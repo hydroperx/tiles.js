@@ -160,7 +160,7 @@ export class TileExpert
         id: string,
         index?: number,
         label?: string,
-    })
+    }): HTMLDivElement
     {
         index ??= -1;
         label ??= "";
@@ -173,8 +173,63 @@ export class TileExpert
         assert(existing_indices.indexOf(index) == -1, `Group at index ${index} already exists.`);
         this.m_state.groups.set(id, { index, label });
 
+        const div = document.createElement("div");
+        div.classList.add(this.m_label_class_name);
+        this.m_container.appendChild(div);
+
         // Rearrange
         this.rearrange_delayed();
+
+        return div;
+    }
+
+    addTile({
+        id,
+        group,
+        x,
+        y,
+        size,
+    }: {
+        /**
+         * Tile ID.
+         */
+        id: string,
+        /**
+         * Group to attach tile to.
+         */
+        group: string,
+        /**
+         * Horizontal position in small tiles.
+         */
+        x?: number,
+        /**
+         * Vertical position in small tiles.
+         */
+        y?: number,
+
+        /**
+         * Tile size.
+         */
+        size?: TileSize,
+    }): HTMLButtonElement
+    {
+        assert(this.m_state.groups.has(group), `Group ${group} does not exist.`);
+        assert(!this.m_state.tiles.has(id), `Duplicate tile ID: ${id}.`);
+        this.m_state.tiles.set(id, {
+            size: size ?? "small",
+            x: x ?? 0,
+            y: y ?? 0,
+            group,
+        });
+
+        const button = document.createElement("button");
+        button.classList.add(this.m_tile_class_name);
+        this.m_container.appendChild(button);
+
+        // Rearrange
+        this.rearrange_delayed();
+
+        return button;
     }
 
     // Updates pixel measurements.

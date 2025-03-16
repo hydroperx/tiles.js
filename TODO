@@ -21,7 +21,7 @@
 
 # API
 
-- [ ] Allow adding tiles
+- [x] Allow adding tiles
 - [ ] Allow resizing tiles
 - [ ] Allow removing tiles
 - [x] Allow adding groups
