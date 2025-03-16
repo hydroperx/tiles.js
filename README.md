@@ -31,11 +31,11 @@ const tile_expert = new TileExpert({
     // Class name used for identifying tiles.
     tileClassName: "tile",
     // The size of small tiles, in cascading "rem" units.
-    smallSize: 2,
+    smallSize: 3.625,
     // Gap between tiles, in cascading "rem" units.
-    tileGap: 0.9,
+    tileGap: 0.6,
     // Gap between groups, in cascading "rem" units.
-    groupGap: 2,
+    groupGap: 3,
     // The height of group labels, in cascading "rem" units.
     labelHeight: 2,
     // Maximum width in small tiles.

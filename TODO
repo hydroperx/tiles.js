@@ -1,12 +1,8 @@
-- [ ] Allow serializing state
-- [ ] Allow deserializing state
-- [ ] Set label height in `rearrange`
 - [ ] Control the cascading `transition`
+  - [ ] of labels
+  - [ ] and tiles
+- [ ] Drag-n-drop
 - [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
-  [ ] of labels
-  [ ] and tiles
-- [ ] After rearrange, clear `m_tiles` and `m_rows`
-  - [ ] On grid snap, if last group is iterated and a tile doesn't fit within its bounds, contribute it anyways to the snapped place.
 
 # Changes
 

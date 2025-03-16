@@ -138,6 +138,9 @@ export class TileExpert
         });
         this.m_rearrange_timeout = -1;
 
+        // Set state
+        this.m_state = new TileExpertState();
+
         // Update pixel measurements
         this.update_px();
     }
@@ -152,6 +155,42 @@ export class TileExpert
         this.m_container.remove();
     }
 
+    /**
+     * Loads a state in the `TileExpert` instance.
+     */
+    load(state: TileExpertState): void
+    {
+        for (const [id, group] of state.groups)
+        {
+            this.addGroup({
+                id,
+                index: group.index,
+                label: group.label,
+            });
+        }
+        for (const [id, tile] of state.tiles)
+        {
+            this.addTile({
+                id,
+                size: tile.size,
+                x: tile.x,
+                y: tile.y,
+                group: tile.group,
+            });
+        }
+    }
+
+    /**
+     * Returns the state of the `TileExpert` instance.
+     */
+    save(): TileExpertState
+    {
+        return this.m_state.clone();
+    }
+
+    /**
+     * Adds a group and returns its label's `div` element.
+     */
     addGroup({
         id,
         index,
@@ -174,6 +213,7 @@ export class TileExpert
         this.m_state.groups.set(id, { index, label });
 
         const div = document.createElement("div");
+        div.setAttribute("data-id", id);
         div.classList.add(this.m_label_class_name);
         this.m_container.appendChild(div);
 
@@ -223,6 +263,7 @@ export class TileExpert
         });
 
         const button = document.createElement("button");
+        button.setAttribute("data-id", id);
         button.classList.add(this.m_tile_class_name);
         this.m_container.appendChild(button);
 
@@ -304,6 +345,8 @@ export class TileExpert
             grid_snap_offset = getOffset(grid_snap_tile_button, this.m_scroll_node ?? this.m_container);
         }
 
+        const last_label_div =  label_divs[label_divs.length - 1];
+
         // Position labels and tiles
         for (const label_div of label_divs)
         {
@@ -369,8 +412,8 @@ export class TileExpert
             // Grid snapping
             if (grid_snap_offset)
             {
-                const x: number = this.page_x_to_x(grid_snap_offset.x)
-                    , y: number = this.page_y_to_y(grid_snap_offset.y);
+                let x: number = this.page_x_to_x(grid_snap_offset.x),
+                    y: number = this.page_y_to_y(grid_snap_offset.y);
                 if (x !== -1 && y !== -1)
                 {
                     const state = this.m_state.tiles.get(grid_snap_params.tile);
@@ -400,6 +443,58 @@ export class TileExpert
             // Enter label text
             label_div.innerText = group_state.label;
         }
+
+        // Grid snapping (new group)
+        if (grid_snap_offset)
+            {
+                let x: number = this.page_x_to_x(grid_snap_offset.x),
+                    y: number = this.page_y_to_y(grid_snap_offset.y);
+                if (x === -1  && this.m_dir == "horizontal")
+                    x = this.forced_page_x_to_x(grid_snap_offset.x);
+                if (y === -1 && this.m_dir == "vertical")
+                    y = this.forced_page_y_to_y(grid_snap_offset.x);
+                if (x !== -1 && y !== -1)
+                {
+                    const state = this.m_state.tiles.get(grid_snap_params.tile);
+                    if (this.m_rows.sizeFreeAt(x, y, state.size))
+                    {
+                        const btn = grid_snap_tile_button;
+                        const { new_x, new_y } = this.put_tile(state.size, x, y);
+                        this.set_real_position(grid_snap_params.tile, new_x, new_y);
+
+                        // Group ID
+                        const group_id = "auto$" + random_hex_large();
+
+                        // Create label div
+                        const label_div = this.addGroup({
+                            id: group_id,
+                            index: -1,
+                            label: "",
+                        });
+
+                        state.group = group_id;
+                        state.x = new_x;
+                        state.y = new_y;
+
+                        // Position and size group label
+                        const { x: label_x, y: label_y, width: label_w } = this.put_label();
+                        label_div.style.left = `${label_x / this.m_rem}rem`;
+                        label_div.style.top = `${label_y / this.m_rem}rem`;
+                        label_div.style.width = `${label_w / this.m_rem}rem`;
+                        label_div.style.height = `${this.m_label_height}rem`;
+                        label_divs.push(label_div);
+
+                        const group_state = this.m_state.groups.get(group_id);
+
+                        // Enter label text
+                        label_div.innerText = group_state.label;
+                    }
+                    grid_snap_offset = null;
+                }
+            }
+
+        this.m_tiles.clear();
+        this.m_rows = null;
     }
 
     private populate_tiles(tile_buttons: HTMLButtonElement[]): void
@@ -719,6 +814,20 @@ export class TileExpert
             throw new Error("not implemented");
     }
 
+    private forced_page_x_to_x(x: number): number {
+        if (this.m_dir == "horizontal")
+            return this.horizontal_container_forced_page_x_to_x(x);
+        else
+            throw new Error("does not make sense");
+    }
+
+    private forced_page_y_to_y(y: number): number {
+        if (this.m_dir == "horizontal")
+            throw new Error("does not make sense");
+        else
+            throw new Error("not implemented");
+    }
+
     private horizontal_container_page_x_to_x(x: number): number
     {
         // return -1 if not fitting
@@ -736,6 +845,23 @@ export class TileExpert
             gx += small_w;
         }
         return this.m_rows.width;
+    }
+
+    private horizontal_container_forced_page_x_to_x(x: number): number
+    {
+        // return -1 if not fitting
+        const { m_group_x: group_x } = this;
+        const { m_tile_gap_px: tile_gap_px } = this;
+        const { small_w, wide_w } = this.m_tile_widthheight_px;
+        const radius = small_w;
+        if (x < group_x - radius) return -1;
+        for (let gx = group_x, j = 0; gx < 0x7FFFFF; j++)
+        {
+            if (x < gx + small_w / 2) return j;
+            if (j != 0) gx += tile_gap_px;
+            gx += small_w;
+        }
+        return -1;
     }
 
     private horizontal_container_page_y_to_y(y: number): number
