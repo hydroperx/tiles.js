@@ -433,8 +433,7 @@ export class TileExpert
 
             // Position and size group label
             const { x, y, width } = this.put_label();
-            label_div.style.left = `${x / this.m_rem}rem`;
-            label_div.style.top = `${y / this.m_rem}rem`;
+            label_div.style.translate = `${x / this.m_rem}rem ${y / this.m_rem}rem`;
             label_div.style.width = `${width / this.m_rem}rem`;
             label_div.style.height = `${this.m_label_height}rem`;
 
@@ -478,8 +477,7 @@ export class TileExpert
 
                         // Position and size group label
                         const { x: label_x, y: label_y, width: label_w } = this.put_label();
-                        label_div.style.left = `${label_x / this.m_rem}rem`;
-                        label_div.style.top = `${label_y / this.m_rem}rem`;
+                        label_div.style.translate = `${label_x / this.m_rem}rem ${label_y / this.m_rem}rem`;
                         label_div.style.width = `${label_w / this.m_rem}rem`;
                         label_div.style.height = `${this.m_label_height}rem`;
                         label_divs.push(label_div);
