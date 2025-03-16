@@ -1,6 +1,6 @@
 import { TileExpert } from "com.hydroper.tileexpert";
 
-const container = document.querySelector("#container");
+const container = document.querySelector("#container")!;
 
 const tile_expert = new TileExpert({
     element: container,
