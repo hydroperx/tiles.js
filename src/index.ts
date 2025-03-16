@@ -1,9 +1,11 @@
+import assert from "assert";
+import getRectangleOverlap from "rectangle-overlap";
+
 import { RemObserver } from "./utils/RemObserver";
 import { TileSize$widthheight, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 import { random_hex_large } from "./utils/random";
 import { Rows } from "./Rows";
 import { TileExpertState } from "./TileExpertState";
-import assert from "assert";
 
 export { type TileSize } from "./enum/TileSize";
 export * from "./TileExpertState";
@@ -86,12 +88,14 @@ export class TileExpert
         groupLabelHeight: number,
 
         /**
-         * Maximum width in small tiles.
+         * Maximum width in small tiles, effective only
+         * in vertical containers.
          */
         maxWidth?: number,
 
         /**
-         * Maximum height in small tiles.
+         * Maximum height in small tiles, effective only
+         * in horizontal containers.
          */
         maxHeight?: number,
 
@@ -187,10 +191,10 @@ export class TileExpert
         }
     }
 
-    private contribute_calc_tile(button: HTMLButtonElement, state: TileExpertState)
+    private contribute_calc_tile(button: HTMLButtonElement)
     {
         const id = button.getAttribute("data-id");
-        const tile_state = state.tiles.get(id);
+        const tile_state = this.m_state.tiles.get(id);
         assert(tile_state !== undefined, "Invalidated tile state.");
         const size = tile_state.size;
         this.m_tiles.set(id, {
@@ -228,6 +232,219 @@ export class TileExpert
         }
         button.setAttribute("data-x", x.toString());
         button.setAttribute("data-y", y.toString());
+    }
+
+    /**
+     * Puts a label after all tiles of a group have been positioned,
+     * moving to the next group.
+     */
+    private put_label(): { x: number, y: number, width: number }
+    {
+        if (this.m_dir)
+            return this.horizontal_container_put_label();
+        else
+            throw new Error("not implemented");
+    }
+
+    private horizontal_container_put_label(): { x: number, y: number, width: number }
+    {
+        // Measurements
+        const { m_tile_gap_px: tile_gap_px, m_group_gap_px: group_gap_px } = this;
+        const { small_w } = this.m_tile_widthheight_px;
+
+        // Result vars
+        const this_group_x = this.m_group_x;
+        const width = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+
+        // Move to the next group
+        this.m_group_x += width + group_gap_px;
+        this.m_rows = new Rows(Infinity, this.m_max_height);
+
+        // Result
+        return { x: this_group_x, y: 0, width };
+    }
+
+    private shift(
+        tiles: HTMLButtonElement[],
+        to_shift: string,
+        place_taker: string,
+        place_taker_button: HTMLButtonElement,
+        place_side: "left" | "top" | "right" | "bottom"
+    ): void
+    {
+        if (this.m_dir == "horizontal")
+            this.horizontal_container_shift(tiles, to_shift, place_taker, place_taker_button, place_side);
+        else
+            throw new Error("not implemented");
+    }
+
+    private horizontal_container_shift(
+        tiles: HTMLButtonElement[],
+        to_shift: string,
+        place_taker: string,
+        place_taker_button: HTMLButtonElement,
+        place_side: "left" | "top" | "right" | "bottom"
+    ): void
+    {
+        const shifting_tile_button = tiles.find(t => t.getAttribute("data-id") == to_shift);
+        if (!shifting_tile_button) return;
+
+        // Populate tiles
+        this.populate_tiles(tiles);
+        this.contribute_calc_tile(place_taker_button);
+
+        // Make sure to insert place_taker into the group that
+        // the tile to be shifted is part from.
+        const place_taker_state = this.m_state.tiles.get(place_taker);
+        place_taker_state.group = shifting_tile_button.getAttribute("data-group");
+        place_taker_button.setAttribute("data-group", place_taker_state.group);
+
+        // Misc vars
+        const place_taker_w = get_size_width_small(place_taker_state.size);
+        const place_taker_h = get_size_height_small(place_taker_state.size);
+        const to_shift_state = this.m_state.tiles.get(to_shift);
+        const { w: to_shift_w, h: to_shift_h } = this.m_tiles.get(to_shift);
+
+        switch (place_side)
+        {
+            case "left":
+            case "right":
+            {
+                // Move tile to either left or right if there is
+                // space available.
+                let shift_to: "left" | "right" | null = null;
+                let left_available = false, right_available = false;
+                if (!(place_taker_w > to_shift_w || place_taker_h > to_shift_h))
+                {
+                    if (
+                        this.m_rows.sizeFreeAt(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_state.size) &&
+                        to_shift_state.x + place_taker_w + to_shift_w < this.m_rows.width
+                    ) {
+                        right_available = true;
+                    }
+                    if (this.m_rows.sizeFreeAt(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_state.size))
+                    {
+                        left_available = true;
+                    }
+                }
+
+                if (place_side == "left")
+                    shift_to = right_available ? "right" : null;
+                else shift_to = left_available ? "left" : null;
+
+                if (shift_to == "left")
+                {
+                    // shift tile to left
+                    const place_taker_new_horizontal = to_shift_state.x;
+                    this.m_rows.clearSize(to_shift_state.x, to_shift_state.y, to_shift_state.size);
+                    this.m_rows.fillSize(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_state.size);
+                    this.set_real_position(to_shift, to_shift_state.x - to_shift_w, to_shift_state.y);
+                    this.set_real_position(place_taker, place_taker_new_horizontal, to_shift_state.y);
+                }
+                else if (shift_to == "right")
+                {
+                    // shift tile to right
+                    const place_taker_new_horizontal = to_shift_state.x;
+                    this.m_rows.clearSize(to_shift_state.x, to_shift_state.y, to_shift_state.size);
+                    this.m_rows.fillSize(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_state.size);
+                    this.set_real_position(to_shift, to_shift_state.x + place_taker_w, to_shift_state.y);
+                    this.set_real_position(place_taker, place_taker_new_horizontal, to_shift_state.y);
+                }
+
+                break;
+            }
+            case "top":
+            {
+                // shift tiles to bottom recursively.
+                let x = to_shift_state.x,
+                    y = to_shift_state.y;
+                if (y + place_taker_h >= this.m_rows.max_height)
+                {
+                    return;
+                }
+                this.set_real_position(place_taker, x, y);
+
+                // Set previously taken size to that of place_taker
+                const prev_taken_h = place_taker_h;
+
+                this.horizontal_container_shift_bottom(
+                    to_shift,
+                    prev_taken_h,
+                    [place_taker]
+                );
+                break;
+            }
+            case "bottom":
+            {
+                // Ignore bottom-to-top shift for now.
+                //
+                // in case it is implemented in the future:
+                //
+                // detection: here it may be impossible to shift to top
+                // in circumstances where there is no free space
+                // (consequently the take placer may also not take any space).
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param t1 Tile to shift.
+     * @param prev_taken_h Previously taken height
+     */
+    private horizontal_container_shift_bottom(
+        t1: string,
+        prev_taken_h: number,
+        prev: string[]
+    ): void {
+
+        // vars
+        const t1_s = this.m_state.tiles.get(t1);
+        const { w: t1_w, h: t1_h } = this.m_tiles.get(t1);
+
+        // shift t1 (x, y)
+        let t1_new_x = t1_s.x,
+            t1_new_y = t1_s.y + prev_taken_h;
+
+        if (!this.m_rows.sizeFreeAt(t1_new_x, t1_new_y, t1_s.size))
+        {
+            if (t1_new_y + t1_h >= this.m_rows.max_height)
+            {
+                t1_new_x += t1_w;
+                t1_new_y = 0;
+            }
+            if (!this.m_rows.sizeFreeAt(t1_new_x, t1_new_y, t1_s.size))
+            {
+                // find the next tile(s) to shift bottom.
+                // here it may be like a group of small tiles
+                // to shift together, or one large tile.
+                // (do not look for tiles that are being actively dragged or
+                // tiles that are being shifted already.)
+                const next_tiles: string[] = [];
+                for (const [tile, tile_p] of this.m_tiles)
+                {
+                    const overlap = getRectangleOverlap(
+                        { x: t1_new_x, y: t1_new_y, width: t1_w, height: t1_h },
+                        { x: tile_p.x, y: tile_p.y, width: tile_p.w, height: tile_p.h }
+                    );
+                    if (overlap && tile_p.button.getAttribute("data-dragging") != "true" && prev.indexOf(tile) == -1)
+                    {
+                        next_tiles.push(tile);
+                    }
+                }
+                for (const t2 of next_tiles)
+                {
+                    const new_prev = prev.slice(0);
+                    new_prev.push(t1);
+                    this.horizontal_container_shift_bottom(
+                        t2,
+                        t1_h,
+                        new_prev,
+                    );
+                }
+            }
+        }
+        this.set_real_position(t1, t1_new_x, t1_new_y);
     }
 
     page_x_to_x(x: number): number {
