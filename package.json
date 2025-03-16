@@ -1,0 +1,31 @@
+{
+  "name": "com.hydroper.tileexpert",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {},
+  "main": "src/index.ts",
+  "dependencies": {
+    "assert": "^2.1.0",
+    "clone": "^2.1.2",
+    "com.hydroper.domdraggable": "^4.2.0",
+    "com.hydroper.typedeventtarget": "^1.0.1",
+    "extend": "^3.0.2",
+    "getoffset": "^0.6.4",
+    "jquery": "^3.7.1",
+    "rectangle-overlap": "^2.0.0"
+  },
+  "description": "Metro design components",
+  "license": "Apache-2.0",
+  "keywords": [
+    "metro",
+    "ui"
+  ],
+  "author": "Hydroper <HydroperFox@gmail.com>",
+  "devDependencies": {
+    "@types/assert": "^1.5.11",
+    "@types/clone": "^2.1.4",
+    "@types/extend": "^3.0.4",
+    "@types/jquery": "^3.5.32",
+    "typescript": "~5.6.2"
+  }
+}
