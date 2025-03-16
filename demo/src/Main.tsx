@@ -12,6 +12,7 @@ const tile_expert = new TileExpert({
     groupGap: 2,
     groupLabelHeight: 2,
     maxHeight: 6,
+    scrollNode: undefined,
 });
 
 tile_expert.addGroup({

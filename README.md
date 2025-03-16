@@ -9,8 +9,8 @@ Base implementation for Windows 8 like live tiles in HTML5. Features:
 
 Specifications:
 
-- Group label element tag: `input[type="text"]`
-- Group label element attribute `data-id`: the group ID.
+- Group-label element tag: `div`
+- Group-label element attribute `data-id`: the group ID.
 - Tile element tag: `button`
 - Tile element attribute `data-id`: the tile ID.
 - Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
@@ -22,8 +22,7 @@ Specifications:
 import { TileExpert } from "com.hydroper.tileexpert";
 
 const tile_expert = new TileExpert({
-    // Container. The cascading "position" is automatically set to "relative",
-    // as tiles are positioned through the "left" and "top" properties.
+    // Container.
     element,
     // The direction of the tile container.
     direction: "horizontal",
@@ -45,10 +44,12 @@ const tile_expert = new TileExpert({
     maxHeight: 6,
     // Transition function(s) to contribute to tiles.
     tileTransition: "",
+    // Scroll node to resolve offsets from.
+    scrollNode: undefined,
 });
 
 // Adding groups
-const label_input = tile_expert.addGroup({
+const label_div = tile_expert.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",

@@ -1,5 +1,6 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
+import getOffset from "getoffset";
 
 import { RemObserver } from "./utils/RemObserver";
 import { TileSize$widthheight, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
@@ -24,6 +25,7 @@ export class TileExpert
     private m_group_label_height: number;
     private m_max_width: number;
     private m_max_height: number;
+    private m_scroll_node: HTMLElement;
 
     private m_rem_observer: RemObserver;
     private m_rem: number;
@@ -54,8 +56,7 @@ export class TileExpert
 
     constructor(options: {
         /**
-         * Container. The cascading "position" is automatically set to "relative",
-         * as tiles are positioned through the "left" and "top" properties.
+         * Container.
          */
         element: Element,
         /**
@@ -103,6 +104,11 @@ export class TileExpert
          * Transition function(s) to contribute to tiles.
          */
         tileTransition?: string,
+
+        /**
+         * Scroll node to resolve offsets from.
+         */
+        scrollNode?: Element,
     }) {
         this.m_container = options.element as HTMLElement;
         this.m_dir = options.direction;
@@ -114,6 +120,7 @@ export class TileExpert
         this.m_group_label_height = options.groupLabelHeight;
         this.m_max_width = options.maxWidth ?? Infinity;
         this.m_max_height = options.maxHeight ?? Infinity;
+        this.m_scroll_node = options.scrollNode as HTMLElement;
 
         this.m_tile_widthheight_rem.small_w = this.m_small_size;
         this.m_tile_widthheight_rem.small_h = this.m_small_size;
@@ -164,12 +171,150 @@ export class TileExpert
         this.m_rearrange_timeout = window.setTimeout(this.rearrange_immediate.bind(this), 10);
     }
 
-    private rearrange_immediate({
-        //
-    }: RearrangeOptions) {
+    private rearrange_immediate(rearrange_options: RearrangeOptions) {
         this.m_rearrange_timeout = -1;
 
-        fixme();
+        // Group-label divs
+        const label_divs: HTMLDivElement[] = Array.from(this.m_container.querySelectorAll(this.m_label_class_name)) as HTMLDivElement[];
+
+        // Sort label divs
+        label_divs.sort((a, b) => {
+            const a_pos = this.m_state.groups.get(a.getAttribute("data-id")).index;
+            const b_pos = this.m_state.groups.get(b.getAttribute("data-id")).index;
+
+            return a_pos < b_pos ? -1 : a_pos > b_pos ? 1 : 0;
+        });
+
+        // Initialize layout calculus
+        this.m_rows = new Rows(this.m_dir == "horizontal" ? Infinity : this.m_max_width, this.m_dir == "horizontal" ? this.m_max_height : Infinity);
+        this.m_group_x = 0;
+        this.m_group_y = this.m_group_label_height * this.m_rem;
+
+        // Retrieve tile buttons
+        const tiles = Array.from(this.m_container.querySelectorAll(this.m_tile_class_name)) as HTMLButtonElement[];
+
+        // Shifting parameters
+        const shift_params = rearrange_options?.shift ?
+            {
+                to_shift: rearrange_options.to_shift,
+                place_taker: rearrange_options.place_taker,
+                place_side: rearrange_options.place_side,
+            } : null;
+
+        // Restore parameters
+        const restore_params = rearrange_options?.restore ?
+            {
+                except: rearrange_options.restore_except,
+            } : null;
+
+        // Grid snap parameters
+        const grid_snap_params = rearrange_options?.grid_snap ?
+            {
+                tile: rearrange_options.grid_snap_tile,
+            } : null;
+        let grid_snap_tile_button: HTMLButtonElement | null = null,
+            grid_snap_offset: { x: number, y: number } = null;
+        if (grid_snap_params)
+        {
+            grid_snap_tile_button = tiles.find(t => t.getAttribute("data-id") == grid_snap_params.tile);
+            grid_snap_offset = getOffset(grid_snap_tile_button, this.m_scroll_node ?? this.m_container);
+        }
+
+        // Position labels and tiles
+        for (const label_div of label_divs)
+        {
+            const group_id = label_div.getAttribute("data-id");
+
+            // Determine whether to shift tiles at this group
+            let shifting = false;
+            if (shift_params && this.m_state.tiles.has(shift_params.to_shift) &&
+                this.m_state.tiles.get(shift_params.to_shift).group == group_id)
+            {
+                shifting = true;
+            }
+
+            const this_group_tiles: HTMLButtonElement[] = [];
+
+            // Position and size tiles
+            for (const tile of tiles)
+            {
+                const tile_id = tile.getAttribute("data-id");
+                let tile_state = this.m_state.tiles.get(tile_id)!;
+                const tile_group_id = tile_state.group;
+                if (tile_group_id != group_id)
+                {
+                    continue;
+                }
+
+                this_group_tiles.push(tile);
+
+                // Position tile
+                if (tile.getAttribute("data-dragging") != "true")
+                {
+                    const h    = tile_state.x
+                        , v    = tile_state.y
+                        , size = tile_state?.size
+                    const { new_x, new_y } = this.put_tile(size, h, v);
+                    this.set_real_position(tile_id, new_x, new_y);
+
+                    if (!tile_state)
+                    {
+                        tile_state = { group: "", size: "small", x: 0, y: 0 };
+                        this.m_state.tiles.set(tile_id, tile_state);
+                    }
+                    tile_state.group = tile_group_id;
+                    tile_state.size = size;
+                    tile_state.x = new_x;
+                    tile_state.y = new_y;
+                }
+            }
+
+            // Shift tiles
+            if (shifting)
+            {
+                const place_taker_button = tiles.find(t => t.getAttribute("data-id") == shift_params.place_taker);
+                this.shift(
+                    this_group_tiles,
+                    shift_params.to_shift,
+                    shift_params.place_taker,
+                    place_taker_button,
+                    shift_params.place_side
+                );
+            }
+
+            // Grid snapping
+            if (grid_snap_offset)
+            {
+                const x: number = this.page_x_to_x(grid_snap_offset.x)
+                    , y: number = this.page_y_to_y(grid_snap_offset.y);
+                if (x !== -1 && y !== -1)
+                {
+                    const state = this.m_state.tiles.get(grid_snap_params.tile);
+                    if (this.m_rows.sizeFreeAt(x, y, state.size))
+                    {
+                        const btn = grid_snap_tile_button;
+                        const { new_x, new_y } = this.put_tile(state.size, x, y);
+                        this.set_real_position(grid_snap_params.tile, new_x, new_y);
+
+                        state.group = group_id;
+                        state.x = new_x;
+                        state.y = new_y;
+                    }
+                    grid_snap_offset = null;
+                }
+            }
+
+            // Position and size group label
+            const { x, y, width } = this.put_label();
+            label_div.style.left = `${x / this.m_rem}rem`;
+            label_div.style.top = `${y / this.m_rem}rem`;
+            label_div.style.width = `${width / this.m_rem}rem`;
+
+            const group_state = this.m_state.groups.get(group_id);
+
+            // Enter label text
+            label_div.innerText = group_state.label;
+        }
     }
 
     private populate_tiles(tile_buttons: HTMLButtonElement[]): void
@@ -232,6 +377,36 @@ export class TileExpert
         }
         button.setAttribute("data-x", x.toString());
         button.setAttribute("data-y", y.toString());
+    }
+
+    put_tile(size: TileSize, x: number, y: number): { new_x: number, new_y: number }
+    {
+        if (this.m_dir == "horizontal")
+            return this.horizontal_container_put_tile(size, x, y);
+        else
+            throw new Error("not implemented");
+    }
+
+    horizontal_container_put_tile(size: TileSize, x: number, y: number): { new_x: number, new_y: number }
+    {
+        const { max_height } = this.m_rows;
+
+        for (;;)
+        {
+            for (; y < max_height; y++)
+            {
+                if (this.m_rows.sizeFreeAt(x, y, size))
+                {
+                    this.m_rows.fillSize(x, y, size);
+                    return {
+                        new_x: x, new_y: y
+                    };
+                }
+            }
+            y = 0;
+            x++;
+            assert(x <= 0x7FFFFF, "Horizontal tiles too large.");
+        }
     }
 
     /**
