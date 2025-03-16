@@ -1,0 +1,10 @@
+- [ ] Allow serializing state
+- [ ] Allow deserializing state
+- [ ] After rearrange, clear `m_tiles` and `m_rows`
+
+# Changes
+
+- FullTilesPositionMap
+  - [ ] FullTilesPositionMap's constructor is now replaced by `populate_tiles()`
+  - [ ] `setPosition` is now `set_real_position`
+  - [ ] `contributeTile` is now `contribute_calc_tile`

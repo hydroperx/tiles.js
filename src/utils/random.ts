@@ -1,15 +1,9 @@
-/**
- * Generates a random 1-5 digits hexadecimal string.
- */
-export function randomHex()
+export function random_hex()
 {
     return Math.floor(Math.random() * 0xF_FF_FF).toString(16);
 }
 
-/**
- * Generates a large random hexadecimal string.
- */
-export function randomHexLarge()
+export function random_hex_large()
 {
-    return [0,0,0,0,0,0,0].map(_ => randomHex()).join("");
+    return [0,0,0,0,0,0,0].map(_ => random_hex()).join("");
 }

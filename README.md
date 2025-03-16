@@ -10,8 +10,11 @@ Base implementation for Windows 8 like live tiles in HTML5. Features:
 Specifications:
 
 - Group label element tag: `input[type="text"]`
+- Group label element attribute `data-id`: the group ID.
 - Tile element tag: `button`
+- Tile element attribute `data-id`: the tile ID.
 - Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
+- Overrides the `transition` style in tile elements.
 
 ## Getting started
 
@@ -42,10 +45,12 @@ const tile_expert = new TileExpert({
     maxWidth: undefined,
     // Maximum height in small tiles.
     maxHeight: 6,
+    // Transition function(s) to contribute to tiles.
+    tileTransition: "",
 });
 
 // Adding groups
-tile_expert.addGroup({
+const label_input = tile_expert.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
