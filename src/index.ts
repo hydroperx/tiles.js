@@ -375,8 +375,6 @@ export class TileExpert
             const real_y = (this.m_group_y / rem) + (y * small_h) + (y * tile_gap_rem);
             button.style.translate = `${real_x}rem ${real_y}rem`;
         }
-        button.setAttribute("data-x", x.toString());
-        button.setAttribute("data-y", y.toString());
     }
 
     put_tile(size: TileSize, x: number, y: number): { new_x: number, new_y: number }
@@ -471,8 +469,7 @@ export class TileExpert
         // Make sure to insert place_taker into the group that
         // the tile to be shifted is part from.
         const place_taker_state = this.m_state.tiles.get(place_taker);
-        place_taker_state.group = shifting_tile_button.getAttribute("data-group");
-        place_taker_button.setAttribute("data-group", place_taker_state.group);
+        place_taker_state.group = this.m_state.tiles.get(shifting_tile_button.getAttribute("data-id")).group;
 
         // Misc vars
         const place_taker_w = get_size_width_small(place_taker_state.size);
