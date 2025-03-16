@@ -41,7 +41,7 @@ tile2.style.background = "green";
 
 tile_expert.addGroup({
     id: "group2",
-    index: 0,
+    index: 1,
     label: "Group 1",
 });
 
