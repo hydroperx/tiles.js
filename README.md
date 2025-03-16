@@ -27,8 +27,6 @@ const tile_expert = new TileExpert({
     element,
     // The direction of the tile container.
     direction: "horizontal",
-    // Whether a right-to-left layout is used or not.
-    rtl: false,
     // Class name used for identifying group labels.
     labelClassName: "label",
     // Class name used for identifying tiles.

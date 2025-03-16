@@ -1,6 +1,9 @@
 - [ ] Allow serializing state
 - [ ] Allow deserializing state
+- [ ] Set `this.m_group_y = 0;` in rearranging function at the beginning
+- [ ] Control the cascading `transition`
 - [ ] After rearrange, clear `m_tiles` and `m_rows`
+  - [ ] On grid snap, if last group is iterated and a tile doesn't fit within its bounds, contribute it anyways to the snapped place.
 
 # Changes
 

@@ -5,7 +5,6 @@ const container = document.querySelector("#container")!;
 const tile_expert = new TileExpert({
     element: container,
     direction: "horizontal",
-    rtl: false,
     labelClassName: "label",
     tileClassName: "tile",
     smallSize: 2,

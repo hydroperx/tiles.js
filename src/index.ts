@@ -14,7 +14,6 @@ export class TileExpert
 
     private m_container: HTMLElement;
     private m_dir: "horizontal" | "vertical";
-    private m_rtl: boolean;
     private m_label_class_name: string;
     private m_tile_class_name: string;
     private m_small_size: number;
@@ -33,13 +32,14 @@ export class TileExpert
         wide_w: 0, wide_h: 0,
         large_w: 0, large_h: 0,
     };
-
     private m_tile_widthheight_px: TileSize$widthheight = {
         small_w: 0, small_h: 0,
         medium_w: 0, medium_h: 0,
         wide_w: 0, wide_h: 0,
         large_w: 0, large_h: 0,
     };
+    private m_tile_gap_px: number = 0;
+    private m_group_gap_px: number = 0;
 
     private m_rearrange_timeout: number = -1;
 
@@ -60,10 +60,6 @@ export class TileExpert
          * The direction of the tile container.
          */
         direction: "horizontal" | "vertical",
-        /**
-         * Whether a right-to-left layout is used or not.
-         */
-        rtl: boolean,
         /**
          * Class name used for identifying group labels.
          */
@@ -106,7 +102,6 @@ export class TileExpert
     }) {
         this.m_container = options.element as HTMLElement;
         this.m_dir = options.direction;
-        this.m_rtl = options.rtl;
         this.m_label_class_name = options.labelClassName;
         this.m_tile_class_name = options.tileClassName;
         this.m_small_size = options.smallSize;
@@ -154,6 +149,8 @@ export class TileExpert
         this.m_tile_widthheight_px.wide_h = this.m_tile_widthheight_rem.wide_h * rem;
         this.m_tile_widthheight_px.large_w = this.m_tile_widthheight_rem.large_w * rem;
         this.m_tile_widthheight_px.large_h = this.m_tile_widthheight_px.large_h * rem;
+        this.m_tile_gap_px = this.m_tile_gap * rem;
+        this.m_group_gap_px = this.m_group_gap * rem;
     }
 
     private rearrange_delayed(options: RearrangeOptions): void
@@ -231,6 +228,57 @@ export class TileExpert
         }
         button.setAttribute("data-x", x.toString());
         button.setAttribute("data-y", y.toString());
+    }
+
+    page_x_to_x(x: number): number {
+        if (this.m_dir == "horizontal")
+            return this.horizontal_container_page_x_to_x(x);
+        else
+            throw new Error("not implemented");
+    }
+
+    page_y_to_y(y: number): number {
+        if (this.m_dir == "horizontal")
+            return this.horizontal_container_page_y_to_y(y);
+        else
+            throw new Error("not implemented");
+    }
+
+    horizontal_container_page_x_to_x(x: number): number
+    {
+        // return -1 if not fitting
+        const { m_group_x: group_x } = this;
+        const { m_tile_gap_px: tile_gap_px } = this;
+        const { small_w } = this.m_tile_widthheight_px;
+        const radius = small_w;
+        if (x < group_x - radius) return -1;
+        const w = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+        if (x > group_x + w + radius) return -1;
+        for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
+        {
+            if (x < gx + small_w / 2) return j;
+            if (j != 0) gx += tile_gap_px;
+            gx += small_w;
+        }
+        return this.m_rows.width;
+    }
+
+    horizontal_container_page_y_to_y(y: number): number
+    {
+        // return -1 if not fitting
+        const { m_tile_gap_px: tile_gap_px } = this;
+        const { small_h } = this.m_tile_widthheight_px;
+        const group_y = this.m_group_label_height * this.m_rem;
+        if (y < group_y) return -1;
+        const h = this.m_rows.max_height == 0 ? 0: (this.m_rows.max_height * small_h) * ((this.m_rows.max_height - 1) * tile_gap_px);
+        if (y > group_y + h) return -1;
+        for (let gy = group_y, j = 0, lim = group_y + h; gy < lim; j++)
+        {
+            if (y < gy + small_h / 2) return j;
+            if (j != 0) gy += tile_gap_px;
+            gy += small_h;
+        }
+        return this.m_rows.height;
     }
 }
 
