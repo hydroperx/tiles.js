@@ -1,8 +1,8 @@
 - [ ] Allow serializing state
 - [ ] Allow deserializing state
-- [ ] On rearrange, to start, do `this.m_rows = new Rows(Infinity, this.m_max_height);` instead of constructing the old layout class.
 - [ ] Set label height in `rearrange`
 - [ ] Control the cascading `transition`
+- [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
   [ ] of labels
   [ ] and tiles
 - [ ] After rearrange, clear `m_tiles` and `m_rows`
@@ -24,6 +24,8 @@
 - [ ] Allow adding tiles
 - [ ] Allow resizing tiles
 - [ ] Allow removing tiles
-- [ ] Allow adding groups
+- [x] Allow adding groups
 - [ ] Allow renaming groups
 - [ ] Allow removing groups
+- [ ] Allow checking whether a group exists or not
+- [ ] Allow checking whether a tile exists or not

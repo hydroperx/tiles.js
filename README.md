@@ -37,7 +37,7 @@ const tile_expert = new TileExpert({
     // Gap between groups, in cascading "rem" units.
     groupGap: 2,
     // The height of group labels, in cascading "rem" units.
-    groupLabelHeight: 2,
+    labelHeight: 2,
     // Maximum width in small tiles.
     maxWidth: undefined,
     // Maximum height in small tiles.

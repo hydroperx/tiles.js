@@ -10,7 +10,7 @@ const tile_expert = new TileExpert({
     smallSize: 2,
     tileGap: 0.9,
     groupGap: 2,
-    groupLabelHeight: 2,
+    labelHeight: 2,
     maxHeight: 6,
     scrollNode: undefined,
 });
