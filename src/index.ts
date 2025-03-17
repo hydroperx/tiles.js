@@ -761,7 +761,8 @@ export class TileExpert
         // Result vars
         const this_group_x = this.m_group_x;
         const minimum_width = wide_w;
-        const width = this.m_rows.width == 0 ? minimum_width : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+        let width = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+        width = Math.max(width, minimum_width);
 
         // Move to the next group
         this.m_group_x += width + group_gap_px;
@@ -987,7 +988,8 @@ export class TileExpert
         const { small_w, wide_w } = this.m_tile_widthheight_px;
         const radius = 0;
         if (x < group_x - radius) return -1;
-        const w = this.m_rows.width == 0 ? wide_w : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+        let w = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
+        w = Math.max(w, wide_w);
         if (x > group_x + w + radius) return -1;
         for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
         {
@@ -1003,7 +1005,7 @@ export class TileExpert
         // return -1 if not fitting
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
-        const { small_w, wide_w } = this.m_tile_widthheight_px;
+        const { small_w } = this.m_tile_widthheight_px;
         const radius = small_w;
         if (x < group_x - radius) return -1;
         for (let gx = group_x, j = 0; gx < 0x7FFFFF; j++)
