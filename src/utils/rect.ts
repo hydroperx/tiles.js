@@ -1,30 +1,32 @@
 /**
- * Determines the side a rectangle hits.
+ * Determines the side a draggable rectangle hits.
  *
- * @param a Rectangle to be hitted.
- * @param b Hitting rectangle.
- * @returns The side of `a` that `b` hits.
+ * @param draggable The draggable rectangle.
+ * @param hitted The rectangle to be hit.
+ * @returns The side of `hitted` that `draggable` hits.
  */
-export function getRectHitSide(
-    a: { x: number, y: number, width: number, height: number },
-    b: { x: number, y: number, width: number, height: number }
+export function draggableHitSide(
+    draggable: { x: number, y: number, width: number, height: number },
+    hitted: { x: number, y: number, width: number, height: number }
 ): "top" | "bottom" | "left" | "right" | null {
-    // Based in https://stackoverflow.com/a/29861691
-    const r1 = { x: a.x, y: a.y, w: a.width, h: a.height };
-    const r2 = { x: b.x, y: b.y, w: b.width, h: b.height };
-    const dx = (r1.x+r1.w/2)-(r2.x+r2.w/2);
-    const dy = (r1.y+r1.h/2)-(r2.y+r2.h/2);
-    const width = (r1.w+r2.w)/2;
-    const height = (r1.h+r2.h)/2;
-    const crossWidth = width*dy;
-    const crossHeight = height*dx;
-    let collision = null;
+    // ChatGPT-based
 
-    if (Math.abs(dx) <= width && Math.abs(dy) <= height)
-    {
-        if (crossWidth > crossHeight)
-            collision = (crossWidth > (-crossHeight)) ? "bottom" : "left";
-        else collision = (crossWidth > -(crossHeight)) ? "right" : "top";
-    }
-    return collision;
+    let { x: xA, y: yA, width: wA, height: hA } = hitted;
+    let { x: xB, y: yB, width: wB, height: hB } = draggable;
+
+    // Compute overlap distances
+    let leftOverlap = Math.max(0, xA + wA - xB);
+    let rightOverlap = Math.max(0, xB + wB - xA);
+    let topOverlap = Math.max(0, yA + hA - yB);
+    let bottomOverlap = Math.max(0, yB + hB - yA);
+
+    // Find the side with maximum overlap
+    let maxOverlap = Math.max(leftOverlap, rightOverlap, topOverlap, bottomOverlap);
+    
+    if (maxOverlap === leftOverlap) return "left";
+    if (maxOverlap === rightOverlap) return "right";
+    if (maxOverlap === topOverlap) return "top";
+    if (maxOverlap === bottomOverlap) return "bottom";
+
+    return null; // No overlap
 }

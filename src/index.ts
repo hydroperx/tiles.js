@@ -8,7 +8,7 @@ import { TileSize$widthheight, get_size_width_small, get_size_height_small, Tile
 import { random_hex_large } from "./utils/random";
 import { Rows } from "./Rows";
 import { TileExpertState } from "./TileExpertState";
-import { getRectHitSide } from "./utils/rect";
+import { draggableHitSide } from "./utils/rect";
 
 export { type TileSize } from "./enum/TileSize";
 export * from "./TileExpertState";
@@ -329,9 +329,9 @@ export class TileExpert
                 set_dragging(true);
         
                 // Shift tiles as needed.
-                const hit_drag_diff_x = hit_drag_start ? hit_drag_start[0] - x : 0x7FFFFFFF;
-                const hit_drag_diff_y = hit_drag_start ? hit_drag_start[1] - y : 0x7FFFFFFF;
-                const hid_drag_diff_rad = small_w / 1.3;
+                const hit_drag_diff_x = hit_drag_start ? x - hit_drag_start[0] : 0x7FFFFFFF;
+                const hit_drag_diff_y = hit_drag_start ? y - hit_drag_start[1] : 0x7FFFFFFF;
+                const hid_drag_diff_rad = small_w / 1.9;
                 const hit_drag_inertia = (
                     hit_drag_diff_x > -hid_drag_diff_rad && hit_drag_diff_x <= hid_drag_diff_rad &&
                     hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
@@ -407,7 +407,8 @@ export class TileExpert
             for (const tile of tiles)
             {
                 const rect = tile.getBoundingClientRect();
-                const place_side = getRectHitSide(r, rect);
+                const place_side = draggableHitSide(r, rect);
+                console.log(place_side);
                 if (place_side === null)
                 {
                     continue;
@@ -1007,7 +1008,7 @@ export class TileExpert
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_w, wide_w } = this.m_tile_widthheight_px;
-        const radius = small_w / 2;
+        const radius = small_w;
         if (x < group_x - radius) return -1;
         let w = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
         w = Math.max(w, wide_w);
@@ -1027,7 +1028,7 @@ export class TileExpert
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_w } = this.m_tile_widthheight_px;
-        const radius = small_w / 2;
+        const radius = small_w;
         if (x < group_x - radius) return -1;
         for (let gx = group_x, j = 0; gx < 0x7FFFFF; j++)
         {
@@ -1044,7 +1045,7 @@ export class TileExpert
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_h } = this.m_tile_widthheight_px;
         const group_y = this.m_label_height * this.m_rem;
-        const radius = small_h / 2;
+        const radius = small_h;
         if (y < group_y - radius) return -1;
         const h = this.m_rows.max_height == 0 ? 0: (this.m_rows.max_height * small_h) * ((this.m_rows.max_height - 1) * tile_gap_px);
         if (y > group_y + h + radius) return -1;
