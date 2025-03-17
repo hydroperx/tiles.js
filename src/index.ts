@@ -296,6 +296,7 @@ export class TileExpert
 
         // Drag vars
         let drag_start: [number, number] | null = null;
+        let hit_drag_start: [number, number] | null = null;
         let previous_state: TileExpertState | null = null;
         let active_tiles_hit = false;
 
@@ -309,6 +310,8 @@ export class TileExpert
             },
             onDrag: (el, x, y, evt) =>
             {
+                const { small_w } = this.m_tile_widthheight_px;
+
                 if (drag_start === null)
                 {
                     button.style.transition = normal_transition;
@@ -317,26 +320,41 @@ export class TileExpert
                 }
         
                 const diff_x = drag_start[0] - x
-                    , diff_y = drag_start[1] - y;
-                if (diff_x > -5 && diff_x <= 5 && diff_y > -5 && diff_y <= 5)
+                    , diff_y = drag_start[1] - y
+                    , diff_rad = small_w / 2.5;
+                if (diff_x > -diff_rad && diff_x <= diff_rad && diff_y > -diff_rad && diff_y <= diff_rad)
                 {
                     return;
                 }
                 set_dragging(true);
         
                 // Shift tiles as needed.
-                const hit = hits_another_tile();
-                if (hit)
+                const hit_drag_diff_x = hit_drag_start ? hit_drag_start[0] - x : 0x7FFFFFFF;
+                const hit_drag_diff_y = hit_drag_start ? hit_drag_start[1] - y : 0x7FFFFFFF;
+                const hid_drag_diff_rad = small_w / 1.3;
+                const hit_drag_inertia = (
+                    hit_drag_diff_x > -hid_drag_diff_rad && hit_drag_diff_x <= hid_drag_diff_rad &&
+                    hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
+                if (!hit_drag_inertia)
                 {
-                    this.rearrange_immediate({ shift: true, to_shift: hit.tile, place_taker: id, place_side: hit.side});
-                    active_tiles_hit = true;
-                }
-                else
-                {
-                    this.m_state.clear();
-                    this.m_state.set(previous_state);
-                    this.rearrange_immediate({ restore: true, restore_except: id });
-                    active_tiles_hit = false;
+                    const hit = hits_another_tile();
+                    if (hit)
+                    {
+                        if (!active_tiles_hit)
+                        {
+                            this.rearrange_immediate({ shift: true, to_shift: hit.tile, place_taker: id, place_side: hit.side});
+                            active_tiles_hit = true;
+                            hit_drag_start = [x, y];
+                        }
+                    }
+                    else
+                    {
+                        this.m_state.clear();
+                        this.m_state.set(previous_state);
+                        this.rearrange_immediate({ restore: true, restore_except: id });
+                        active_tiles_hit = false;
+                        hit_drag_start = null;
+                    }
                 }
             },
             onDragEnd: (el, x, y, evt) =>
@@ -346,8 +364,9 @@ export class TileExpert
                     button.style.inset = "";
                     return;
                 }
-        
+
                 drag_start = null;
+                hit_drag_start = null;
                 set_dragging(false);
                 button.style.transition = normal_transition;
 
@@ -364,6 +383,8 @@ export class TileExpert
         
                     button.style.inset = "";
                 }
+
+                active_tiles_hit = false;
             },
         });
         this.m_draggables.set(button, draggable);
@@ -386,7 +407,7 @@ export class TileExpert
             for (const tile of tiles)
             {
                 const rect = tile.getBoundingClientRect();
-                const place_side = getRectHitSide(rect, r);
+                const place_side = getRectHitSide(r, rect);
                 if (place_side === null)
                 {
                     continue;
@@ -394,7 +415,7 @@ export class TileExpert
 
                 // Only hits if a large enough area overlaps.
                 const overlap = getRectangleOverlap(rect, r);
-                if (overlap && overlap.area < (small_w * 1.5))
+                if (overlap && overlap.area < (small_w * 0.3))
                 {
                     continue;
                 }
@@ -600,51 +621,51 @@ export class TileExpert
 
         // Grid snapping (new group)
         if (grid_snap_offset)
+        {
+            let x: number = this.page_x_to_x(grid_snap_offset.x),
+                y: number = this.page_y_to_y(grid_snap_offset.y);
+            if (x === -1  && this.m_dir == "horizontal")
+                x = this.forced_page_x_to_x(grid_snap_offset.x);
+            if (y === -1 && this.m_dir == "vertical")
+                y = this.forced_page_y_to_y(grid_snap_offset.x);
+            if (x !== -1 && y !== -1)
             {
-                let x: number = this.page_x_to_x(grid_snap_offset.x),
-                    y: number = this.page_y_to_y(grid_snap_offset.y);
-                if (x === -1  && this.m_dir == "horizontal")
-                    x = this.forced_page_x_to_x(grid_snap_offset.x);
-                if (y === -1 && this.m_dir == "vertical")
-                    y = this.forced_page_y_to_y(grid_snap_offset.x);
-                if (x !== -1 && y !== -1)
+                const state = this.m_state.tiles.get(grid_snap_params.tile);
+                if (this.m_rows.sizeFreeAt(x, y, state.size))
                 {
-                    const state = this.m_state.tiles.get(grid_snap_params.tile);
-                    if (this.m_rows.sizeFreeAt(x, y, state.size))
-                    {
-                        const btn = grid_snap_tile_button;
-                        const { new_x, new_y } = this.put_tile(state.size, x, y);
-                        this.set_real_position(grid_snap_params.tile, new_x, new_y);
+                    const btn = grid_snap_tile_button;
+                    const { new_x, new_y } = this.put_tile(state.size, x, y);
+                    this.set_real_position(grid_snap_params.tile, new_x, new_y);
 
-                        // Group ID
-                        const group_id = "auto$" + random_hex_large();
+                    // Group ID
+                    const group_id = "auto$" + random_hex_large();
 
-                        // Create label div
-                        const label_div = this.addGroup({
-                            id: group_id,
-                            index: -1,
-                            label: "",
-                        });
+                    // Create label div
+                    const label_div = this.addGroup({
+                        id: group_id,
+                        index: -1,
+                        label: "",
+                    });
 
-                        state.group = group_id;
-                        state.x = new_x;
-                        state.y = new_y;
+                    state.group = group_id;
+                    state.x = new_x;
+                    state.y = new_y;
 
-                        // Position and size group label
-                        const { x: label_x, y: label_y, width: label_w } = this.put_label();
-                        label_div.style.translate = `${label_x / this.m_rem}rem ${label_y / this.m_rem}rem`;
-                        label_div.style.width = `${label_w / this.m_rem}rem`;
-                        label_div.style.height = `${this.m_label_height}rem`;
-                        label_divs.push(label_div);
+                    // Position and size group label
+                    const { x: label_x, y: label_y, width: label_w } = this.put_label();
+                    label_div.style.translate = `${label_x / this.m_rem}rem ${label_y / this.m_rem}rem`;
+                    label_div.style.width = `${label_w / this.m_rem}rem`;
+                    label_div.style.height = `${this.m_label_height}rem`;
+                    label_divs.push(label_div);
 
-                        const group_state = this.m_state.groups.get(group_id);
+                    const group_state = this.m_state.groups.get(group_id);
 
-                        // Enter label text
-                        label_div.innerText = group_state.label;
-                    }
-                    grid_snap_offset = null;
+                    // Enter label text
+                    label_div.innerText = group_state.label;
                 }
+                grid_snap_offset = null;
             }
+        }
 
         this.m_tiles.clear();
         this.m_rows = null;
