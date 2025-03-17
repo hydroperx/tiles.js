@@ -16,7 +16,7 @@
     "react": ">=18.3.1"
   },
   "dependencies": {
-    "com.hydroper.tileexpert": "file:..",
+    "com.hydroper.livetilebase": "file:..",
     "@types/node": "^22.13.4"
   }
 }

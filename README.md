@@ -1,11 +1,6 @@
-# TileExpert
+# LiveTileBase
 
-Base implementation for Windows 8 like live tiles in HTML5. Features:
-
-- Custom minimum tile sizes
-- Floating tiles
-- Groups
-- Drag-n-drop
+Base implementation for Windows 8 like live tiles in HTML5.:
 
 Specifications:
 
@@ -21,9 +16,9 @@ Specifications:
 ## Getting started
 
 ```ts
-import { TileExpert } from "com.hydroper.tileexpert";
+import { LiveTileBase } from "com.hydroper.livetilebase";
 
-const tile_expert = new TileExpert({
+const live_tile_base = new LiveTileBase({
     // Container.
     element,
     // The direction of the tile container.
@@ -51,14 +46,14 @@ const tile_expert = new TileExpert({
 });
 
 // Adding groups
-const label_div = tile_expert.addGroup({
+const label_div = live_tile_base.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
 });
 
 // Adding tiles
-const button = tile_expert.addTile({
+const button = live_tile_base.addTile({
     id: "tile1",
     group: "group1",
     // Horizontal position in small tiles.
@@ -70,5 +65,5 @@ const button = tile_expert.addTile({
 });
 
 // Disposal
-tile_expert.destroy();
+live_tile_base.destroy();
 ```

@@ -7,15 +7,15 @@ import { RemObserver } from "./utils/RemObserver";
 import { TileSize$widthheight, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 import { random_hex_large } from "./utils/random";
 import { Rows } from "./Rows";
-import { TileExpertState } from "./TileExpertState";
+import { LiveTileBaseState } from "./LiveTileBaseState";
 import { draggableHitSide } from "./utils/rect";
 
 export { type TileSize } from "./enum/TileSize";
-export * from "./TileExpertState";
+export * from "./LiveTileBaseState";
 
-export class TileExpert
+export class LiveTileBase
 {
-    private m_state: TileExpertState;
+    private m_state: LiveTileBaseState;
     private m_draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 
     private m_container: HTMLElement;
@@ -148,14 +148,14 @@ export class TileExpert
         this.m_rearrange_timeout = -1;
 
         // Set state
-        this.m_state = new TileExpertState();
+        this.m_state = new LiveTileBaseState();
 
         // Update pixel measurements
         this.update_px();
     }
 
     /**
-     * Destroys the `TileExpert` instance disposing
+     * Destroys the `LiveTileBase` instance disposing
      * of any observers and removing the container from the DOM.
      */
     destroy()
@@ -171,9 +171,9 @@ export class TileExpert
     }
 
     /**
-     * Loads a state in the `TileExpert` instance.
+     * Loads a state in the `LiveTileBase` instance.
      */
-    load(state: TileExpertState): void
+    load(state: LiveTileBaseState): void
     {
         for (const [id, group] of state.groups)
         {
@@ -196,9 +196,9 @@ export class TileExpert
     }
 
     /**
-     * Returns the state of the `TileExpert` instance.
+     * Returns the state of the `LiveTileBase` instance.
      */
-    save(): TileExpertState
+    save(): LiveTileBaseState
     {
         return this.m_state.clone();
     }
@@ -297,7 +297,7 @@ export class TileExpert
         // Drag vars
         let drag_start: [number, number] | null = null;
         let hit_drag_start: [number, number] | null = null;
-        let previous_state: TileExpertState | null = null;
+        let previous_state: LiveTileBaseState | null = null;
         let active_tiles_hit = false;
 
         // Setup draggable

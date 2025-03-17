@@ -1,8 +1,8 @@
-import { TileExpert } from "com.hydroper.tileexpert";
+import { LiveTileBase } from "com.hydroper.livetilebase";
 
 const container = document.querySelector("#container")!;
 
-const tile_expert = new TileExpert({
+const live_tile_base = new LiveTileBase({
     element: container,
     direction: "horizontal",
     labelClassName: "label",
@@ -15,13 +15,13 @@ const tile_expert = new TileExpert({
     scrollNode: undefined,
 });
 
-tile_expert.addGroup({
+live_tile_base.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
 });
 
-const tile1 = tile_expert.addTile({
+const tile1 = live_tile_base.addTile({
     id: "tile1",
     group: "group1",
     x: 0,
@@ -30,7 +30,7 @@ const tile1 = tile_expert.addTile({
 });
 tile1.style.background = "red";
 
-const tile2 = tile_expert.addTile({
+const tile2 = live_tile_base.addTile({
     id: "tile2",
     group: "group1",
     x: 0,
@@ -39,13 +39,13 @@ const tile2 = tile_expert.addTile({
 });
 tile2.style.background = "green";
 
-tile_expert.addGroup({
+live_tile_base.addGroup({
     id: "group2",
     index: 1,
     label: "Group 2",
 });
 
-const tile3 = tile_expert.addTile({
+const tile3 = live_tile_base.addTile({
     id: "tile3",
     group: "group2",
     x: 0,
