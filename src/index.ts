@@ -28,6 +28,7 @@ export class TileExpert
     private m_label_height: number;
     private m_max_width: number;
     private m_max_height: number;
+    private m_tile_transition: string;
     private m_scroll_node: HTMLElement;
 
     private m_rem_observer: RemObserver;
@@ -125,6 +126,7 @@ export class TileExpert
         this.m_label_height = options.labelHeight;
         this.m_max_width = options.maxWidth ?? Infinity;
         this.m_max_height = options.maxHeight ?? Infinity;
+        this.m_tile_transition = options.tileTransition ?? "";
         this.m_scroll_node = options.scrollNode as HTMLElement;
 
         this.m_container.style.position = "relative";
@@ -279,6 +281,9 @@ export class TileExpert
             group,
         });
 
+        const normal_transition = `${this.m_tile_transition} translate 0.2s ease-out`;
+        const dragging_transition = `${this.m_tile_transition}`;
+
         const [w_rem, h_rem] = this.get_tile_size_rem(size);
         const button = document.createElement("button");
         button.setAttribute("data-id", id);
@@ -286,6 +291,7 @@ export class TileExpert
         button.style.position = "absolute";
         button.style.width = `${w_rem}rem`;
         button.style.height = `${h_rem}rem`;
+        button.style.transition = normal_transition;
         this.m_container.appendChild(button);
 
         // Drag vars
@@ -299,12 +305,13 @@ export class TileExpert
             {
                 drag_start = [x, y];
                 previous_state = this.m_state.clone();
-                button.style.transform = "";
+                button.style.transition = dragging_transition;
             },
             onDrag: (el, x, y, evt) =>
             {
                 if (drag_start === null)
                 {
+                    button.style.transition = normal_transition;
                     button.style.inset = "";
                     return;
                 }
@@ -342,6 +349,7 @@ export class TileExpert
         
                 drag_start = null;
                 set_dragging(false);
+                button.style.transition = normal_transition;
 
                 // Move tile properly
                 if (active_tiles_hit)
