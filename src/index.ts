@@ -986,7 +986,7 @@ export class TileExpert
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_w, wide_w } = this.m_tile_widthheight_px;
-        const radius = 0;
+        const radius = small_w / 2;
         if (x < group_x - radius) return -1;
         let w = this.m_rows.width == 0 ? 0 : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
         w = Math.max(w, wide_w);
@@ -1006,7 +1006,7 @@ export class TileExpert
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_w } = this.m_tile_widthheight_px;
-        const radius = small_w;
+        const radius = small_w / 2;
         if (x < group_x - radius) return -1;
         for (let gx = group_x, j = 0; gx < 0x7FFFFF; j++)
         {
@@ -1023,9 +1023,10 @@ export class TileExpert
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_h } = this.m_tile_widthheight_px;
         const group_y = this.m_label_height * this.m_rem;
-        if (y < group_y) return -1;
+        const radius = small_h / 2;
+        if (y < group_y - radius) return -1;
         const h = this.m_rows.max_height == 0 ? 0: (this.m_rows.max_height * small_h) * ((this.m_rows.max_height - 1) * tile_gap_px);
-        if (y > group_y + h) return -1;
+        if (y > group_y + h + radius) return -1;
         for (let gy = group_y, j = 0, lim = group_y + h; gy < lim; j++)
         {
             if (y < gy + small_h / 2) return j;
