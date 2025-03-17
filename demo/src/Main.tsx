@@ -33,8 +33,8 @@ tile1.style.background = "red";
 const tile2 = tile_expert.addTile({
     id: "tile2",
     group: "group1",
-    x: 4,
-    y: 0,
+    x: 0,
+    y: 4,
     size: "wide",
 });
 tile2.style.background = "green";

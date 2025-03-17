@@ -124,6 +124,8 @@ export class TileExpert
         this.m_max_height = options.maxHeight ?? Infinity;
         this.m_scroll_node = options.scrollNode as HTMLElement;
 
+        this.m_container.style.position = "relative";
+
         this.m_tile_widthheight_rem.small_w = this.m_small_size;
         this.m_tile_widthheight_rem.small_h = this.m_small_size;
         this.m_tile_widthheight_rem.medium_w = this.m_small_size * 2 + this.m_tile_gap;
@@ -131,7 +133,7 @@ export class TileExpert
         this.m_tile_widthheight_rem.wide_w = this.m_tile_widthheight_rem.medium_w * 2 + this.m_tile_gap;
         this.m_tile_widthheight_rem.wide_h = this.m_tile_widthheight_rem.medium_w;
         this.m_tile_widthheight_rem.large_w = this.m_tile_widthheight_rem.wide_w;
-        this.m_tile_widthheight_rem.large_h = this.m_tile_widthheight_rem.wide_h;
+        this.m_tile_widthheight_rem.large_h = this.m_tile_widthheight_rem.wide_w;
 
         // Observe the "rem" unit size
         this.m_rem_observer = new RemObserver(val => {
@@ -217,6 +219,7 @@ export class TileExpert
         const div = document.createElement("div");
         div.setAttribute("data-id", id);
         div.classList.add(this.m_label_class_name);
+        div.style.position = "absolute";
         this.m_container.appendChild(div);
 
         // Rearrange
@@ -271,6 +274,7 @@ export class TileExpert
         const button = document.createElement("button");
         button.setAttribute("data-id", id);
         button.classList.add(this.m_tile_class_name);
+        button.style.position = "absolute";
         button.style.width = `${w_rem}rem`;
         button.style.height = `${h_rem}rem`;
         this.m_container.appendChild(button);
@@ -383,6 +387,10 @@ export class TileExpert
             }
 
             const this_group_tiles: HTMLButtonElement[] = [];
+
+            // Populate tile calculus
+            this.m_tiles.clear();
+            this.populate_tiles(tiles);
 
             // Position and size tiles
             for (const tile of tiles)
@@ -663,8 +671,6 @@ export class TileExpert
         const shifting_tile_button = tiles.find(t => t.getAttribute("data-id") == to_shift);
         if (!shifting_tile_button) return;
 
-        // Populate tiles
-        this.populate_tiles(tiles);
         this.contribute_calc_tile(place_taker_button);
 
         // Make sure to insert place_taker into the group that
