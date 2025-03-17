@@ -110,6 +110,8 @@ export class TileExpert
          */
         scrollNode?: Element,
     }) {
+        assert(options.direction == "horizontal", "Vertical direction not supported currently.");
+
         this.m_container = options.element as HTMLElement;
         this.m_dir = options.direction;
         this.m_label_class_name = options.labelClassName;
@@ -255,22 +257,40 @@ export class TileExpert
     {
         assert(this.m_state.groups.has(group), `Group ${group} does not exist.`);
         assert(!this.m_state.tiles.has(id), `Duplicate tile ID: ${id}.`);
+        size ??= "small";
+        x ??= 0;
+        y ??= 0;
         this.m_state.tiles.set(id, {
-            size: size ?? "small",
-            x: x ?? 0,
-            y: y ?? 0,
+            size,
+            x,
+            y,
             group,
         });
 
+        const [w_rem, h_rem] = this.get_tile_size_rem(size);
         const button = document.createElement("button");
         button.setAttribute("data-id", id);
         button.classList.add(this.m_tile_class_name);
+        button.style.width = `${w_rem}rem`;
+        button.style.height = `${h_rem}rem`;
         this.m_container.appendChild(button);
 
         // Rearrange
         this.rearrange_delayed();
 
         return button;
+    }
+
+    private get_tile_size_rem(size: TileSize): [number, number]
+    {
+        const r = this.m_tile_widthheight_rem;
+        switch (size)
+        {
+            case "small": return [r.small_w, r.small_h];
+            case "medium": return [r.medium_w, r.medium_h];
+            case "wide": return [r.wide_w, r.wide_h];
+            case "large": return [r.large_w, r.large_h];
+        }
     }
 
     // Updates pixel measurements.
@@ -297,10 +317,12 @@ export class TileExpert
     }
 
     private rearrange_immediate(rearrange_options: RearrangeOptions = {}) {
+        if (this.m_rearrange_timeout != -1)
+            window.clearTimeout(this.m_rearrange_timeout);
         this.m_rearrange_timeout = -1;
 
         // Group-label divs
-        const label_divs: HTMLDivElement[] = Array.from(this.m_container.querySelectorAll(this.m_label_class_name)) as HTMLDivElement[];
+        const label_divs: HTMLDivElement[] = Array.from(this.m_container.querySelectorAll("." + this.m_label_class_name)) as HTMLDivElement[];
 
         // Sort label divs
         label_divs.sort((a, b) => {
@@ -316,7 +338,7 @@ export class TileExpert
         this.m_group_y = this.m_label_height * this.m_rem;
 
         // Retrieve tile buttons
-        const tiles = Array.from(this.m_container.querySelectorAll(this.m_tile_class_name)) as HTMLButtonElement[];
+        const tiles = Array.from(this.m_container.querySelectorAll("." + this.m_tile_class_name)) as HTMLButtonElement[];
 
         // Shifting parameters
         const shift_params = rearrange_options?.shift ?
@@ -547,7 +569,7 @@ export class TileExpert
         }
 
         const button = this.m_tiles.get(id)?.button;
-        if (button.getAttribute("data-dragging") != "true")
+        if (button && button.getAttribute("data-dragging") != "true")
         {
             const real_x = (this.m_group_x / rem) + (x * small_w) + (x * tile_gap_rem);
             const real_y = (this.m_group_y / rem) + (y * small_h) + (y * tile_gap_rem);

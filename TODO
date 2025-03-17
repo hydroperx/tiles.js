@@ -3,6 +3,7 @@
   - [ ] and tiles
 - [ ] Drag-n-drop
 - [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
+- [ ] Dispose of tile draggables in `destroy()`
 
 # Changes
 

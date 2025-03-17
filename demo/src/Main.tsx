@@ -42,7 +42,7 @@ tile2.style.background = "green";
 tile_expert.addGroup({
     id: "group2",
     index: 1,
-    label: "Group 1",
+    label: "Group 2",
 });
 
 const tile3 = tile_expert.addTile({
