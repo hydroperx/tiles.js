@@ -985,7 +985,7 @@ export class TileExpert
         const { m_group_x: group_x } = this;
         const { m_tile_gap_px: tile_gap_px } = this;
         const { small_w, wide_w } = this.m_tile_widthheight_px;
-        const radius = small_w;
+        const radius = 0;
         if (x < group_x - radius) return -1;
         const w = this.m_rows.width == 0 ? wide_w : (this.m_rows.width * small_w) + ((this.m_rows.width - 1) * tile_gap_px);
         if (x > group_x + w + radius) return -1;
