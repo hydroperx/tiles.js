@@ -13,7 +13,7 @@ export function get_size_height_small(size: TileSize): number
     return size == "large" ? 4 : size == "wide" ? 2 : size == "medium" ? 2 : 1;
 }
 
-export type TileSize$widthheight = {
+export type TileSizeOfResolution = {
     small_w: number,
     small_h: number,
     medium_w: number,

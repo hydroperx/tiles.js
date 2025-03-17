@@ -1,3 +1,9 @@
+Refactor:
+
+- [ ] Layouts: adding, removing, resizing or moving tiles should influence in the offset XYrem coordinates of the next groups (including their labels and tiles).
+
+Misc:
+
 - [ ] Control the cascading `transition`
   - [ ] of labels
   - [ ] and tiles
@@ -18,11 +24,11 @@
 
 # API
 
-- [x] Allow adding tiles
+- [ ] Allow adding tiles
 - [ ] Allow resizing tiles
 - [ ] Allow removing tiles
   - [ ] Destroy and unassign draggable
-- [x] Allow adding groups
+- [ ] Allow adding groups
 - [ ] Allow renaming groups
 - [ ] Allow removing groups
 - [ ] Allow checking whether a group exists or not

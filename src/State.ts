@@ -3,19 +3,19 @@ import { TileSize } from "./enum/TileSize";
 /**
  * The state of a `Tiles` component, containing positions and labels.
  */
-export class LiveTileBaseState
+export class State
 {
     groups: Map<string, { index: number, label: string }> = new Map();
     tiles: Map<string, { size: TileSize, x: number, y: number, group: string }> = new Map();
 
     /**
-     * Constructs `LiveTileBaseState` from JSON. The `object` argument
+     * Constructs `State` from JSON. The `object` argument
      * may be a JSON serialized string or a plain object.
      */
-    static fromJSON(object: any): LiveTileBaseState
+    static fromJSON(object: any): State
     {
         object = typeof object === "string" ? JSON.parse(object) : object;
-        const r = new LiveTileBaseState();
+        const r = new State();
         for (const id in object.groups)
         {
             const o1 = object.groups[id];
@@ -72,7 +72,7 @@ export class LiveTileBaseState
         this.tiles.clear();
     }
 
-    set(state: LiveTileBaseState): void
+    set(state: State): void
     {
         for (const [id, group] of state.groups)
         {
@@ -92,9 +92,9 @@ export class LiveTileBaseState
         }
     }
 
-    clone(): LiveTileBaseState
+    clone(): State
     {
-        const r = new LiveTileBaseState();
+        const r = new State();
         r.set(this);
         return r;
     }

@@ -1,8 +1,8 @@
-import { LiveTileBase } from "com.hydroper.livetilebase";
+import { LiveTiles } from "com.hydroper.livetilebase";
 
 const container = document.querySelector("#container")!;
 
-const live_tile_base = new LiveTileBase({
+const live_tiles = new LiveTiles({
     element: container,
     direction: "horizontal",
     labelClassName: "label",
@@ -15,13 +15,13 @@ const live_tile_base = new LiveTileBase({
     scrollNode: undefined,
 });
 
-live_tile_base.addGroup({
+live_tiles.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
 });
 
-const tile1 = live_tile_base.addTile({
+const tile1 = live_tiles.addTile({
     id: "tile1",
     group: "group1",
     x: 0,
@@ -30,7 +30,7 @@ const tile1 = live_tile_base.addTile({
 });
 tile1.style.background = "red";
 
-const tile2 = live_tile_base.addTile({
+const tile2 = live_tiles.addTile({
     id: "tile2",
     group: "group1",
     x: 0,
@@ -39,13 +39,13 @@ const tile2 = live_tile_base.addTile({
 });
 tile2.style.background = "green";
 
-live_tile_base.addGroup({
+live_tiles.addGroup({
     id: "group2",
     index: 1,
     label: "Group 2",
 });
 
-const tile3 = live_tile_base.addTile({
+const tile3 = live_tiles.addTile({
     id: "tile3",
     group: "group2",
     x: 0,

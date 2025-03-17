@@ -1,4 +1,4 @@
-# LiveTileBase
+# LiveTiles
 
 Base implementation for Windows 8 like live tiles in HTML5.:
 
@@ -16,9 +16,9 @@ Specifications:
 ## Getting started
 
 ```ts
-import { LiveTileBase } from "com.hydroper.livetilebase";
+import { LiveTiles } from "com.hydroper.livetilebase";
 
-const live_tile_base = new LiveTileBase({
+const live_tiles = new LiveTiles({
     // Container.
     element,
     // The direction of the tile container.
@@ -35,7 +35,7 @@ const live_tile_base = new LiveTileBase({
     groupGap: 3,
     // The height of group labels, in cascading "rem" units.
     labelHeight: 2,
-    // Maximum width in small tiles.
+    // Maximum width in small tiles. Effective only in horizontal containers.
     maxWidth: undefined,
     // Maximum height in small tiles.
     maxHeight: 6,
@@ -46,14 +46,14 @@ const live_tile_base = new LiveTileBase({
 });
 
 // Adding groups
-const label_div = live_tile_base.addGroup({
+const label_div = live_tiles.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
 });
 
 // Adding tiles
-const button = live_tile_base.addTile({
+const button = live_tiles.addTile({
     id: "tile1",
     group: "group1",
     // Horizontal position in small tiles.
@@ -65,5 +65,5 @@ const button = live_tile_base.addTile({
 });
 
 // Disposal
-live_tile_base.destroy();
+live_tiles.destroy();
 ```
