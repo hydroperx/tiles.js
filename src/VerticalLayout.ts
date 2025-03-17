@@ -37,4 +37,9 @@ export class VerticalLayout extends Layout
             y += this.$._group_gap + this.$._label_height;
         }
     }
+
+    override shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void
+    {
+        throw new Error("not implemented");
+    }
 }

@@ -20,6 +20,8 @@ export abstract class Layout
     }
 
     abstract readjust_groups(): void;
+
+    abstract shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void;
 }
 
 export class Group
@@ -126,16 +128,6 @@ export class Group
             }
         }
         return true;
-    }
-
-    immediately_above(titleId: string): string[]
-    {
-        fixme();
-    }
-
-    immediately_below(titleId: string): string[]
-    {
-        fixme();
     }
 
     private _resize(): void
