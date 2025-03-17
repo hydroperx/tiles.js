@@ -1,12 +1,14 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 import getOffset from "getoffset";
+import Draggable from "com.hydroper.domdraggable";
 
 import { RemObserver } from "./utils/RemObserver";
 import { TileSize$widthheight, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 import { random_hex_large } from "./utils/random";
 import { Rows } from "./Rows";
 import { TileExpertState } from "./TileExpertState";
+import { getRectHitSide } from "./utils/rect";
 
 export { type TileSize } from "./enum/TileSize";
 export * from "./TileExpertState";
@@ -14,6 +16,7 @@ export * from "./TileExpertState";
 export class TileExpert
 {
     private m_state: TileExpertState;
+    private m_draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 
     private m_container: HTMLElement;
     private m_dir: "horizontal" | "vertical";
@@ -155,6 +158,12 @@ export class TileExpert
      */
     destroy()
     {
+        for (const btn of Array.from(this.m_container.querySelectorAll("." + this.m_tile_class_name)) as HTMLButtonElement[])
+        {
+            const draggable = this.m_draggables.get(btn);
+            if (draggable) draggable.destroy();
+            this.m_draggables.delete(btn);
+        }
         this.m_rem_observer.cleanup();
         this.m_container.remove();
     }
@@ -278,6 +287,114 @@ export class TileExpert
         button.style.width = `${w_rem}rem`;
         button.style.height = `${h_rem}rem`;
         this.m_container.appendChild(button);
+
+        // Drag vars
+        let drag_start: [number, number] | null = null;
+        let previous_state: TileExpertState | null = null;
+        let active_tiles_hit = false;
+
+        // Setup draggable
+        const draggable = new Draggable(button, {
+            onDragStart: (el, x, y, evt) =>
+            {
+                drag_start = [x, y];
+                previous_state = this.m_state.clone();
+                button.style.transform = "";
+            },
+            onDrag: (el, x, y, evt) =>
+            {
+                if (drag_start === null)
+                {
+                    button.style.inset = "";
+                    return;
+                }
+        
+                const diff_x = drag_start[0] - x
+                    , diff_y = drag_start[1] - y;
+                if (diff_x > -5 && diff_x <= 5 && diff_y > -5 && diff_y <= 5)
+                {
+                    return;
+                }
+                set_dragging(true);
+        
+                // Shift tiles as needed.
+                const hit = hits_another_tile();
+                if (hit)
+                {
+                    this.rearrange_immediate({ shift: true, to_shift: hit.tile, place_taker: id, place_side: hit.side});
+                    active_tiles_hit = true;
+                }
+                else
+                {
+                    this.m_state.clear();
+                    this.m_state.set(previous_state);
+                    this.rearrange_immediate({ restore: true, restore_except: id });
+                    active_tiles_hit = false;
+                }
+            },
+            onDragEnd: (el, x, y, evt) =>
+            {
+                if (drag_start === null)
+                {
+                    button.style.inset = "";
+                    return;
+                }
+        
+                drag_start = null;
+                set_dragging(false);
+
+                // Move tile properly
+                if (active_tiles_hit)
+                {
+                    button.style.inset = "";
+                    this.rearrange_immediate();
+                }
+                else
+                {
+                    // Snap tile to free space.
+                    this.rearrange_immediate({ grid_snap: true, grid_snap_tile: id });
+        
+                    button.style.inset = "";
+                }
+            },
+        });
+        this.m_draggables.set(button, draggable);
+
+        // Set dragging state
+        const set_dragging = (value: boolean): void =>
+        {
+            button.setAttribute("data-dragging", value.toString());
+        };
+
+        // Detect whether this tile hits another
+        const hits_another_tile = (): { tile: string, side: "left" | "right" | "top" | "bottom" } | null =>
+        {
+            const { small_w } = this.m_tile_widthheight_px;
+            const tiles = Array.from(this.m_container.querySelectorAll("." + this.m_tile_class_name)) as HTMLButtonElement[];
+            const i = tiles.indexOf(button);
+            if (i == -1) return null;
+            tiles.splice(i, 1);
+            const r = button.getBoundingClientRect();
+            for (const tile of tiles)
+            {
+                const rect = tile.getBoundingClientRect();
+                const place_side = getRectHitSide(rect, r);
+                if (place_side === null)
+                {
+                    continue;
+                }
+
+                // Only hits if a large enough area overlaps.
+                const overlap = getRectangleOverlap(rect, r);
+                if (overlap && overlap.area < (small_w * 1.5))
+                {
+                    continue;
+                }
+
+                if (overlap) return { tile: tile.getAttribute("data-id"), side: place_side };
+            }
+            return null;
+        };
 
         // Rearrange
         this.rearrange_delayed();

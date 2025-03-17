@@ -21,6 +21,7 @@
 - [x] Allow adding tiles
 - [ ] Allow resizing tiles
 - [ ] Allow removing tiles
+  - [ ] Destroy and unassign draggable
 - [x] Allow adding groups
 - [ ] Allow renaming groups
 - [ ] Allow removing groups
