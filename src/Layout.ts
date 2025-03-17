@@ -7,96 +7,22 @@ import { TileSizeOfResolution, get_size_width_small, get_size_height_small, Tile
 export abstract class Layout
 {
     // sorted groups.
-    protected groups: Group[];
+    public groups: Group[];
+
+    public horizontal: boolean;
 
     constructor(
         public $: LiveTiles,
         public max_width: number,
         public max_height: number
     ) {
+        this.horizontal = $._dir == "horizontal";
     }
 
     abstract readjust_groups(): void;
 }
 
-export class HorizontalLayout extends Layout
-{
-    constructor(
-        $: LiveTiles,
-        max_width: number,
-        max_height: number
-    ) {
-        super($, max_width, max_height);
-    }
-
-    override readjust_groups(): void
-    {
-        let x = 0,
-            y = this.$._label_height;
-        for (const group of this.groups)
-        {
-            const label_x = x;
-            const w = group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap;
-            x += w;
-
-            // position each tile
-            for (const tile of group.tiles)
-            {
-                const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
-                const btn_y = y + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
-                tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
-            }
-
-            // position the label
-            group.label.style.translate = `${label_x}rem ${y}rem`;
-            group.label.style.width = `${w}rem`;
-            group.label.style.height = `${this.$._label_height}rem`;
-
-            // move on to next group
-            x += this.$._group_gap;
-        }
-    }
-}
-
-export class VerticalLayout extends Layout
-{
-    constructor(
-        $: LiveTiles,
-        max_width: number,
-        max_height: number
-    ) {
-        super($, max_width, max_height);
-    }
-
-    override readjust_groups(): void
-    {
-        let y = 0;
-        for (const group of this.groups)
-        {
-            const label_y = y;
-            const h = group.height * this.$._tile_size.small_h + group.height * this.$._tile_gap;
-            y += h;
-
-            // position each tile
-            for (const tile of group.tiles)
-            {
-                const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
-                const btn_y = this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
-                tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
-            }
-
-            // position the label
-            group.label.style.translate = `0rem ${label_y}rem`;
-            group.label.style.width = `100%`;
-            group.label.style.height = `${this.$._label_height}rem`;
-
-            // move on to next group
-            y += this.$._group_gap + this.$._label_height;
-        }
-    }
-}
-
-class Group
+export class Group
 {
     // random order tiles
     tiles: Tile[];
@@ -118,7 +44,7 @@ class Group
 
     add(tile: Tile): boolean
     {
-        if (this.$ instanceof HorizontalLayout)
+        if (this.$.horizontal)
         {
             a: for (;;)
             {
@@ -189,17 +115,25 @@ class Group
         return false;
     }
 
-    willFit(x: number, y: number, w: number, h: number): boolean
+    will_fit(x: number, y: number, w: number, h: number): boolean
+    {
+        for (const other of this.tiles)
+        {
+            const overlap = getRectangleOverlap({ x, y, width: w, height: h }, other);
+            if (overlap && overlap.area != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    immediately_above(titleId: string): string[]
     {
         fixme();
     }
 
-    immediatelyAbove(titleId: string): string[]
-    {
-        fixme();
-    }
-
-    immediatelyBelow(titleId: string): string[]
+    immediately_below(titleId: string): string[]
     {
         fixme();
     }

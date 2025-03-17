@@ -8,7 +8,9 @@ import { TileSizeOfResolution, get_size_width_small, get_size_height_small, Tile
 import { random_hex_large } from "./utils/random";
 import { State } from "./State";
 import { draggableHitSide } from "./utils/rect";
-import { HorizontalLayout, Layout, VerticalLayout } from "./Layout";
+import { Layout } from "./Layout";
+import { HorizontalLayout } from "./HorizontalLayout";
+import { VerticalLayout } from "./VerticalLayout";
 
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
