@@ -12,9 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "peerDependencies": {
-    "react": ">=18.3.1"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "com.hydroper.livetilebase": "file:..",
     "@types/node": "^22.13.4"

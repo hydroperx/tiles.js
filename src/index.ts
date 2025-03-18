@@ -1,11 +1,9 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
-import getOffset from "getoffset";
 import Draggable from "com.hydroper.domdraggable";
 
 import { RemObserver } from "./utils/RemObserver";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
-import { random_hex_large } from "./utils/random";
 import { State } from "./State";
 import { draggableHitSide } from "./utils/rect";
 import { Group, Layout } from "./Layout";
@@ -192,6 +190,8 @@ export class LiveTiles
 
     /**
      * Adds a group and returns its label's `div` element.
+     * 
+     * If `index` is -1 (default), inserts the group at the end.
      */
     addGroup({
         id,
@@ -429,7 +429,7 @@ export class LiveTiles
         };
 
         // Rearrange
-        this.readjust_groups_delayed();
+        this._readjust_groups_delayed();
 
         return button;
     }
@@ -446,7 +446,8 @@ export class LiveTiles
         }
     }
 
-    private readjust_groups_delayed(): void
+    /** @private */
+    _readjust_groups_delayed(): void
     {
         if (this._readjust_timeout !== -1)
             window.clearTimeout(this._readjust_timeout);

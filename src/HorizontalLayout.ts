@@ -4,6 +4,7 @@ import { mouse } from "getoffset";
 import { Group, Layout } from "./Layout";
 import type { LiveTiles } from ".";
 import { get_size_height_small, get_size_width_small } from "./enum/TileSize";
+import { random_hex_large } from "./utils/random";
 
 export class HorizontalLayout extends Layout
 {
@@ -17,7 +18,49 @@ export class HorizontalLayout extends Layout
 
     override snap_to_grid(tile: string, event: Event): void
     {
-        fixme();
+        const { clientX: pointer_x, clientY: pointer_y } = event as MouseEvent;
+        const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
+        const tile_data = prev_group.tiles.find(t => t.id == tile);
+
+        let x = this.client_x_to_x(pointer_x),
+            y = this.client_y_to_y(pointer_y);
+        
+        if (!x)
+            x = this.forced_client_x_to_x(pointer_x);
+
+        if (x && y)
+        {
+            if (x.group == "")
+            {
+                // insert new group
+                const group_id = "auto$" + random_hex_large();
+                this.$.addGroup({
+                    id: group_id,
+                    index: -1,
+                    label: "",
+                });
+                const new_group = this.groups.find(g => g.id == group_id);
+
+                // Insert tile
+                prev_group.remove(tile);
+                tile_data.x = x.x;
+                tile_data.y = y.y;
+                new_group.add(tile_data);
+            }
+            else
+            {
+                const new_group = this.groups.find(g => g.id == x.group);
+                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                {
+                    prev_group.remove(tile);
+                    tile_data.x = x.x;
+                    tile_data.y = y.y;
+                    new_group.add(tile_data);
+                }
+            }
+        }
+
+        this.$._readjust_groups_delayed();
     }
 
     override client_x_to_x(x: number): { group: string, x: number } | null
@@ -28,6 +71,7 @@ export class HorizontalLayout extends Layout
         const small_w = this.$._small_size * this.$._rem;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
+
         for (const group of this.groups)
         {
             const w = Math.max(
@@ -59,7 +103,6 @@ export class HorizontalLayout extends Layout
         const radius = this.$._small_size * this.$._rem;
         const small_h = this.$._small_size * this.$._rem;
         const tile_gap = this.$._tile_gap * this.$._rem;
-        const group_gap = this.$._group_gap * this.$._rem;
 
         if (y < group_y - radius) return null;
         const h = this.max_height == 0 ? 0 : (this.max_height * small_h) * ((this.max_height - 1) * tile_gap);
@@ -82,6 +125,7 @@ export class HorizontalLayout extends Layout
         const small_w = this.$._small_size * this.$._rem;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
+
         for (const group of this.groups)
         {
             const w = Math.max(
