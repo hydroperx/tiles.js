@@ -475,7 +475,7 @@ export class LiveTiles
     _resize_container(): void
     {
         if (this._dir == "horizontal")
-            this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width * this._rem, this._layout.total_offset_width) + "rem";
-        else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height * this._rem, this._layout.total_offset_height) + "rem";
+            this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width * this._rem, this._layout.total_offset_width * this._rem) + "rem";
+        else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height * this._rem, this._layout.total_offset_height * this._rem) + "rem";
     }
 }
