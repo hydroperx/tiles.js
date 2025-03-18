@@ -125,6 +125,9 @@ export class LiveTiles
         this._tile_size.large_w = this._tile_size.wide_w;
         this._tile_size.large_h = this._tile_size.wide_w;
 
+        this._container.style.width = "100%";
+        this._container.style.height = (this._max_height * this._small_size + this._max_height * this._tile_gap + this._label_height) + "rem";
+
         // Observe the "rem" unit size
         this._rem_observer = new RemObserver(val => {
             this._rem = val;
