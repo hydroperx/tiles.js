@@ -22,6 +22,11 @@ export abstract class Layout
     abstract readjust_groups(): void;
 
     abstract shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void;
+
+    abstract client_x_to_x(x: number): { group: string, x: number } | null;
+    abstract client_y_to_y(y: number): { group: string, y: number } | null;
+    abstract forced_client_x_to_x(x: number): { group: string, x: number } | null;
+    abstract forced_client_y_to_y(y: number): { group: string, y: number } | null;
 }
 
 export class Group
@@ -92,6 +97,11 @@ export class Group
         }
 
         this.tiles.push(tile);
+        
+        // Update state's position
+        const state = this.$.$._state.tiles.get(tile.id);
+        state.x = tile.x;
+        state.y = tile.y;
 
         // Resize
         this._resize();
@@ -117,7 +127,19 @@ export class Group
         return false;
     }
 
-    will_fit(x: number, y: number, w: number, h: number): boolean
+    clear_area(x: number, y: number, w: number, h: number): void
+    {
+        for (const other of this.tiles)
+        {
+            const overlap = getRectangleOverlap({ x, y, width: w, height: h }, other);
+            if (overlap && overlap.area != 0)
+            {
+                this.remove(other.id);
+            }
+        }
+    }
+
+    is_area_available(x: number, y: number, w: number, h: number): boolean
     {
         for (const other of this.tiles)
         {

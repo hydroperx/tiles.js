@@ -26,6 +26,7 @@ Misc:
 
 - [ ] Allow adding tiles
 - [ ] Allow resizing tiles
+  - [ ] Update both state size and tile data width/height
 - [ ] Allow removing tiles
   - [ ] Destroy and unassign draggable
 - [ ] Allow adding groups

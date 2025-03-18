@@ -1,5 +1,9 @@
-import { Layout } from "./Layout";
+import getRectangleOverlap from "rectangle-overlap";
+import { mouse } from "getoffset";
+
+import { Group, Layout } from "./Layout";
 import type { LiveTiles } from ".";
+import { get_size_height_small, get_size_width_small } from "./enum/TileSize";
 
 export class HorizontalLayout extends Layout
 {
@@ -11,6 +15,55 @@ export class HorizontalLayout extends Layout
         super($, max_width, max_height);
     }
 
+    override client_x_to_x(x: number): { group: string, x: number } | null
+    {
+        [x] = mouse({ clientX: x, clientY: 0 }, this.$._container, this.$._scroll_node);
+        let group_x = 0;
+        const radius = this.$._small_size * this.$._rem;
+        const small_w = this.$._small_size * this.$._rem;
+        const tile_gap = this.$._tile_gap * this.$._rem;
+        for (const group of this.groups)
+        {
+            const label_x = x;
+            const w = Math.max(
+                this.$._tile_size.small_w * this.$._rem,
+                group.width * (this.$._tile_size.small_w * this.$._rem) + group.width * (this.$._tile_gap * this.$._rem)
+            );
+
+            if (x < group_x - radius) return null;
+            if (x > group_x + w + radius) continue;
+
+            for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
+            {
+                if (x < gx + small_w / 2) return { group: group.id, x: j };
+                if (j != 0) gx += tile_gap;
+                gx += small_w;
+            }
+
+            // move on to next group
+            group_x += this.$._group_gap + w;
+        }
+
+        return null;
+    }
+
+    override client_y_to_y(y: number): { group: string, y: number } | null
+    {
+        [, y] = mouse({ clientX: 0, clientY: y }, this.$._container, this.$._scroll_node);
+
+        throw new Error("not implemented");
+    }
+
+    override forced_client_x_to_x(x: number): { group: string, x: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
+    override forced_client_y_to_y(y: number): { group: string, y: number } | null
+    {
+        throw new Error("does not make sense");
+    }
+
     override readjust_groups(): void
     {
         let x = 0,
@@ -18,7 +71,7 @@ export class HorizontalLayout extends Layout
         for (const group of this.groups)
         {
             const label_x = x;
-            const w = group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap;
+            const w = Math.max(this.$._tile_size.small_w, group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap);
             x += w;
 
             // position each tile
@@ -53,8 +106,9 @@ export class HorizontalLayout extends Layout
         // Misc vars
         const place_taker_w = get_size_width_small(place_taker_state.size);
         const place_taker_h = get_size_height_small(place_taker_state.size);
-        const to_shift_state = this.m_state.tiles.get(to_shift);
-        const { w: to_shift_w, h: to_shift_h } = this.m_tiles.get(to_shift);
+        const to_shift_state = this.$._state.tiles.get(to_shift);
+        const to_shift_tile = group.tiles.find(t => t.id == to_shift)!;
+        const { width: to_shift_w, height: to_shift_h } = to_shift_tile;
 
         switch (place_side)
         {
@@ -68,12 +122,12 @@ export class HorizontalLayout extends Layout
                 if (!(place_taker_w > to_shift_w || place_taker_h > to_shift_h))
                 {
                     if (
-                        this.m_rows.sizeFreeAt(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_state.size) &&
-                        to_shift_state.x + place_taker_w + to_shift_w < this.m_rows.width
+                        group.is_area_available(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_w, to_shift_h) &&
+                        to_shift_state.x + place_taker_w + to_shift_w < group.width
                     ) {
                         right_available = true;
                     }
-                    if (this.m_rows.sizeFreeAt(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_state.size))
+                    if (group.is_area_available(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_w, to_shift_h))
                     {
                         left_available = true;
                     }
@@ -86,25 +140,38 @@ export class HorizontalLayout extends Layout
                 if (shift_to == "left")
                 {
                     // shift tile to left
-                    const place_taker_new_horizontal = to_shift_state.x;
-                    this.m_rows.clearSize(to_shift_state.x, to_shift_state.y, to_shift_state.size);
-                    this.m_rows.fillSize(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_state.size);
-                    this.set_real_position(to_shift, to_shift_state.x - to_shift_w, to_shift_state.y);
+                    group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
+                    to_shift_tile.x = to_shift_state.x - to_shift_w;
+                    to_shift_tile.y = to_shift_state.y;
+                    group.add(to_shift_tile);
                     place_taker_state.group = this.$._state.tiles.get(to_shift).group;
-                    // remove from previous group and insert into group
-                    fixme();
-                    this.set_real_position(place_taker, place_taker_new_horizontal, to_shift_state.y);
+
+                    // remove from previous group and insert into new group
+                    const place_taker_new_x = to_shift_state.x;
+                    const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
+                    const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                    place_taker_prev_group?.remove(place_taker);
+                    place_taker_tile.x = place_taker_new_x;
+                    place_taker_tile.y = to_shift_state.y;
+                    group.add(place_taker_tile);
                 }
                 else if (shift_to == "right")
                 {
                     // shift tile to right
-                    const place_taker_new_horizontal = to_shift_state.x;
-                    this.m_rows.clearSize(to_shift_state.x, to_shift_state.y, to_shift_state.size);
-                    this.m_rows.fillSize(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_state.size);
-                    this.set_real_position(to_shift, to_shift_state.x + place_taker_w, to_shift_state.y);
-                    this.set_real_position(place_taker, place_taker_new_horizontal, to_shift_state.y);
+                    group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
+                    to_shift_tile.x = to_shift_state.x + place_taker_w;
+                    to_shift_tile.y = to_shift_state.y;
+                    group.add(to_shift_tile);
+
+                    // remove from previous group and insert into new group
+                    const place_taker_new_x = to_shift_state.x;
+                    const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
+                    const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                    place_taker_prev_group?.remove(place_taker);
+                    place_taker_tile.x = place_taker_new_x;
+                    place_taker_tile.y = to_shift_state.y;
+                    group.add(place_taker_tile);
                 }
-                else place_taker_state.group = k_place_taker_group;
 
                 break;
             }
@@ -113,20 +180,23 @@ export class HorizontalLayout extends Layout
                 // shift tiles to bottom recursively.
                 let x = to_shift_state.x,
                     y = to_shift_state.y;
-                if (y + place_taker_h >= this.m_rows.max_height)
+                if (y + place_taker_h >= this.max_height)
                 {
                     return;
                 }
-                this.set_real_position(place_taker, x, y);
 
-                // Set previously taken size to that of place_taker
+                // remove from previous group and insert into new group
+                const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
+                const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                place_taker_prev_group?.remove(place_taker);
+                place_taker_tile.x = x;
+                place_taker_tile.y = y;
+                group.add(place_taker_tile);
+
+                // Initial previously taken size is that of place_taker
                 const prev_taken_h = place_taker_h;
 
-                this.horizontal_container_shift_bottom(
-                    to_shift,
-                    prev_taken_h,
-                    [place_taker]
-                );
+                this.shift_bottom(to_shift, prev_taken_h, [place_taker], group);
                 break;
             }
             case "bottom":
@@ -139,11 +209,74 @@ export class HorizontalLayout extends Layout
                 // in circumstances where there is no free space
                 // (consequently the take placer may also not take any space).
 
-                place_taker_state.group = k_place_taker_group;
                 break;
             }
         }
 
         this.readjust_groups();
+    }
+
+    /**
+     * @param t1 Tile to shift.
+     * @param prev_taken_h Previously taken height
+     */
+    private shift_bottom(
+        t1: string,
+        prev_taken_h: number,
+        prev: string[],
+        group: Group
+    ): void {
+
+        // vars
+        const t1_data = group.tiles.find(t => t.id == t1)!;
+        const { width: t1_w, height: t1_h } = t1_data;
+
+        // shift t1 (x, y)
+        let t1_new_x = t1_data.x,
+            t1_new_y = t1_data.y + prev_taken_h;
+
+        if (!group.is_area_available(t1_new_x, t1_new_y, t1_data.width, t1_data.height))
+        {
+            if (t1_new_y + t1_h >= this.max_height)
+            {
+                t1_new_x += t1_w;
+                t1_new_y = 0;
+            }
+            if (!group.is_area_available(t1_new_x, t1_new_y, t1_data.width, t1_data.height))
+            {
+                // find the next tile(s) to shift bottom.
+                // here it may be like a group of small tiles
+                // to shift together, or one large tile.
+                // (do not look for tiles that are being actively dragged or
+                // tiles that are being shifted already.)
+                const next_tiles: string[] = [];
+                for (const tile of group.tiles)
+                {
+                    const overlap = getRectangleOverlap(
+                        { x: t1_new_x, y: t1_new_y, width: t1_w, height: t1_h },
+                        { x: tile.x, y: tile.y, width: tile.width, height: tile.height }
+                    );
+                    if (overlap && overlap.area != 0 && tile.button.getAttribute("data-dragging") != "true" && prev.indexOf(tile.id) == -1)
+                    {
+                        next_tiles.push(tile.id);
+                    }
+                }
+                for (const t2 of next_tiles)
+                {
+                    const new_prev = prev.slice(0);
+                    new_prev.push(t1);
+                    this.shift_bottom(
+                        t2,
+                        t1_h,
+                        new_prev,
+                        group
+                    );
+                }
+            }
+        }
+        group.remove(t1);
+        t1_data.x = t1_new_x;
+        t1_data.x = t1_new_y;
+        group.add(t1_data);
     }
 }

@@ -11,13 +11,33 @@ export class VerticalLayout extends Layout
         super($, max_width, max_height);
     }
 
+    override client_x_to_x(x: number): { group: string, x: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
+    override client_y_to_y(y: number): { group: string, y: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
+    override forced_client_x_to_x(x: number): { group: string, x: number } | null
+    {
+        throw new Error("does not make sense");
+    }
+
+    override forced_client_y_to_y(y: number): { group: string, y: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
     override readjust_groups(): void
     {
         let y = 0;
         for (const group of this.groups)
         {
             const label_y = y;
-            const h = group.height * this.$._tile_size.small_h + group.height * this.$._tile_gap;
+            const h = Math.max(this.$._tile_size.small_h, group.height * this.$._tile_size.small_h + group.height * this.$._tile_gap);
             y += h;
 
             // position each tile
