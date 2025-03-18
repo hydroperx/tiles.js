@@ -34,8 +34,10 @@ export class LiveTiles
     /** @private */ public _rem_observer: RemObserver;
     /** @private */ public _rem: number;
 
-    /** @private */
-    public _layout: Layout;
+    /** @private */ public _layout: Layout;
+
+    /** @private */ public _resize_observer: ResizeObserver;
+    /** @private */ public _layout_total_width: number;
 
     public _tile_size: TileSizeOfResolution = {
         small_w: 0, small_h: 0,
@@ -140,6 +142,11 @@ export class LiveTiles
         this._layout = this._dir == "horizontal" ?
             new HorizontalLayout(this, this._max_width, this._max_height) :
             new VerticalLayout(this, this._max_width, this._max_height);
+
+        this._resize_observer = new ResizeObserver(() => {
+            this._resize_container();
+        });
+        this._resize_observer.observe(this._container);
     }
 
     /**
@@ -155,6 +162,7 @@ export class LiveTiles
             this._draggables.delete(btn);
         }
         this._rem_observer.cleanup();
+        this._resize_observer.disconnect();
         this._container.remove();
     }
 
@@ -273,7 +281,7 @@ export class LiveTiles
             group,
         });
 
-        const normal_transition = `${this._tile_transition} left 0.2s ease-out, top 0.2s ease-out`;
+        const normal_transition = `${this._tile_transition} translate 0.2s ease-out`;
         const dragging_transition = `${this._tile_transition}`;
 
         const [w, h] = this.get_tile_size(size);
@@ -418,7 +426,6 @@ export class LiveTiles
             {
                 const rect = tile.getBoundingClientRect();
                 const place_side = draggableHitSide(r, rect);
-                console.log(place_side);
                 if (place_side === null)
                 {
                     continue;
@@ -462,5 +469,13 @@ export class LiveTiles
         this._readjust_timeout = window.setTimeout(() => {
             this._layout.readjust_groups();
         }, 10);
+    }
+
+    /** @private */
+    _resize_container(): void
+    {
+        if (this._dir == "horizontal")
+            this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width * this._rem, this._layout.total_offset_width) + "rem";
+        else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height * this._rem, this._layout.total_offset_height) + "rem";
     }
 }

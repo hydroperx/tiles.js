@@ -53,19 +53,20 @@ export class VerticalLayout extends Layout
 
                 const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = y + this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
-                tile.button.style.left = `${btn_x}rem`;
-                tile.button.style.top = `${btn_y}rem`;
+                tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
             }
 
             // position the label
-            group.label.style.left = `0rem`;
-            group.label.style.top = `${label_y}rem`;
+            group.label.style.translate = `0rem ${label_y}rem`;
             group.label.style.width = `100%`;
             group.label.style.height = `${this.$._label_height}rem`;
 
             // move on to next group
             y += h + this.$._group_gap;
         }
+
+        this.total_offset_height = y;
+        this.$._resize_container();
     }
 
     override shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void

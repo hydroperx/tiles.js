@@ -6,10 +6,13 @@ import { TileSizeOfResolution, get_size_width_small, get_size_height_small, Tile
 
 export abstract class Layout
 {
-    // sorted groups.
-    public groups: Group[] = [];
+    total_offset_width: number = 0;
+    total_offset_height: number = 0;
 
-    public horizontal: boolean;
+    // sorted groups.
+    groups: Group[] = [];
+
+    horizontal: boolean;
 
     constructor(
         public $: LiveTiles,
