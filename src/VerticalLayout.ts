@@ -42,6 +42,7 @@ export class VerticalLayout extends Layout
         for (const group of this.groups)
         {
             const label_y = y;
+            y += this.$._label_height
             const h = Math.max(this.$._tile_size.small_h, group.height * this.$._tile_size.small_h + group.height * this.$._tile_gap);
 
             // position each tile
@@ -63,7 +64,7 @@ export class VerticalLayout extends Layout
             group.label.style.height = `${this.$._label_height}rem`;
 
             // move on to next group
-            y += h + this.$._group_gap + this.$._label_height;
+            y += h + this.$._group_gap;
         }
     }
 
