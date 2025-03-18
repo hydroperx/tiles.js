@@ -50,13 +50,62 @@ export class HorizontalLayout extends Layout
     override client_y_to_y(y: number): { group: string, y: number } | null
     {
         [, y] = mouse({ clientX: 0, clientY: y }, this.$._container, this.$._scroll_node);
+        const group_y = this.$._label_height * this.$._rem;
+        const radius = this.$._small_size * this.$._rem;
+        const small_h = this.$._small_size * this.$._rem;
+        const tile_gap = this.$._tile_gap * this.$._rem;
+        const group_gap = this.$._group_gap * this.$._rem;
 
-        throw new Error("not implemented");
+        if (y < group_y - radius) return null;
+        const h = this.max_height == 0 ? 0 : (this.max_height * small_h) * ((this.max_height - 1) * tile_gap);
+        if (y > group_y + h + radius) return null;
+
+        for (let gy = group_y, j = 0, lim = group_y + h; gy < lim; j++)
+        {
+            if (y < gy + small_h / 2) return { group: "", y: j };
+            if (j != 0) gy += tile_gap;
+            gy += small_h;
+        }
+        return { group: "", y: this.max_height };
     }
 
     override forced_client_x_to_x(x: number): { group: string, x: number } | null
     {
-        throw new Error("not implemented");
+        [x] = mouse({ clientX: x, clientY: 0 }, this.$._container, this.$._scroll_node);
+        let group_x = 0;
+        const radius = this.$._small_size * this.$._rem;
+        const small_w = this.$._small_size * this.$._rem;
+        const tile_gap = this.$._tile_gap * this.$._rem;
+        const group_gap = this.$._group_gap * this.$._rem;
+        for (const group of this.groups)
+        {
+            const w = Math.max(
+                this.$._tile_size.small_w * this.$._rem,
+                group.width * (this.$._tile_size.small_w * this.$._rem) + group.width * (this.$._tile_gap * this.$._rem)
+            );
+
+            if (x < group_x - radius) return null;
+
+            for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
+            {
+                if (x < gx + small_w / 2) return { group: group.id, x: j };
+                if (j != 0) gx += tile_gap;
+                gx += small_w;
+            }
+
+            // move on to next group
+            group_x += group_gap + w;
+        }
+
+        // New group
+        for (let gx = group_x, j = 0; gx < 0x7FFFFFFF; j++)
+        {
+            if (x < gx + small_w / 2) return { group: "", x: j };
+            if (j != 0) gx += tile_gap;
+            gx += small_w;
+        }
+
+        return null;
     }
 
     override forced_client_y_to_y(y: number): { group: string, y: number } | null

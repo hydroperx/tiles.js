@@ -15,6 +15,8 @@ Specifications:
 
 ## Getting started
 
+> Note: only horizontal containers are supported currently.
+
 ```ts
 import { LiveTiles } from "com.hydroper.livetilebase";
 
@@ -35,9 +37,13 @@ const live_tiles = new LiveTiles({
     groupGap: 3,
     // The height of group labels, in cascading "rem" units.
     labelHeight: 2,
-    // Maximum width in small tiles. Effective only in horizontal containers.
+    // Maximum width in small tiles.
+    // Effective only in vertical containers.
+    // Must be > 0 for vertical containers.
     maxWidth: undefined,
     // Maximum height in small tiles.
+    // Effective only in horizontal containers.
+    // Must be > 0 for horizontal containers.
     maxHeight: 6,
     // Transition function(s) to contribute to tiles.
     tileTransition: "",

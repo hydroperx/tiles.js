@@ -83,12 +83,12 @@ export class LiveTiles
          * Maximum width in small tiles, effective only
          * in vertical containers.
          */
-        maxWidth?: number,
+        maxWidth: number,
         /**
          * Maximum height in small tiles, effective
          * in horizontal and vertical containers.
          */
-        maxHeight?: number,
+        maxHeight: number,
         /**
          * Transition function(s) to contribute to tiles.
          */
@@ -99,6 +99,7 @@ export class LiveTiles
         scrollNode?: Element,
     }) {
         assert(options.direction == "horizontal", "Vertical direction not supported currently.");
+        assert(options.direction == "horizontal" ? (options.maxHeight ?? 0) > 0 : true, "maxHeight must be specified and be > 0.");
 
         this._container = options.element as HTMLElement;
         this._dir = options.direction;
