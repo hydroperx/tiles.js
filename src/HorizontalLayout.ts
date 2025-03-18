@@ -15,6 +15,11 @@ export class HorizontalLayout extends Layout
         super($, max_width, max_height);
     }
 
+    override snap_to_grid(tile: string, event: Event): void
+    {
+        fixme();
+    }
+
     override client_x_to_x(x: number): { group: string, x: number } | null
     {
         [x] = mouse({ clientX: x, clientY: 0 }, this.$._container, this.$._scroll_node);
@@ -126,6 +131,9 @@ export class HorizontalLayout extends Layout
             // position each tile
             for (const tile of group.tiles)
             {
+                // ... or not if being dragged.
+                if (tile.button.getAttribute("data-dragging") === "true") continue;
+
                 const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = y + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
                 tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;

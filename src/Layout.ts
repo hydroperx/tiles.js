@@ -21,6 +21,8 @@ export abstract class Layout
 
     abstract readjust_groups(): void;
 
+    abstract snap_to_grid(tile: string, event: Event): void;
+
     abstract shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void;
 
     abstract client_x_to_x(x: number): { group: string, x: number } | null;

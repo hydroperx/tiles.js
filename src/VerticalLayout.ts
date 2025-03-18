@@ -11,6 +11,11 @@ export class VerticalLayout extends Layout
         super($, max_width, max_height);
     }
 
+    override snap_to_grid(tile: string, event: Event): void
+    {
+        throw new Error("not implemented");
+    }
+
     override client_x_to_x(x: number): { group: string, x: number } | null
     {
         throw new Error("not implemented");
@@ -43,6 +48,9 @@ export class VerticalLayout extends Layout
             // position each tile
             for (const tile of group.tiles)
             {
+                // ... or not if being dragged.
+                if (tile.button.getAttribute("data-dragging") === "true") continue;
+
                 const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
                 tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;

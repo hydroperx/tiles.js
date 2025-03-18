@@ -8,7 +8,7 @@ import { TileSizeOfResolution, get_size_width_small, get_size_height_small, Tile
 import { random_hex_large } from "./utils/random";
 import { State } from "./State";
 import { draggableHitSide } from "./utils/rect";
-import { Layout } from "./Layout";
+import { Group, Layout } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
 import { VerticalLayout } from "./VerticalLayout";
 
@@ -45,6 +45,8 @@ export class LiveTiles
         wide_w: 0, wide_h: 0,
         large_w: 0, large_h: 0,
     };
+
+    private _readjust_timeout = -1;
 
     constructor(options: {
         /**
@@ -186,5 +188,270 @@ export class LiveTiles
     save(): State
     {
         return this._state.clone();
+    }
+
+    private readjust_groups_delayed(): void
+    {
+        if (this._readjust_timeout !== -1)
+            window.clearTimeout(this._readjust_timeout);
+        this._readjust_timeout = window.setTimeout(() => {
+            this._layout.readjust_groups();
+        });
+    }
+
+    /**
+     * Adds a group and returns its label's `div` element.
+     */
+    addGroup({
+        id,
+        index,
+        label,
+    }: {
+        id: string,
+        index?: number,
+        label?: string,
+    }): HTMLDivElement
+    {
+        index ??= -1;
+        label ??= "";
+        assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
+        const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
+        if (index === -1)
+        {
+            index = Math.max.apply(null, existing_indices.concat(0)) + 1;
+        }
+        assert(index <= this._layout.groups.length, "Group index " + index + " out of bounds.");
+        assert(existing_indices.indexOf(index) == -1, `Group at index ${index} already exists.`);
+        this._state.groups.set(id, { index, label });
+
+        const div = document.createElement("div");
+        div.setAttribute("data-id", id);
+        div.classList.add(this._label_class_name);
+        div.style.position = "absolute";
+        this._container.appendChild(div);
+
+        this._layout.groups.splice(index, 0, new Group(this._layout, id, div));
+        this._layout.readjust_groups();
+
+        return div;
+    }
+
+    addTile({
+        id,
+        group,
+        x,
+        y,
+        size,
+    }: {
+        /**
+         * Tile ID.
+         */
+        id: string,
+        /**
+         * Group to attach tile to.
+         */
+        group: string,
+        /**
+         * Horizontal position in small tiles.
+         */
+        x?: number,
+        /**
+         * Vertical position in small tiles.
+         */
+        y?: number,
+
+        /**
+         * Tile size.
+         */
+        size?: TileSize,
+    }): HTMLButtonElement
+    {
+        assert(this._state.groups.has(group), `Group ${group} does not exist.`);
+        assert(!this._state.tiles.has(id), `Duplicate tile ID: ${id}.`);
+        size ??= "small";
+        x ??= 0;
+        y ??= 0;
+        this._state.tiles.set(id, {
+            size,
+            x,
+            y,
+            group,
+        });
+
+        const normal_transition = `${this._tile_transition} translate 0.2s ease-out`;
+        const dragging_transition = `${this._tile_transition}`;
+
+        const [w, h] = this.get_tile_size(size);
+        const button = document.createElement("button");
+        button.setAttribute("data-id", id);
+        button.classList.add(this._tile_class_name);
+        button.style.position = "absolute";
+        button.style.width = `${w}rem`;
+        button.style.height = `${h}rem`;
+        button.style.transition = normal_transition;
+        this._container.appendChild(button);
+
+        // Drag vars
+        let drag_start: [number, number] | null = null;
+        let hit_drag_start: [number, number] | null = null;
+        let previous_state: State | null = null;
+        let active_tiles_hit = false;
+
+        // Setup draggable
+        const draggable = new Draggable(button, {
+            onDragStart: (el, x, y, evt) =>
+            {
+                drag_start = [x, y];
+                previous_state = this._state.clone();
+                button.style.transition = dragging_transition;
+            },
+            onDrag: (el, x, y, evt) =>
+            {
+                const small_w = this._small_size * this._rem;
+
+                if (drag_start === null)
+                {
+                    button.style.transition = normal_transition;
+                    button.style.inset = "";
+                    return;
+                }
+        
+                const diff_x = drag_start[0] - x
+                    , diff_y = drag_start[1] - y
+                    , diff_rad = small_w / 2.5;
+                if (diff_x > -diff_rad && diff_x <= diff_rad && diff_y > -diff_rad && diff_y <= diff_rad)
+                {
+                    return;
+                }
+                set_dragging(true);
+        
+                // Shift tiles as needed.
+                const hit_drag_diff_x = hit_drag_start ? x - hit_drag_start[0] : 0x7FFFFFFF;
+                const hit_drag_diff_y = hit_drag_start ? y - hit_drag_start[1] : 0x7FFFFFFF;
+                const hid_drag_diff_rad = small_w / 1.9;
+                const hit_drag_inertia = (
+                    hit_drag_diff_x > -hid_drag_diff_rad && hit_drag_diff_x <= hid_drag_diff_rad &&
+                    hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
+                if (!hit_drag_inertia)
+                {
+                    const hit = hits_another_tile();
+                    if (hit)
+                    {
+                        if (!active_tiles_hit)
+                        {
+                            this._layout.shift(hit.tile, id, hit.side);
+                            active_tiles_hit = true;
+                            hit_drag_start = [x, y];
+                        }
+                    }
+                    else
+                    {
+                        this._state.clear();
+                        this._state.set(previous_state);
+
+                        // Restore layout positions and size
+                        for (const group of this._layout.groups)
+                        {
+                            for (const tile of group.tiles)
+                            {
+                                const tile_state = this._state.tiles.get(tile.id);
+                                tile.x = tile_state.x;
+                                tile.y = tile_state.y;
+                                tile.width = get_size_width_small(tile_state.size);
+                                tile.height = get_size_height_small(tile_state.size);
+                            }
+                        }
+
+                        this._layout.readjust_groups();
+                        active_tiles_hit = false;
+                        hit_drag_start = null;
+                    }
+                }
+            },
+            onDragEnd: (el, x, y, evt) =>
+            {
+                if (drag_start === null)
+                {
+                    button.style.inset = "";
+                    return;
+                }
+
+                drag_start = null;
+                hit_drag_start = null;
+                set_dragging(false);
+                button.style.transition = normal_transition;
+
+                // Move tile properly
+                if (active_tiles_hit)
+                {
+                    button.style.inset = "";
+                    this._layout.readjust_groups();
+                }
+                else
+                {
+                    // Snap tile to free space.
+                    this._layout.snap_to_grid(id, evt);
+        
+                    button.style.inset = "";
+                }
+
+                active_tiles_hit = false;
+            },
+        });
+        this._draggables.set(button, draggable);
+
+        // Set dragging state
+        const set_dragging = (value: boolean): void =>
+        {
+            button.setAttribute("data-dragging", value.toString());
+        };
+
+        // Detect whether this tile hits another
+        const hits_another_tile = (): { tile: string, side: "left" | "right" | "top" | "bottom" } | null =>
+        {
+            const small_w = this._small_size * this._rem;
+            const tiles = Array.from(this._container.querySelectorAll("." + this._tile_class_name)) as HTMLButtonElement[];
+            const i = tiles.indexOf(button);
+            if (i == -1) return null;
+            tiles.splice(i, 1);
+            const r = button.getBoundingClientRect();
+            for (const tile of tiles)
+            {
+                const rect = tile.getBoundingClientRect();
+                const place_side = draggableHitSide(r, rect);
+                console.log(place_side);
+                if (place_side === null)
+                {
+                    continue;
+                }
+
+                // Only hits if a large enough area overlaps.
+                const overlap = getRectangleOverlap(rect, r);
+                if (overlap && overlap.area < (small_w * 0.3))
+                {
+                    continue;
+                }
+
+                if (overlap) return { tile: tile.getAttribute("data-id"), side: place_side };
+            }
+            return null;
+        };
+
+        // Rearrange
+        this.readjust_groups_delayed();
+
+        return button;
+    }
+
+    private get_tile_size(size: TileSize): [number, number]
+    {
+        const r = this._tile_size;
+        switch (size)
+        {
+            case "small": return [r.small_w, r.small_h];
+            case "medium": return [r.medium_w, r.medium_h];
+            case "wide": return [r.wide_w, r.wide_h];
+            case "large": return [r.large_w, r.large_h];
+        }
     }
 }
