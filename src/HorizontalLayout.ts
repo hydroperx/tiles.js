@@ -190,7 +190,6 @@ export class HorizontalLayout extends Layout
             x += w + this.$._group_gap;
         }
 
-        console.log(this.total_offset_width)
         this.total_offset_width = x;
         this.$._resize_container();
     }
