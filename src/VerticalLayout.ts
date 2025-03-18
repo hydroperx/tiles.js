@@ -52,11 +52,13 @@ export class VerticalLayout extends Layout
 
                 const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = y + this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
-                tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
+                tile.button.style.left = `${btn_x}rem`;
+                tile.button.style.top = `${btn_y}rem`;
             }
 
             // position the label
-            group.label.style.translate = `0rem ${label_y}rem`;
+            group.label.style.left = `0rem`;
+            group.label.style.top = `${label_y}rem`;
             group.label.style.width = `100%`;
             group.label.style.height = `${this.$._label_height}rem`;
 

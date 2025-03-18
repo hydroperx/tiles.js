@@ -179,11 +179,13 @@ export class HorizontalLayout extends Layout
 
                 const btn_x = x + tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = y + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
-                tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
+                tile.button.style.left = `${btn_x}rem`;
+                tile.button.style.top = `${btn_y}rem`;
             }
 
             // position the label
-            group.label.style.translate = `${label_x}rem ${y}rem`;
+            group.label.style.left = `${label_x}rem`;
+            group.label.style.top = `${y}rem`;
             group.label.style.width = `${w}rem`;
             group.label.style.height = `${this.$._label_height}rem`;
 

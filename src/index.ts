@@ -272,7 +272,7 @@ export class LiveTiles
             group,
         });
 
-        const normal_transition = `${this._tile_transition} translate 0.2s ease-out`;
+        const normal_transition = `${this._tile_transition} left 0.2s ease-out, top 0.2s ease-out`;
         const dragging_transition = `${this._tile_transition}`;
 
         const [w, h] = this.get_tile_size(size);

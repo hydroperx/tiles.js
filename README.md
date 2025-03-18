@@ -4,7 +4,7 @@ Base implementation for Windows 8 like live tiles in HTML5.
 
 Specifications:
 
-- Used positioning style: cascading `translate`
+- Used positioning style: cascading `left` and `top`
 - Group-label element tag: `div`
 - Group-label element attribute `data-id`: the group ID.
 - Tile element tag: `button`
