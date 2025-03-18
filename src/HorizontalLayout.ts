@@ -170,7 +170,6 @@ export class HorizontalLayout extends Layout
         {
             const label_x = x;
             const w = Math.max(this.$._tile_size.small_w, group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap);
-
             // position each tile
             for (const tile of group.tiles)
             {
@@ -191,6 +190,7 @@ export class HorizontalLayout extends Layout
             x += w + this.$._group_gap;
         }
 
+        console.log(this.total_offset_width)
         this.total_offset_width = x;
         this.$._resize_container();
     }
