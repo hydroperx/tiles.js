@@ -22,9 +22,9 @@ export class HorizontalLayout extends Layout
         const radius = this.$._small_size * this.$._rem;
         const small_w = this.$._small_size * this.$._rem;
         const tile_gap = this.$._tile_gap * this.$._rem;
+        const group_gap = this.$._group_gap * this.$._rem;
         for (const group of this.groups)
         {
-            const label_x = x;
             const w = Math.max(
                 this.$._tile_size.small_w * this.$._rem,
                 group.width * (this.$._tile_size.small_w * this.$._rem) + group.width * (this.$._tile_gap * this.$._rem)
@@ -41,7 +41,7 @@ export class HorizontalLayout extends Layout
             }
 
             // move on to next group
-            group_x += this.$._group_gap + w;
+            group_x += group_gap + w;
         }
 
         return null;
