@@ -56,6 +56,9 @@ export class Group
 
     add(tile: Tile): boolean
     {
+        if (tile.x < 0 || tile.x + tile.width > this.$.max_width || tile.y < 0 || tile.y + tile.height > this.$.max_height)
+            return false;
+
         if (this.$.horizontal)
         {
             a: for (;;)
@@ -146,6 +149,9 @@ export class Group
 
     is_area_available(x: number, y: number, w: number, h: number): boolean
     {
+        if (x < 0 || x + w > this.$.max_width || y < 0 || y + h > this.$.max_height)
+            return false;
+
         for (const other of this.tiles)
         {
             const overlap = getRectangleOverlap({ x, y, width: w, height: h }, other);

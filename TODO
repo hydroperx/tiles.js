@@ -1,18 +1,15 @@
-Refactor:
+Bugs:
 
-- [ ] Layouts: adding, removing, resizing or moving tiles should influence in the offset XYrem coordinates of the next groups (including their labels and tiles).
-- [ ] Grid snapping: note that `client_x_to_x` or `client_y_to_y` may return an `""` (empty) group. In case of horizontal containers, to-y will always give empty group; while in vertical containers, to-x will always give empty group.
-- [ ] Grid snapping: note that `client_x_to_x` or `client_y_to_y` may return an empty group in case they create a last group (depends on the container direction).
+- [ ] Grid snapping not working perfectly with bigger tiles
+- [ ] Shifting tiles can happen resulting in tile positions less than 0. I think this is lack of checking available area in left shift. 
+
+Other:
+
 - [ ] Remove a group after all attached tiles are removed from it.
-
-Misc:
-
 - [ ] Control the cascading `transition`
   - [ ] of labels
   - [ ] and tiles
-- [ ] Drag-n-drop
 - [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
-- [ ] Dispose of tile draggables in `destroy()`
 
 # Changes
 
