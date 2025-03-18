@@ -39,11 +39,11 @@ const live_tiles = new LiveTiles({
     labelHeight: 2,
     // Maximum width in small tiles.
     // Effective only in vertical containers.
-    // Must be > 0 for vertical containers.
+    // Must be >= 4 for vertical containers.
     maxWidth: undefined,
     // Maximum height in small tiles.
     // Effective only in horizontal containers.
-    // Must be > 0 for horizontal containers.
+    // Must be >= 4 for horizontal containers.
     maxHeight: 6,
     // Transition function(s) to contribute to tiles.
     tileTransition: "",
