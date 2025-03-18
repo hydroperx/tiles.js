@@ -222,6 +222,7 @@ export class LiveTiles
         div.setAttribute("data-id", id);
         div.classList.add(this._label_class_name);
         div.style.position = "absolute";
+        div.innerText = label;
         this._container.appendChild(div);
 
         this._layout.groups.splice(index, 0, new Group(this._layout, id, div));

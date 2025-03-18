@@ -185,7 +185,7 @@ export class HorizontalLayout extends Layout
 
             // position the label
             group.label.style.left = `${label_x}rem`;
-            group.label.style.top = `${y}rem`;
+            group.label.style.top = `${y - this.$._label_height}rem`;
             group.label.style.width = `${w}rem`;
             group.label.style.height = `${this.$._label_height}rem`;
 

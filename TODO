@@ -34,7 +34,7 @@ Misc:
   - [ ] Destroy and unassign draggable
   - [ ] Remove it from the Layout as well.
 - [ ] Allow adding groups
-- [ ] Allow renaming groups
+- [ ] Allow renaming group labels
 - [ ] Allow removing groups
 - [ ] Allow checking whether a group exists or not
 - [ ] Allow checking whether a tile exists or not
