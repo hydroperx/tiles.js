@@ -190,15 +190,6 @@ export class LiveTiles
         return this._state.clone();
     }
 
-    private readjust_groups_delayed(): void
-    {
-        if (this._readjust_timeout !== -1)
-            window.clearTimeout(this._readjust_timeout);
-        this._readjust_timeout = window.setTimeout(() => {
-            this._layout.readjust_groups();
-        });
-    }
-
     /**
      * Adds a group and returns its label's `div` element.
      */
@@ -453,5 +444,14 @@ export class LiveTiles
             case "wide": return [r.wide_w, r.wide_h];
             case "large": return [r.large_w, r.large_h];
         }
+    }
+
+    private readjust_groups_delayed(): void
+    {
+        if (this._readjust_timeout !== -1)
+            window.clearTimeout(this._readjust_timeout);
+        this._readjust_timeout = window.setTimeout(() => {
+            this._layout.readjust_groups();
+        }, 10);
     }
 }
