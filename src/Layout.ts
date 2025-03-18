@@ -7,7 +7,7 @@ import { TileSizeOfResolution, get_size_width_small, get_size_height_small, Tile
 export abstract class Layout
 {
     // sorted groups.
-    public groups: Group[];
+    public groups: Group[] = [];
 
     public horizontal: boolean;
 
@@ -34,7 +34,7 @@ export abstract class Layout
 export class Group
 {
     // random order tiles
-    tiles: Tile[];
+    tiles: Tile[] = [];
     private _width: number = 0;
     private _height: number = 0;
 
@@ -161,7 +161,7 @@ export class Group
     }
 }
 
-class Tile
+export class Tile
 {
     constructor(
         public id: string,

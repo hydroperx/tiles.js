@@ -6,7 +6,7 @@ import { RemObserver } from "./utils/RemObserver";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 import { State } from "./State";
 import { draggableHitSide } from "./utils/rect";
-import { Group, Layout } from "./Layout";
+import { Group, Layout, Tile } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
 import { VerticalLayout } from "./VerticalLayout";
 
@@ -281,6 +281,10 @@ export class LiveTiles
         button.style.height = `${h}rem`;
         button.style.transition = normal_transition;
         this._container.appendChild(button);
+
+        // Add to layout's group
+        const layout_group = this._layout.groups.find(g => g.id == group)!;
+        layout_group.add(new Tile(id, button, x, y, get_size_width_small(size), get_size_height_small(size)));
 
         // Drag vars
         let drag_start: [number, number] | null = null;

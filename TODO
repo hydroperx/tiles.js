@@ -32,6 +32,7 @@ Misc:
   - [ ] Update both state size and tile data width/height
 - [ ] Allow removing tiles
   - [ ] Destroy and unassign draggable
+  - [ ] Remove it from the Layout as well.
 - [ ] Allow adding groups
 - [ ] Allow renaming groups
 - [ ] Allow removing groups

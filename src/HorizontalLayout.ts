@@ -170,7 +170,6 @@ export class HorizontalLayout extends Layout
         {
             const label_x = x;
             const w = Math.max(this.$._tile_size.small_w, group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap);
-            x += w;
 
             // position each tile
             for (const tile of group.tiles)
@@ -178,7 +177,7 @@ export class HorizontalLayout extends Layout
                 // ... or not if being dragged.
                 if (tile.button.getAttribute("data-dragging") === "true") continue;
 
-                const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
+                const btn_x = x + tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
                 const btn_y = y + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
                 tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
             }
@@ -189,7 +188,7 @@ export class HorizontalLayout extends Layout
             group.label.style.height = `${this.$._label_height}rem`;
 
             // move on to next group
-            x += this.$._group_gap;
+            x += w + this.$._group_gap;
         }
     }
 

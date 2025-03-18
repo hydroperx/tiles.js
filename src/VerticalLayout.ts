@@ -43,7 +43,6 @@ export class VerticalLayout extends Layout
         {
             const label_y = y;
             const h = Math.max(this.$._tile_size.small_h, group.height * this.$._tile_size.small_h + group.height * this.$._tile_gap);
-            y += h;
 
             // position each tile
             for (const tile of group.tiles)
@@ -52,7 +51,7 @@ export class VerticalLayout extends Layout
                 if (tile.button.getAttribute("data-dragging") === "true") continue;
 
                 const btn_x = tile.x * this.$._tile_size.small_w + tile.x * this.$._tile_gap;
-                const btn_y = this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
+                const btn_y = y + this.$._label_height + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
                 tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
             }
 
@@ -62,7 +61,7 @@ export class VerticalLayout extends Layout
             group.label.style.height = `${this.$._label_height}rem`;
 
             // move on to next group
-            y += this.$._group_gap + this.$._label_height;
+            y += h + this.$._group_gap + this.$._label_height;
         }
     }
 
