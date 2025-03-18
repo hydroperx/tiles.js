@@ -1,6 +1,6 @@
-# LiveTiles
+# LiveTileBase
 
-Base implementation for Windows 8 like live tiles in HTML5.:
+Base implementation for Windows 8 like live tiles in HTML5.
 
 Specifications:
 
