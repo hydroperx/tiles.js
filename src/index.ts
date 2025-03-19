@@ -353,22 +353,7 @@ export class Tiles
                     }
                     else
                     {
-                        this._state.clear();
-                        this._state.set(previous_state);
-
-                        // Restore layout positions and size
-                        for (const group of this._layout.groups)
-                        {
-                            for (const tile of group.tiles)
-                            {
-                                const tile_state = this._state.tiles.get(tile.id);
-                                tile.x = tile_state.x;
-                                tile.y = tile_state.y;
-                                tile.width = get_size_width_small(tile_state.size);
-                                tile.height = get_size_height_small(tile_state.size);
-                            }
-                        }
-
+                        this._restore_state(previous_state);
                         this._layout.readjust_groups();
                         active_tiles_hit = false;
                         hit_drag_start = null;
@@ -477,5 +462,38 @@ export class Tiles
         if (this._dir == "horizontal")
             this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width / this._rem, this._layout.total_offset_width) + "rem";
         else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height / this._rem, this._layout.total_offset_height) + "rem";
+    }
+
+    /** @private */
+    _restore_state(previous_state: State): void
+    {
+        this._state.clear();
+        this._state.set(previous_state);
+
+        // Restore layout positions and size
+        this._layout.groups.length = 0;
+        const group_states_sorted = Array.from(this._state.groups.entries())
+            .sort((a, b) => a[1].index - b[1].index);
+        const labels = Array.from(this._container.querySelectorAll("." + this._label_class_name));
+        const tile_buttons = Array.from(this._container.querySelectorAll("." + this._tile_class_name));
+        for (const [group_id,] of group_states_sorted)
+        {
+            const label = labels.find(label => label.getAttribute("data-id") == group_id) as HTMLDivElement | undefined;
+            if (!label) continue;
+            const group_data = new Group(this._layout, group_id, label);
+            this._layout.groups.push(group_data);
+            
+            for (const [tile_id, tile_state] of this._state.tiles)
+            {
+                if (tile_state.group !== group_id) continue;
+
+                const tile_button = tile_buttons.find(btn => btn.getAttribute("data-id") == tile_id) as HTMLButtonElement | undefined;
+                if (!tile_button) continue;
+                const w = get_size_width_small(tile_state.size)
+                    , h = get_size_height_small(tile_state.size);
+                const tile = new Tile(tile_id, tile_button, tile_state.x, tile_state.y, w, h);
+                assert(group_data.add(tile), "Failed restoring state of tile.");
+            }
+        }
     }
 }
