@@ -1,7 +1,7 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 
-import type { LiveTiles } from ".";
+import type { Tiles } from ".";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 
 export abstract class Layout
@@ -15,7 +15,7 @@ export abstract class Layout
     horizontal: boolean;
 
     constructor(
-        public $: LiveTiles,
+        public $: Tiles,
         public max_width: number,
         public max_height: number
     ) {

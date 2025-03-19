@@ -2,14 +2,14 @@ import getRectangleOverlap from "rectangle-overlap";
 import { mouse } from "getoffset";
 
 import { Group, Layout } from "./Layout";
-import type { LiveTiles } from ".";
+import type { Tiles } from ".";
 import { get_size_height_small, get_size_width_small } from "./enum/TileSize";
 import { random_hex_large } from "./utils/random";
 
 export class HorizontalLayout extends Layout
 {
     constructor(
-        $: LiveTiles,
+        $: Tiles,
         max_width: number,
         max_height: number
     ) {

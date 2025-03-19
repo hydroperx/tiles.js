@@ -1,10 +1,10 @@
 import { Layout } from "./Layout";
-import type { LiveTiles } from ".";
+import type { Tiles } from ".";
 
 export class VerticalLayout extends Layout
 {
     constructor(
-        $: LiveTiles,
+        $: Tiles,
         max_width: number,
         max_height: number
     ) {

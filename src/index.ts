@@ -13,7 +13,7 @@ import { VerticalLayout } from "./VerticalLayout";
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
-export class LiveTiles
+export class Tiles
 {
     /** @private */ _state: State;
     /** @private */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
@@ -150,7 +150,7 @@ export class LiveTiles
     }
 
     /**
-     * Destroys the `LiveTiles` instance, disposing
+     * Destroys the `Tiles` instance, disposing
      * of any observers and removing the container from the DOM.
      */
     destroy()
@@ -167,7 +167,7 @@ export class LiveTiles
     }
 
     /**
-     * Loads a state in the `LiveTiles` instance.
+     * Loads a state in the `Tiles` instance.
      */
     load(state: State): void
     {
@@ -192,7 +192,7 @@ export class LiveTiles
     }
 
     /**
-     * Returns the state of the `LiveTiles` instance.
+     * Returns the state of the `Tiles` instance.
      */
     save(): State
     {

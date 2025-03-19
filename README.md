@@ -1,6 +1,6 @@
-# com.hydroper.livetiles.base
+# com.hydroper.tilelayout
 
-Base implementation for Windows 8 like live tiles in HTML5.
+Base layout implementation for Windows 8 like live tiles in HTML5.
 
 ## Specifications
 
@@ -29,9 +29,9 @@ Overrides the `transition` style in tile elements.
 > Note: only horizontal containers are supported currently.
 
 ```ts
-import { LiveTiles } from "com.hydroper.livetiles.base";
+import { Tiles } from "com.hydroper.tilelayout";
 
-const live_tiles = new LiveTiles({
+const tiles = new Tiles({
     // Container.
     element,
     // The direction of the tile container.
@@ -63,14 +63,14 @@ const live_tiles = new LiveTiles({
 });
 
 // Adding groups
-const label_div = live_tiles.addGroup({
+const label_div = tiles.addGroup({
     id: "group1",
     index: 0,
     label: "Group 1",
 });
 
 // Adding tiles
-const button = live_tiles.addTile({
+const button = tiles.addTile({
     id: "tile1",
     group: "group1",
     // Horizontal position in small tiles.
@@ -82,5 +82,5 @@ const button = live_tiles.addTile({
 });
 
 // Disposal
-live_tiles.destroy();
+tiles.destroy();
 ```
