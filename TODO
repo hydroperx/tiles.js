@@ -1,7 +1,8 @@
 Bugs:
 
 - [ ] Grid snapping not working perfectly with bigger tiles
-- [ ] Shifting tiles can happen resulting in tile positions less than 0. I think this is lack of checking available area in left shift. 
+- [ ] Shifting tiles can happen resulting in tile positions less than 0. I think this is lack of checking available area in left shift.
+- [ ] An error may occur when grid snapping or shifting tiles due to some tile being removed from group (therefore its respective group is yielding `undefined`).
 
 Other:
 

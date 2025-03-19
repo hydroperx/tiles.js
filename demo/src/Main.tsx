@@ -1,4 +1,4 @@
-import { LiveTiles } from "com.hydroper.livetilebase";
+import { LiveTiles } from "com.hydroper.livetiles.base";
 
 const container = document.querySelector("#container")!;
 

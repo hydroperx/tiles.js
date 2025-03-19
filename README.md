@@ -1,24 +1,35 @@
-# LiveTileBase
+# com.hydroper.livetiles.base
 
 Base implementation for Windows 8 like live tiles in HTML5.
 
-Specifications:
+## Specifications
 
-- Used positioning style: cascading `translate`
-- Group-label element tag: `div`
-- Group-label element attribute `data-id`: the group ID.
-- Tile element tag: `button`
-- Tile element attribute `data-id`: the tile ID.
-- Tile element attribute `data-dragging`: false or true.
-- Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
-- Overrides the `transition` style in tile elements.
+<blockquote>
+
+Used positioning style: cascading `translate`
+
+Group-label element tag: `div`
+
+Group-label element attribute `data-id`: the group ID.
+
+Tile element tag: `button`
+
+Tile element attribute `data-id`: the tile ID.
+
+Tile element attribute `data-dragging`: false or true.
+
+Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
+
+Overrides the `transition` style in tile elements.
+
+</blockquote>
 
 ## Getting started
 
 > Note: only horizontal containers are supported currently.
 
 ```ts
-import { LiveTiles } from "com.hydroper.livetilebase";
+import { LiveTiles } from "com.hydroper.livetiles.base";
 
 const live_tiles = new LiveTiles({
     // Container.
