@@ -304,7 +304,6 @@ export class Tiles
 
         // Drag vars
         let drag_start: [number, number] | null = null;
-        let hit_drag_start: [number, number] | null = null;
         let previous_state: State | null = null;
         let active_tiles_hit = false,
             active_tile_hit_side: "top" | "left" | "bottom" | "right" = "top",
@@ -340,40 +339,29 @@ export class Tiles
                 set_dragging(true);
         
                 // Shift tiles as needed.
-                const hit_drag_diff_x = hit_drag_start ? x - hit_drag_start[0] : 0x7FFFFFFF;
-                const hit_drag_diff_y = hit_drag_start ? y - hit_drag_start[1] : 0x7FFFFFFF;
-                const hid_drag_diff_rad = small_w / 1.7;
-                const hit_drag_inertia = (
-                    hit_drag_diff_x > -hid_drag_diff_rad && hit_drag_diff_x <= hid_drag_diff_rad &&
-                    hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
-                if (!hit_drag_inertia)
+                const r: DOMRect | null = active_tiles_hit ? button.getBoundingClientRect() : null;
+                const areaOverlap = active_tiles_hit ? getRectangleOverlap(r!, active_tile_hit_area) : null;
+                if (!(areaOverlap && areaOverlap.area != 0))
                 {
-                    const r: DOMRect | null = active_tiles_hit ? button.getBoundingClientRect() : null;
-                    const areaOverlap = active_tiles_hit ? getRectangleOverlap(r!, active_tile_hit_area) : null;
-                    if (!(areaOverlap && areaOverlap.area != 0))
+                    const hit = hits_another_tile();;
+                    if (hit)
                     {
-                        const hit = hits_another_tile();;
-                        if (hit)
-                        {
-                            // Active hit area
-                            const hitted_button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
-                                .find(btn => btn.getAttribute("data-id") == hit.tile);
-                            active_tile_hit_area = hitted_button.getBoundingClientRect();
+                        // Active hit area
+                        const hitted_button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
+                            .find(btn => btn.getAttribute("data-id") == hit.tile);
+                        active_tile_hit_area = hitted_button.getBoundingClientRect();
 
-                            this._restore_state(previous_state);
-                            this._layout.shift(hit.tile, id, hit.side);
-                            active_tile_hit_id = hit.tile;
-                            active_tile_hit_side = hit.side;
-                            active_tiles_hit = true;
-                            hit_drag_start = [x, y];
-                        }
-                        else
-                        {
-                            this._restore_state(previous_state);
-                            this._layout.readjust_groups();
-                            active_tiles_hit = false;
-                            hit_drag_start = null;
-                        }
+                        this._restore_state(previous_state);
+                        this._layout.shift(hit.tile, id, hit.side);
+                        active_tile_hit_id = hit.tile;
+                        active_tile_hit_side = hit.side;
+                        active_tiles_hit = true;
+                    }
+                    else
+                    {
+                        this._restore_state(previous_state);
+                        this._layout.readjust_groups();
+                        active_tiles_hit = false;
                     }
                 }
             },
@@ -386,7 +374,6 @@ export class Tiles
                 }
 
                 drag_start = null;
-                hit_drag_start = null;
                 previous_state = null;
                 set_dragging(false);
                 button.style.transition = normal_transition;
