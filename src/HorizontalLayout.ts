@@ -42,10 +42,13 @@ export class HorizontalLayout extends Layout
                 const new_group = this.groups.find(g => g.id == group_id);
 
                 // Insert tile
-                prev_group.remove(tile);
-                tile_data.x = x.x;
-                tile_data.y = y.y;
-                new_group.add(tile_data);
+                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                {
+                    prev_group.remove(tile);
+                    tile_data.x = x.x;
+                    tile_data.y = y.y;
+                    new_group.add(tile_data);
+                }
             }
             else
             {

@@ -370,6 +370,7 @@ export class Tiles
 
                 drag_start = null;
                 hit_drag_start = null;
+                previous_state = null;
                 set_dragging(false);
                 button.style.transition = normal_transition;
 
