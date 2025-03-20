@@ -325,7 +325,7 @@ export class Tiles
         
                 const diff_x = drag_start[0] - x
                     , diff_y = drag_start[1] - y
-                    , diff_rad = small_w / 2.5;
+                    , diff_rad = small_w / 1.1;
                 if (diff_x > -diff_rad && diff_x <= diff_rad && diff_y > -diff_rad && diff_y <= diff_rad)
                 {
                     return;
@@ -335,7 +335,7 @@ export class Tiles
                 // Shift tiles as needed.
                 const hit_drag_diff_x = hit_drag_start ? x - hit_drag_start[0] : 0x7FFFFFFF;
                 const hit_drag_diff_y = hit_drag_start ? y - hit_drag_start[1] : 0x7FFFFFFF;
-                const hid_drag_diff_rad = small_w / 1.9;
+                const hid_drag_diff_rad = small_w / 1.7;
                 const hit_drag_inertia = (
                     hit_drag_diff_x > -hid_drag_diff_rad && hit_drag_diff_x <= hid_drag_diff_rad &&
                     hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
@@ -344,12 +344,10 @@ export class Tiles
                     const hit = hits_another_tile();
                     if (hit)
                     {
-                        if (!active_tiles_hit)
-                        {
-                            this._layout.shift(hit.tile, id, hit.side);
-                            active_tiles_hit = true;
-                            hit_drag_start = [x, y];
-                        }
+                        this._restore_state(previous_state);
+                        this._layout.shift(hit.tile, id, hit.side);
+                        active_tiles_hit = true;
+                        hit_drag_start = [x, y];
                     }
                     else
                     {
