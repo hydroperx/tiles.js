@@ -304,7 +304,8 @@ export class Tiles
         let previous_state: State | null = null;
         let active_tiles_hit = false,
             active_tile_hit_side: "top" | "left" | "bottom" | "right" = "top",
-            active_tile_hit_id: string = "";
+            active_tile_hit_id: string = "",
+            active_tile_hit_area: { x: number, y: number, width: number, height: number } = { x: 0, y: 0, width: 0, height: 0 };
 
         // Setup draggable
         const draggable = new Draggable(button, {
@@ -343,22 +344,32 @@ export class Tiles
                     hit_drag_diff_y > -hid_drag_diff_rad && hit_drag_diff_y <= hid_drag_diff_rad);
                 if (!hit_drag_inertia)
                 {
-                    const hit = hits_another_tile();
-                    if (hit && (active_tiles_hit ? active_tile_hit_id != hit.tile && active_tile_hit_side != hit.side : true))
+                    const r: DOMRect | null = active_tiles_hit ? button.getBoundingClientRect() : null;
+                    const areaOverlap = active_tiles_hit ? getRectangleOverlap(r!, active_tile_hit_area) : null;
+                    if (!(areaOverlap && areaOverlap.area != 0))
                     {
-                        this._restore_state(previous_state);
-                        this._layout.shift(hit.tile, id, hit.side);
-                        active_tile_hit_id = hit.tile;
-                        active_tile_hit_side = hit.side;
-                        active_tiles_hit = true;
-                        hit_drag_start = [x, y];
-                    }
-                    else
-                    {
-                        this._restore_state(previous_state);
-                        this._layout.readjust_groups();
-                        active_tiles_hit = false;
-                        hit_drag_start = null;
+                        const hit = hits_another_tile();;
+                        if (hit)
+                        {
+                            // Active hit area
+                            const hitted_button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
+                                .find(btn => btn.getAttribute("data-id") == hit.tile);
+                            active_tile_hit_area = hitted_button.getBoundingClientRect();
+
+                            this._restore_state(previous_state);
+                            this._layout.shift(hit.tile, id, hit.side);
+                            active_tile_hit_id = hit.tile;
+                            active_tile_hit_side = hit.side;
+                            active_tiles_hit = true;
+                            hit_drag_start = [x, y];
+                        }
+                        else
+                        {
+                            this._restore_state(previous_state);
+                            this._layout.readjust_groups();
+                            active_tiles_hit = false;
+                            hit_drag_start = null;
+                        }
                     }
                 }
             },
@@ -376,19 +387,11 @@ export class Tiles
                 set_dragging(false);
                 button.style.transition = normal_transition;
 
-                // Move tile properly
-                if (active_tiles_hit)
-                {
-                    button.style.inset = "";
-                    this._layout.readjust_groups();
-                }
-                else
-                {
-                    // Snap tile to free space.
-                    this._layout.snap_to_grid(id, evt);
-        
-                    button.style.inset = "";
-                }
+                // Snap tile to free space.
+                this._layout.snap_to_grid(id, evt);
+
+                button.style.inset = "";
+                this._layout.readjust_groups();
 
                 active_tiles_hit = false;
             },
