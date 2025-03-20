@@ -217,6 +217,10 @@ export class Tiles
         index ??= -1;
         label ??= "";
         assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
+
+        // Keep groups sequential
+        this._keep_groups_sequential();
+
         const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
         if (index === -1)
         {
@@ -501,5 +505,13 @@ export class Tiles
                 assert(group_data.add(tile), "Failed restoring state of tile.");
             }
         }
+    }
+
+    private _keep_groups_sequential(): void
+    {
+        const sorted_groups = Array.from(this._state.groups.entries())
+            .sort((a, b) => a[1].index - b[1].index);
+        for (let i = 0; i < sorted_groups.length; i++)
+            sorted_groups[i][1].index = i;
     }
 }
