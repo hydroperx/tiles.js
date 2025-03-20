@@ -57,7 +57,7 @@ export class Group
     add(tile: Tile): boolean
     {
         if (tile.x < 0 || tile.x + tile.width > this.$.max_width || tile.y < 0 || tile.y + tile.height > this.$.max_height)
-            return false;
+            return console.log("here, x:", tile.x, "y:", tile.y, "w:", tile.width, "h:", tile.height), false;
 
         if (this.$.horizontal)
         {
