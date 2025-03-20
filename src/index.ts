@@ -302,7 +302,9 @@ export class Tiles
         let drag_start: [number, number] | null = null;
         let hit_drag_start: [number, number] | null = null;
         let previous_state: State | null = null;
-        let active_tiles_hit = false;
+        let active_tiles_hit = false,
+            active_tile_hit_side: "top" | "left" | "bottom" | "right" = "top",
+            active_tile_hit_id: string = "";
 
         // Setup draggable
         const draggable = new Draggable(button, {
@@ -342,10 +344,12 @@ export class Tiles
                 if (!hit_drag_inertia)
                 {
                     const hit = hits_another_tile();
-                    if (hit)
+                    if (hit && (active_tiles_hit ? active_tile_hit_id != hit.tile && active_tile_hit_side != hit.side : true))
                     {
                         this._restore_state(previous_state);
                         this._layout.shift(hit.tile, id, hit.side);
+                        active_tile_hit_id = hit.tile;
+                        active_tile_hit_side = hit.side;
                         active_tiles_hit = true;
                         hit_drag_start = [x, y];
                     }
