@@ -214,12 +214,12 @@ export class Tiles
         label?: string,
     }): HTMLDivElement
     {
+        // Keep groups sequential
+        this._keep_groups_sequential();
+
         index ??= -1;
         label ??= "";
         assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
-
-        // Keep groups sequential
-        this._keep_groups_sequential();
 
         const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
         if (index === -1)
