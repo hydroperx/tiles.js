@@ -379,7 +379,8 @@ export class Tiles
                 button.style.transition = normal_transition;
 
                 // Snap tile to free space.
-                this._layout.snap_to_grid(id, evt);
+                const r = el.getBoundingClientRect();
+                this._layout.snap_to_grid(id, { clientX: r.x, clientY: r.y } as any);
 
                 button.style.inset = "";
                 this._layout.readjust_groups();
