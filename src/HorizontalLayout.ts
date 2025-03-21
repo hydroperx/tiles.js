@@ -47,7 +47,8 @@ export class HorizontalLayout extends Layout
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
                     if (prev_group)
-                        prev_group.remove(tile);
+                        prev_group.remove(tile),
+                        prev_group.auto_self_removal();
                     tile_data.x = x.x;
                     tile_data.y = y.y;
 
@@ -65,6 +66,8 @@ export class HorizontalLayout extends Layout
                     prev_group.remove(tile);
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
+                    prev_group.auto_self_removal();
+
                     tile_data.x = x.x;
                     tile_data.y = y.y;
 
@@ -269,6 +272,7 @@ export class HorizontalLayout extends Layout
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
                     const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
                     place_taker_prev_group?.remove(place_taker);
+                    place_taker_prev_group?.auto_self_removal();
                     place_taker_tile.x = place_taker_new_x;
                     place_taker_tile.y = to_shift_state.y;
 
@@ -293,6 +297,7 @@ export class HorizontalLayout extends Layout
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
                     const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
                     place_taker_prev_group?.remove(place_taker);
+                    place_taker_prev_group?.auto_self_removal();
                     place_taker_tile.x = place_taker_new_x;
                     place_taker_tile.y = to_shift_state.y;
 
@@ -319,6 +324,7 @@ export class HorizontalLayout extends Layout
                 const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
                 const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
                 place_taker_prev_group?.remove(place_taker);
+                place_taker_prev_group?.auto_self_removal();
                 place_taker_tile.x = x;
                 place_taker_tile.y = y;
 
