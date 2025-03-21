@@ -85,12 +85,12 @@ export class Tiles
          * Maximum width in small tiles, effective only
          * in vertical containers (must be >= 4).
          */
-        maxWidth: number,
+        maxWidth?: number,
         /**
          * Maximum height in small tiles, effective only
          * in horizontal containers (must be >= 4).
          */
-        maxHeight: number,
+        maxHeight?: number,
         /**
          * Transition function(s) to contribute to tiles.
          */

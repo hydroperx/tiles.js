@@ -65,6 +65,7 @@ export class VerticalLayout extends Layout
             y += h + this.$._group_gap;
         }
 
+        y += this.$._group_gap * 2;
         this.total_offset_height = y;
         this.$._resize_container();
     }

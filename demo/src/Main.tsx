@@ -9,7 +9,7 @@ const tiles = new Tiles({
     tileClassName: "tile",
     smallSize: 3.625,
     tileGap: 0.6,
-    groupGap: 3,
+    groupGap: 5,
     labelHeight: 2,
     maxHeight: 6,
     scrollNode: undefined,
