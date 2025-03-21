@@ -128,6 +128,19 @@ export class Group
             {
                 this.tiles.splice(i, 1);
                 this._resize();
+
+                // Auto remove group
+                if (this.tiles.length == 0)
+                {
+                    const i = this.$.groups.indexOf(this);
+                    if (i != -1)
+                    {
+                        this.$.groups.splice(i, 1);
+                        this.$.$._state.groups.delete(this.id);
+                        this.$.$._keep_groups_sequential();
+                    }
+                }
+
                 this.$.readjust_groups();
                 return true;
             }

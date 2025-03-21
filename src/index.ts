@@ -508,7 +508,8 @@ export class Tiles
         }
     }
 
-    private _keep_groups_sequential(): void
+    /** @private */
+    _keep_groups_sequential(): void
     {
         const sorted_groups = Array.from(this._state.groups.entries())
             .sort((a, b) => a[1].index - b[1].index);

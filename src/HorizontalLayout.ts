@@ -1,7 +1,7 @@
 import getRectangleOverlap from "rectangle-overlap";
 import getOffset from "getoffset";
 
-import { Group, Layout } from "./Layout";
+import { Group, Layout, Tile } from "./Layout";
 import type { Tiles } from ".";
 import { get_size_height_small, get_size_width_small } from "./enum/TileSize";
 import { random_hex_large } from "./utils/random";
@@ -20,8 +20,9 @@ export class HorizontalLayout extends Layout
     {
         const { x: dropped_x, y: dropped_y } = getOffset(el, this.$._scroll_node);
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
-        const tile_data = prev_group.tiles.find(t => t.id == tile);
         const tile_state = this.$._state.tiles.get(tile);
+        const tile_data = (prev_group ? prev_group.tiles.find(t => t.id == tile) : null)
+            ?? new Tile(tile, el as HTMLButtonElement, tile_state.x, tile_state.y, get_size_width_small(tile_state.size), get_size_height_small(tile_state.size));
 
         let x = this.offset_x_to_x(dropped_x),
             y = this.offset_y_to_y(dropped_y);
@@ -45,7 +46,8 @@ export class HorizontalLayout extends Layout
                 // Insert tile
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
-                    prev_group.remove(tile);
+                    if (prev_group)
+                        prev_group.remove(tile);
                     tile_data.x = x.x;
                     tile_data.y = y.y;
 
@@ -59,7 +61,8 @@ export class HorizontalLayout extends Layout
             else
             {
                 const new_group = this.groups.find(g => g.id == x.group);
-                prev_group.remove(tile);
+                if (prev_group)
+                    prev_group.remove(tile);
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
                     tile_data.x = x.x;
@@ -71,7 +74,8 @@ export class HorizontalLayout extends Layout
 
                     new_group.add(tile_data);
                 }
-                else prev_group.add(tile_data);
+                else if (prev_group)
+                    prev_group.add(tile_data);
             }
         }
 

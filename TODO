@@ -10,13 +10,6 @@ Other:
   - [ ] and tiles
 - [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
 
-# Changes
-
-- FullTilesPositionMap
-  - [ ] FullTilesPositionMap's constructor is now replaced by `populate_tiles()`
-  - [ ] `setPosition` is now `set_real_position`
-  - [ ] `contributeTile` is now `contribute_calc_tile`
-
 # Vertical containers
 
 - [ ] `put_label` must additionally increase `this.m_group_y` by `this.m_group_label_height * this.m_rem`
