@@ -5,7 +5,6 @@ Bugs:
 
 Other:
 
-- [ ] Remove a group after all attached tiles are removed from it.
 - [ ] Control the cascading `transition`
   - [ ] of labels
   - [ ] and tiles
