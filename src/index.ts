@@ -37,7 +37,7 @@ export class Tiles
     /** @private */ public _layout: Layout;
 
     /** @private */ public _resize_observer: ResizeObserver;
-    private _size_fixed: boolean = false;
+    private _size_only_grows: boolean = false;
 
     public _tile_size: TileSizeOfResolution = {
         small_w: 0, small_h: 0,
@@ -317,7 +317,7 @@ export class Tiles
                 drag_start = [x, y];
                 previous_state = this._state.clone();
                 button.style.transition = dragging_transition;
-                this._size_fixed = true;
+                this._size_only_grows = true;
             },
             onDrag: (el, x, y, evt) =>
             {
@@ -368,7 +368,7 @@ export class Tiles
             },
             onDragEnd: (el, x, y, evt) =>
             {
-                this._size_fixed = false;
+                this._size_only_grows = false;
 
                 if (drag_start === null)
                 {
@@ -460,7 +460,13 @@ export class Tiles
     /** @private */
     _resize_container(): void
     {
-        if (this._size_fixed) return;
+        if (this._size_only_grows)
+        {
+            if (this._dir == "horizontal")
+                this._container.style.width = Math.max(this._container.getBoundingClientRect().width / this._rem, this._layout.total_offset_width) + "rem";
+            else this._container.style.height = Math.max(this._container.getBoundingClientRect().height / this._rem, this._layout.total_offset_height) + "rem";
+            return;
+        }
 
         if (this._dir == "horizontal")
             this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width / this._rem, this._layout.total_offset_width) + "rem";
