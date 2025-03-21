@@ -317,7 +317,7 @@ export class Tiles
                 drag_start = [x, y];
                 previous_state = this._state.clone();
                 button.style.transition = dragging_transition;
-                button.style.zIndex = "99999999";
+                button.style.zIndex = "999999999";
                 this._size_only_grows = true;
             },
             onDrag: (el, x, y, evt) =>
