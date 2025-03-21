@@ -24,14 +24,14 @@ export abstract class Layout
 
     abstract readjust_groups(): void;
 
-    abstract snap_to_grid(tile: string, event: Event): void;
+    abstract snap_to_grid(tile: string, el: HTMLElement): void;
 
     abstract shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void;
 
-    abstract client_x_to_x(x: number): { group: string, x: number } | null;
-    abstract client_y_to_y(y: number): { group: string, y: number } | null;
-    abstract forced_client_x_to_x(x: number): { group: string, x: number } | null;
-    abstract forced_client_y_to_y(y: number): { group: string, y: number } | null;
+    abstract offset_x_to_x(x: number): { group: string, x: number } | null;
+    abstract offset_y_to_y(y: number): { group: string, y: number } | null;
+    abstract forced_offset_x_to_x(x: number): { group: string, x: number } | null;
+    abstract forced_offset_y_to_y(y: number): { group: string, y: number } | null;
 }
 
 export class Group

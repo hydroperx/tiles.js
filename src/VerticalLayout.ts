@@ -11,27 +11,27 @@ export class VerticalLayout extends Layout
         super($, max_width, max_height);
     }
 
-    override snap_to_grid(tile: string, event: Event): void
+    override snap_to_grid(tile: string, el: HTMLElement): void
     {
         throw new Error("not implemented");
     }
 
-    override client_x_to_x(x: number): { group: string, x: number } | null
+    override offset_x_to_x(x: number): { group: string, x: number } | null
     {
         throw new Error("not implemented");
     }
 
-    override client_y_to_y(y: number): { group: string, y: number } | null
+    override offset_y_to_y(y: number): { group: string, y: number } | null
     {
         throw new Error("not implemented");
     }
 
-    override forced_client_x_to_x(x: number): { group: string, x: number } | null
+    override forced_offset_x_to_x(x: number): { group: string, x: number } | null
     {
         throw new Error("does not make sense");
     }
 
-    override forced_client_y_to_y(y: number): { group: string, y: number } | null
+    override forced_offset_y_to_y(y: number): { group: string, y: number } | null
     {
         throw new Error("not implemented");
     }

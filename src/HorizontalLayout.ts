@@ -1,5 +1,5 @@
 import getRectangleOverlap from "rectangle-overlap";
-import { mouse } from "getoffset";
+import getOffset from "getoffset";
 
 import { Group, Layout } from "./Layout";
 import type { Tiles } from ".";
@@ -16,17 +16,17 @@ export class HorizontalLayout extends Layout
         super($, max_width, max_height);
     }
 
-    override snap_to_grid(tile: string, event: Event): void
+    override snap_to_grid(tile: string, el: HTMLElement): void
     {
-        const { clientX: pointer_x, clientY: pointer_y } = event as MouseEvent;
+        const { x: dropped_x, y: dropped_y } = getOffset(el, this.$._scroll_node);
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
         const tile_data = prev_group.tiles.find(t => t.id == tile);
 
-        let x = this.client_x_to_x(pointer_x),
-            y = this.client_y_to_y(pointer_y);
+        let x = this.offset_x_to_x(dropped_x),
+            y = this.offset_y_to_y(dropped_y);
         
         if (!x)
-            x = this.forced_client_x_to_x(pointer_x);
+            x = this.forced_offset_x_to_x(dropped_x);
 
         if (x && y)
         {
@@ -67,9 +67,8 @@ export class HorizontalLayout extends Layout
         this.$._readjust_groups_delayed();
     }
 
-    override client_x_to_x(x: number): { group: string, x: number } | null
+    override offset_x_to_x(x: number): { group: string, x: number } | null
     {
-        [x] = mouse({ clientX: x, clientY: 0 }, this.$._container, this.$._scroll_node);
         let group_x = 0;
         const radius = this.$._small_size * this.$._rem;
         const small_w = this.$._small_size * this.$._rem;
@@ -100,9 +99,8 @@ export class HorizontalLayout extends Layout
         return null;
     }
 
-    override client_y_to_y(y: number): { group: string, y: number } | null
+    override offset_y_to_y(y: number): { group: string, y: number } | null
     {
-        [, y] = mouse({ clientX: 0, clientY: y }, this.$._container, this.$._scroll_node);
         const group_y = this.$._label_height * this.$._rem;
         const radius = this.$._small_size * this.$._rem;
         const small_h = this.$._small_size * this.$._rem;
@@ -121,9 +119,8 @@ export class HorizontalLayout extends Layout
         return { group: "", y: this.max_height };
     }
 
-    override forced_client_x_to_x(x: number): { group: string, x: number } | null
+    override forced_offset_x_to_x(x: number): { group: string, x: number } | null
     {
-        [x] = mouse({ clientX: x, clientY: 0 }, this.$._container, this.$._scroll_node);
         let group_x = 0;
         const radius = this.$._small_size * this.$._rem;
         const small_w = this.$._small_size * this.$._rem;
@@ -161,7 +158,7 @@ export class HorizontalLayout extends Layout
         return null;
     }
 
-    override forced_client_y_to_y(y: number): { group: string, y: number } | null
+    override forced_offset_y_to_y(y: number): { group: string, y: number } | null
     {
         throw new Error("does not make sense");
     }
