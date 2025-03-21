@@ -92,10 +92,8 @@ export class HorizontalLayout extends Layout
 
         for (const group of this.groups)
         {
-            const w = Math.max(
-                this.$._tile_size.small_w * this.$._rem,
-                group.width * (this.$._tile_size.small_w * this.$._rem) + group.width * (this.$._tile_gap * this.$._rem)
-            );
+            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width * small_w + group.width * (this.$._tile_gap * this.$._rem))
+                + group_gap;
 
             if (x < group_x - radius) return null;
             if (x > group_x + w + radius) continue;
@@ -108,7 +106,7 @@ export class HorizontalLayout extends Layout
             }
 
             // move on to next group
-            group_x += group_gap + w;
+            group_x += w;
         }
 
         return null;
@@ -144,10 +142,8 @@ export class HorizontalLayout extends Layout
 
         for (const group of this.groups)
         {
-            const w = Math.max(
-                this.$._tile_size.small_w * this.$._rem,
-                group.width * (this.$._tile_size.small_w * this.$._rem) + group.width * (this.$._tile_gap * this.$._rem)
-            );
+            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width * small_w + group.width * (this.$._tile_gap * this.$._rem))
+                + group_gap;
 
             if (x < group_x - radius) return null;
 
@@ -159,7 +155,7 @@ export class HorizontalLayout extends Layout
             }
 
             // move on to next group
-            group_x += group_gap + w;
+            group_x += w;
         }
 
         // New group
@@ -185,7 +181,8 @@ export class HorizontalLayout extends Layout
         for (const group of this.groups)
         {
             const label_x = x;
-            const w = Math.max(this.$._tile_size.small_w, group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap);
+            const w = Math.max(this.$._tile_size.large_w, group.width * this.$._tile_size.small_w + group.width * this.$._tile_gap)
+                + this.$._group_gap;
             // position each tile
             for (const tile of group.tiles)
             {
@@ -203,7 +200,7 @@ export class HorizontalLayout extends Layout
             group.label.style.height = `${this.$._label_height}rem`;
 
             // move on to next group
-            x += w + this.$._group_gap;
+            x += w;
         }
 
         x += this.$._group_gap * 2;

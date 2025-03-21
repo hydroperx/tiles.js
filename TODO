@@ -2,6 +2,7 @@ Bugs:
 
 - [ ] Grid snapping, when going far away in a new auto group, and the first following grid snap does not work, but the second and so on do work.
 - [ ] Shifting tiles not working perfectly.
+- [ ] Somehow, grid snapping is allowing for one group to intersect the another. What is going on?
 
 Other:
 
