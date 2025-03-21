@@ -135,6 +135,7 @@ export class Group
                     const i = this.$.groups.indexOf(this);
                     if (i != -1)
                     {
+                        this.label.remove();
                         this.$.groups.splice(i, 1);
                         this.$.$._state.groups.delete(this.id);
                         this.$.$._keep_groups_sequential();
