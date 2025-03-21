@@ -1,6 +1,6 @@
 Bugs:
 
-- [ ] Shifting tiles isn't workign properly for example when you drag a tile far away in a new anonymous group and drag it again.
+- [ ] Dragging tiles isn't working properly for example when you drag a tile far away in a new anonymous group and drag it again (for some reason groups move/enlargen, and that is not a "shifting" issue as I've debugged it for that).
 - [ ] Shifting tiles can happen resulting in tile positions greater than expected.
 - [ ] An error may occur when grid snapping or shifting tiles due to some tile being removed from group (therefore its respective group is yielding `undefined`).
   - This is apparently happening due to `shift()`. Fix `HorizontalLayout#shift()`?
