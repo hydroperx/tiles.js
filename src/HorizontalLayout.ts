@@ -21,6 +21,7 @@ export class HorizontalLayout extends Layout
         const { x: dropped_x, y: dropped_y } = getOffset(el, this.$._scroll_node);
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
         const tile_data = prev_group.tiles.find(t => t.id == tile);
+        const tile_state = this.$._state.tiles.get(tile);
 
         let x = this.offset_x_to_x(dropped_x),
             y = this.offset_y_to_y(dropped_y);
@@ -47,6 +48,11 @@ export class HorizontalLayout extends Layout
                     prev_group.remove(tile);
                     tile_data.x = x.x;
                     tile_data.y = y.y;
+
+                    tile_state.x = x.x;
+                    tile_state.y = y.y;
+                    tile_state.group = group_id;
+
                     new_group.add(tile_data);
                 }
             }
@@ -58,6 +64,11 @@ export class HorizontalLayout extends Layout
                 {
                     tile_data.x = x.x;
                     tile_data.y = y.y;
+
+                    tile_state.x = x.x;
+                    tile_state.y = y.y;
+                    tile_state.group = x.group;
+
                     new_group.add(tile_data);
                 }
                 else prev_group.add(tile_data);
@@ -247,6 +258,8 @@ export class HorizontalLayout extends Layout
                     group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
                     to_shift_tile.x = to_shift_state.x - to_shift_w;
                     to_shift_tile.y = to_shift_state.y;
+                    to_shift_state.x = to_shift_tile.x;
+                    to_shift_state.y = to_shift_tile.y;
                     group.add(to_shift_tile);
                     place_taker_state.group = this.$._state.tiles.get(to_shift).group;
 
@@ -257,6 +270,11 @@ export class HorizontalLayout extends Layout
                     place_taker_prev_group?.remove(place_taker);
                     place_taker_tile.x = place_taker_new_x;
                     place_taker_tile.y = to_shift_state.y;
+
+                    place_taker_state.x = place_taker_tile.x;
+                    place_taker_state.y = place_taker_tile.y;
+                    place_taker_state.group = group.id;
+
                     group.add(place_taker_tile);
                 }
                 else if (shift_to == "right")
@@ -265,6 +283,8 @@ export class HorizontalLayout extends Layout
                     group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
                     to_shift_tile.x = to_shift_state.x + place_taker_w;
                     to_shift_tile.y = to_shift_state.y;
+                    to_shift_state.x = to_shift_tile.x;
+                    to_shift_state.y = to_shift_tile.y;
                     group.add(to_shift_tile);
 
                     // remove from previous group and insert into new group
@@ -274,6 +294,11 @@ export class HorizontalLayout extends Layout
                     place_taker_prev_group?.remove(place_taker);
                     place_taker_tile.x = place_taker_new_x;
                     place_taker_tile.y = to_shift_state.y;
+
+                    place_taker_state.x = place_taker_tile.x;
+                    place_taker_state.y = place_taker_tile.y;
+                    place_taker_state.group = group.id;
+
                     group.add(place_taker_tile);
                 }
 
@@ -295,6 +320,11 @@ export class HorizontalLayout extends Layout
                 place_taker_prev_group?.remove(place_taker);
                 place_taker_tile.x = x;
                 place_taker_tile.y = y;
+
+                place_taker_state.x = place_taker_tile.x;
+                place_taker_state.y = place_taker_tile.y;
+                place_taker_state.group = group.id;
+
                 group.add(place_taker_tile);
 
                 // Initial previously taken size is that of place_taker
@@ -333,6 +363,7 @@ export class HorizontalLayout extends Layout
 
         // vars
         const t1_data = group.tiles.find(t => t.id == t1)!;
+        const t1_state = this.$._state.tiles.get(t1)!;
         const { width: t1_w, height: t1_h } = t1_data;
 
         // shift t1 (x, y)
@@ -381,6 +412,8 @@ export class HorizontalLayout extends Layout
         group.remove(t1);
         t1_data.x = t1_new_x;
         t1_data.x = t1_new_y;
+        t1_state.x = t1_data.x;
+        t1_state.y = t1_data.y;
         group.add(t1_data);
     }
 }
