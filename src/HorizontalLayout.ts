@@ -90,7 +90,6 @@ export class HorizontalLayout extends Layout
     {
         let group_x = 0;
         const small_w = this.$._small_size * this.$._rem;
-        const radius = small_w;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
 
@@ -99,8 +98,8 @@ export class HorizontalLayout extends Layout
             const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
-            if (x < group_x - radius) return null;
-            if (x > group_x + w + radius) continue;
+            if (x < group_x) return null;
+            if (x > group_x + w) continue;
 
             for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
             {
@@ -140,7 +139,6 @@ export class HorizontalLayout extends Layout
     {
         let group_x = 0;
         const small_w = this.$._small_size * this.$._rem;
-        const radius = small_w;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
 
@@ -149,7 +147,7 @@ export class HorizontalLayout extends Layout
             const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
-            if (x < group_x - radius) return null;
+            if (x < group_x) return null;
 
             for (let gx = group_x, j = 0, lim = group_x + w; gx < lim; j++)
             {
