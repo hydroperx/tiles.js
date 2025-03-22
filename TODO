@@ -1,6 +1,5 @@
 Bugs:
 
-- [ ] Grid snapping, when going far away in a new auto group, and the first following grid snap does not work, but the second and so on do work.
 - [ ] Grid snapping not working perfectly. For example, in the demo, in the initial state, after dropping the red tile below the blue tile, instead of moving the red tile to the blue's group, the demo instead keeps it in the first group. Something wrong somewhere.
 - [ ] Shifting tiles not working perfectly.
 

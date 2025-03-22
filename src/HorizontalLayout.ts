@@ -66,7 +66,8 @@ export class HorizontalLayout extends Layout
                     prev_group.remove(tile);
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
-                    prev_group.auto_self_removal();
+                    if (new_group !== prev_group)
+                        prev_group.auto_self_removal();
 
                     tile_data.x = x.x;
                     tile_data.y = y.y;
