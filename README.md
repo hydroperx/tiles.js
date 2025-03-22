@@ -49,7 +49,7 @@ const tiles = new Tiles({
     // Gap between tiles, in cascading "rem" units.
     tileGap: 0.6,
     // Gap between groups, in cascading "rem" units.
-    groupGap: 5,
+    groupGap: 9,
     // The height of group labels, in cascading "rem" units.
     labelHeight: 2,
     // Maximum width in small tiles.
