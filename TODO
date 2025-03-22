@@ -1,6 +1,5 @@
 Bugs:
 
-- [ ] Dropping the red tile after the blue tile and just a bit more forward causes a bug, where the red tile is bound to keep only snapping forward and so on.
 - [ ] Shifting tiles not working perfectly.
 
 Other:

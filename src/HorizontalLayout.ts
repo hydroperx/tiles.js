@@ -102,7 +102,12 @@ export class HorizontalLayout extends Layout
                 + group_gap;
 
             if (x < group_x - r) return null;
-            if (x > group_x + w) continue;
+            if (x > group_x + w)
+            {
+                // move on to next group
+                group_x += w;
+                continue;
+            }
 
             for (let gx = group_x, j = 0, lim = group_x + w - r; gx < lim; j++)
             {
