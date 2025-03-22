@@ -88,8 +88,8 @@ export class HorizontalLayout extends Layout
     override offset_x_to_x(x: number): { group: string, x: number } | null
     {
         let group_x = 0;
-        const radius = this.$._small_size * this.$._rem;
         const small_w = this.$._small_size * this.$._rem;
+        const radius = small_w;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
 
@@ -138,8 +138,8 @@ export class HorizontalLayout extends Layout
     override forced_offset_x_to_x(x: number): { group: string, x: number } | null
     {
         let group_x = 0;
-        const radius = this.$._small_size * this.$._rem;
         const small_w = this.$._small_size * this.$._rem;
+        const radius = small_w;
         const tile_gap = this.$._tile_gap * this.$._rem;
         const group_gap = this.$._group_gap * this.$._rem;
 
