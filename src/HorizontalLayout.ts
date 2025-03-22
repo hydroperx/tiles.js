@@ -18,7 +18,9 @@ export class HorizontalLayout extends Layout
 
     override snap_to_grid(tile: string, el: HTMLElement): void
     {
-        const { x: dropped_x, y: dropped_y } = getOffset(el, this.$._scroll_node);
+        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._scroll_node);
+        dropped_x = dropped_x / this.$._rem;
+        dropped_y = dropped_y / this.$._rem;
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
         const tile_state = this.$._state.tiles.get(tile);
         const tile_data = (prev_group ? prev_group.tiles.find(t => t.id == tile) : null)
@@ -89,14 +91,14 @@ export class HorizontalLayout extends Layout
     override offset_x_to_x(x: number): { group: string, x: number } | null
     {
         let group_x = 0;
-        const small_w = this.$._small_size * this.$._rem;
+        const small_w = this.$._small_size;
         const r = small_w / 2;
-        const tile_gap = this.$._tile_gap * this.$._rem;
-        const group_gap = this.$._group_gap * this.$._rem;
+        const tile_gap = this.$._tile_gap;
+        const group_gap = this.$._group_gap;
 
         for (const group of this.groups)
         {
-            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
+            const w = Math.max(this.$._tile_size.large_w, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
             if (x < group_x - r) return null;
@@ -117,10 +119,10 @@ export class HorizontalLayout extends Layout
 
     override offset_y_to_y(y: number): { group: string, y: number } | null
     {
-        const group_y = this.$._label_height * this.$._rem;
-        const radius = this.$._small_size * this.$._rem;
-        const small_h = this.$._small_size * this.$._rem;
-        const tile_gap = this.$._tile_gap * this.$._rem;
+        const group_y = this.$._label_height;
+        const radius = this.$._small_size;
+        const small_h = this.$._small_size;
+        const tile_gap = this.$._tile_gap;
 
         if (y < group_y - radius) return null;
         const h = this.max_height == 0 ? 0 : (this.max_height * small_h) * ((this.max_height - 1) * tile_gap);
@@ -137,14 +139,14 @@ export class HorizontalLayout extends Layout
     override forced_offset_x_to_x(x: number): { group: string, x: number } | null
     {
         let group_x = 0;
-        const small_w = this.$._small_size * this.$._rem;
+        const small_w = this.$._small_size;
         const r = small_w / 2;
-        const tile_gap = this.$._tile_gap * this.$._rem;
-        const group_gap = this.$._group_gap * this.$._rem;
+        const tile_gap = this.$._tile_gap;
+        const group_gap = this.$._group_gap;
 
         for (const group of this.groups)
         {
-            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
+            const w = Math.max(this.$._tile_size.large_w, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
             if (x < group_x - r) return null;
