@@ -1,6 +1,7 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 import Draggable from "com.hydroper.domdraggable";
+import { TypedEventTarget } from "com.hydroper.typedeventtarget";
 
 import { RemObserver } from "./utils/RemObserver";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
@@ -13,7 +14,10 @@ import { VerticalLayout } from "./VerticalLayout";
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
-export class Tiles
+export class Tiles extends (EventTarget as TypedEventTarget<{
+    addedGroup: CustomEvent<{ group: Group, label: HTMLDivElement }>,
+    stateUpdated: CustomEvent<State>,
+}>)
 {
     /** @private */ _state: State;
     /** @private */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
@@ -100,6 +104,8 @@ export class Tiles
          */
         scrollNode?: Element,
     }) {
+        super();
+
         assert(options.direction == "horizontal", "Vertical direction not supported currently.");
         assert(options.direction == "horizontal" ? (options.maxHeight ?? 0) >= 4 : true, "maxHeight must be specified and be >= 4.");
 
@@ -237,8 +243,18 @@ export class Tiles
         div.innerText = label;
         this._container.appendChild(div);
 
-        this._layout.groups.splice(index, 0, new Group(this._layout, id, div));
+        const group_data = new Group(this._layout, id, div);
+        this._layout.groups.splice(index, 0, group_data);
         this._layout.readjust_groups();
+
+        this.dispatchEvent(new CustomEvent("addedGroup", {
+            detail: {
+                group: group_data,
+                label: div,
+            }
+        }));
+
+        this._trigger_state_update();
 
         return div;
     }
@@ -515,5 +531,11 @@ export class Tiles
             .sort((a, b) => a[1].index - b[1].index);
         for (let i = 0; i < sorted_groups.length; i++)
             sorted_groups[i][1].index = i;
+    }
+
+    /** @private */
+    _trigger_state_update()
+    {
+        this.dispatchEvent(new CustomEvent("stateUpdated", { detail: this._state }))
     }
 }

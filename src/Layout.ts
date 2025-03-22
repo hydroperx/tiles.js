@@ -117,6 +117,9 @@ export class Group
         // Move next groups
         this.$.readjust_groups();
 
+        // Trigger state update
+        this.$.$._trigger_state_update();
+
         return true;
     }
 
@@ -129,6 +132,7 @@ export class Group
                 this.tiles.splice(i, 1);
                 this._resize();
                 this.$.readjust_groups();
+                this.$.$._trigger_state_update();
                 return true;
             }
         }
@@ -146,6 +150,7 @@ export class Group
                 this.$.groups.splice(i, 1);
                 this.$.$._state.groups.delete(this.id);
                 this.$.$._keep_groups_sequential();
+                this.$.$._trigger_state_update();
             }
         }
     }

@@ -88,3 +88,25 @@ const button = tiles.addTile({
 // Disposal
 tiles.destroy();
 ```
+
+## Events
+
+### addedGroup
+
+Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, label: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
+
+```ts
+tiles.addEventListener("addedGroup", ({ detail: { group, label } }) => {
+    //
+});
+```
+
+### stateUpdated
+
+Dispatched whenever the state is updated. Event is given a `CustomEvent<State>` object.
+
+```ts
+tiles.addEventListener("stateUpdated", ({ detail: state }) => {
+    //
+});
+```
