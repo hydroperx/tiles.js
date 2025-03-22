@@ -95,7 +95,7 @@ export class HorizontalLayout extends Layout
 
         for (const group of this.groups)
         {
-            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * (this.$._tile_gap * this.$._rem))
+            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
             if (x < group_x - radius) return null;
@@ -145,7 +145,7 @@ export class HorizontalLayout extends Layout
 
         for (const group of this.groups)
         {
-            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * (this.$._tile_gap * this.$._rem))
+            const w = Math.max(this.$._tile_size.large_w * this.$._rem, group.width == 0 ? 0 : group.width * small_w + (group.width - 1) * tile_gap)
                 + group_gap;
 
             if (x < group_x - radius) return null;
