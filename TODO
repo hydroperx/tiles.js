@@ -1,6 +1,7 @@
 Bugs:
 
 - [ ] Grid snapping not working perfectly. For example, in the demo, in the initial state, after dropping the red tile below the blue tile, instead of moving the red tile to the blue's group, the demo instead keeps it in the first group. Something wrong somewhere.
+  - [ ] Another case is dropping the red tile after the blue tile, in which case the red tile is bound to keep only snapping forward and so on.
 - [ ] Shifting tiles not working perfectly.
 
 Other:
