@@ -142,17 +142,18 @@ export class Group
     auto_self_removal()
     {
         if (this.tiles.length == 0)
-        {
-            const i = this.$.groups.indexOf(this);
-            if (i != -1)
-            {
-                this.label.remove();
-                this.$.groups.splice(i, 1);
-                this.$.$._state.groups.delete(this.id);
-                this.$.$._keep_groups_sequential();
-                this.$.$._trigger_state_update();
-            }
-        }
+            this.self_removal();
+    }
+
+    self_removal()
+    {
+        const i = this.$.groups.indexOf(this);
+        if (i == -1) return;
+        this.label.remove();
+        this.$.groups.splice(i, 1);
+        this.$.$._state.groups.delete(this.id);
+        this.$.$._keep_groups_sequential();
+        this.$.$._trigger_state_update();
     }
 
     clear_area(x: number, y: number, w: number, h: number): void
