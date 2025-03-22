@@ -12,10 +12,6 @@ Other:
   - [ ] and tiles
 - [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
 
-# Vertical containers
-
-- [ ] `put_label` must additionally increase `this.m_group_y` by `this.m_group_label_height * this.m_rem`
-
 # API
 
 - [ ] Allow adding tiles
