@@ -105,7 +105,7 @@ export class HorizontalLayout extends Layout
             for (let gx = group_x, j = 0, lim = group_x + w - r; gx < lim; j++)
             {
                 if (x < gx + small_w / 2) return { group: group.id, x: j };
-                if (j != 0) gx += tile_gap;
+                gx += tile_gap;
                 gx += small_w;
             }
 
@@ -130,7 +130,7 @@ export class HorizontalLayout extends Layout
         for (let gy = group_y, j = 0, lim = group_y + h; gy < lim; j++)
         {
             if (y < gy + small_h / 2) return { group: "", y: j };
-            if (j != 0) gy += tile_gap;
+            gy += tile_gap;
             gy += small_h;
         }
         return { group: "", y: this.max_height };
@@ -154,7 +154,7 @@ export class HorizontalLayout extends Layout
             for (let gx = group_x, j = 0, lim = group_x + w - r; gx < lim; j++)
             {
                 if (x < gx + small_w / 2) return { group: group.id, x: j };
-                if (j != 0) gx += tile_gap;
+                gx += tile_gap;
                 gx += small_w;
             }
 
@@ -166,7 +166,7 @@ export class HorizontalLayout extends Layout
         for (let gx = group_x, j = 0; gx < 0x7FFFFFFF; j++)
         {
             if (x < gx + small_w / 2) return { group: "", x: j };
-            if (j != 0) gx += tile_gap;
+            gx += tile_gap;
             gx += small_w;
         }
 
