@@ -4,7 +4,7 @@ Base layout implementation for Windows 8 like live tiles in HTML5.
 
 ## Status
 
-The project still has a few drag-n-drop bugs to be solved.
+Shifting during drag-n-drop isn't working currently, but at least grid snapping does.
 
 ## Specifications
 
