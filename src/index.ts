@@ -296,6 +296,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         const [w, h] = this.get_tile_size(size);
         const button = document.createElement("button");
         button.setAttribute("data-id", id);
+        button.setAttribute("data-size", size);
         button.classList.add(this._tile_class_name);
         button.style.position = "absolute";
         button.style.width = `${w}rem`;
@@ -489,6 +490,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         const [real_w, real_h] = this.get_tile_size(size);
         button.style.width = `${real_w}rem`;
         button.style.height = `${real_h}rem`;
+        button.setAttribute("data-size", size);
 
         this._trigger_state_update();
     }

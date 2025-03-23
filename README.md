@@ -20,6 +20,8 @@ Tile element tag: `button`
 
 Tile element attribute `data-id`: the tile ID.
 
+Tile element attribute `data-size`: the tile size (`small`, `medium`, `wide` or `large`).
+
 Tile element attribute `data-dragging`: false or true.
 
 Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
