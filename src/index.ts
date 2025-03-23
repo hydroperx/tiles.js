@@ -203,7 +203,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
         const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
         const index = existing_indices.length == 0 ? 0 : Math.max.apply(null, existing_indices) + 1;
-        assert(existing_indices.indexOf(index) == -1, `Group at index ${index} already exists.`);
         this._state.groups.set(id, { index, label });
 
         const div = document.createElement("div");
