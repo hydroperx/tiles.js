@@ -177,31 +177,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     }
 
     /**
-     * Loads a state in the `Tiles` instance.
-     */
-    load(state: State): void
-    {
-        for (const [id, group] of state.groups)
-        {
-            this.addGroup({
-                id,
-                index: group.index,
-                label: group.label,
-            });
-        }
-        for (const [id, tile] of state.tiles)
-        {
-            this.addTile({
-                id,
-                size: tile.size,
-                x: tile.x,
-                y: tile.y,
-                group: tile.group,
-            });
-        }
-    }
-
-    /**
      * Returns the state of the `Tiles` instance.
      */
     get state(): State
@@ -210,41 +185,24 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     }
 
     /**
-     * Returns the state of the `Tiles` instance, cloned.
-     */
-    save(): State
-    {
-        return this._state.clone();
-    }
-
-    /**
-     * Adds a group and returns its label's `div` element.
-     * 
-     * If `index` is -1 (default), inserts the group at the end.
+     * Adds a group to the end and returns its label's `div` element.
      */
     addGroup({
         id,
-        index,
         label,
     }: {
         id: string,
-        index?: number,
         label?: string,
     }): HTMLDivElement
     {
         // Keep groups sequential
         this._keep_groups_sequential();
 
-        index ??= -1;
         label ??= "";
         assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
 
         const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
-        if (index === -1)
-        {
-            index = Math.max.apply(null, existing_indices.concat(0)) + 1;
-        }
-        assert(index <= this._layout.groups.length, "Group index " + index + " out of bounds.");
+        const index = existing_indices.length == 0 ? 0 : Math.max.apply(null, existing_indices) + 1;
         assert(existing_indices.indexOf(index) == -1, `Group at index ${index} already exists.`);
         this._state.groups.set(id, { index, label });
 

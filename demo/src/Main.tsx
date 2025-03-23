@@ -17,7 +17,6 @@ const tiles = new Tiles({
 
 tiles.addGroup({
     id: "group1",
-    index: 0,
     label: "Group 1",
 });
 
@@ -41,7 +40,6 @@ tile2.style.background = "green";
 
 tiles.addGroup({
     id: "group2",
-    index: 1,
     label: "Group 2",
 });
 

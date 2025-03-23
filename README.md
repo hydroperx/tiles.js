@@ -69,7 +69,6 @@ const tiles = new Tiles({
 // Adding groups
 const label_div = tiles.addGroup({
     id: "group1",
-    index: 0,
     label: "Group 1",
 });
 
