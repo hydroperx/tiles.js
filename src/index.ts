@@ -532,8 +532,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     {
         const sorted_groups = Array.from(this._state.groups.entries())
             .sort((a, b) => a[1].index - b[1].index);
+        let changed = false;
         for (let i = 0; i < sorted_groups.length; i++)
-            sorted_groups[i][1].index = i;
+        {
+            const group = sorted_groups[i][1];
+            if (group.index != i) changed = true;
+            group.index = i;
+        }
+        if (changed)
+            this._trigger_state_update();
     }
 
     /** @private */

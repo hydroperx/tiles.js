@@ -13,7 +13,6 @@ Other:
 # API
 
 - [x] Allow adding tiles
-- [ ] Trigger state update when tiles are effectively rearranged.
 - [ ] Allow resizing tiles
   - [ ] Update both state size and tile data width/height
   - [ ] Trigger `stateUpdated`
