@@ -1,22 +1,7 @@
 Bugs:
 
-- [ ] Grid snapping not working at all far away in an auto group, in case an initial far away grid snap occurred in an auto group already. I think this happening because groups are being automatically removed and the previous groups turn "empty" after a grid snap.
-- [ ] Shifting tiles not working perfectly.
+- [ ] Shifting tiles not working.
 
 Other:
  
-- [ ] Control the cascading `transition` (to feel more like Windows 8)
-  - [ ] of labels
-  - [ ] and tiles
-
-# API
-
-- [x] Allow adding tiles
-- [x] Allow resizing tiles
-- [x] Allow removing tile
-- [x] Allow adding groups
-- [x] Allow renaming group labels
-- [ ] Allow removing groups
-  - [ ] Use `group.self_removal();`
-- [ ] Allow checking whether a group exists or not
-- [ ] Allow checking whether a tile exists or not
+- [ ] Control the cascading `transition` of tiles during shift (to feel more like Windows 8)

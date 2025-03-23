@@ -553,6 +553,23 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         this._trigger_state_update();
     }
 
+    removeGroup(id: string): void
+    {
+        const group = this._layout.groups.find(g => g.id == id);
+        if (!group) return;
+        group.self_removal();
+    }
+
+    groupExists(id: string): boolean
+    {
+        return this._state.groups.has(id);
+    }
+
+    tileExists(id: string): boolean
+    {
+        return this._state.tiles.has(id);
+    }
+
     private get_tile_size(size: TileSize): [number, number]
     {
         const r = this._tile_size;
