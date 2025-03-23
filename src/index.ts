@@ -295,8 +295,28 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         assert(this._state.groups.has(group), `Group ${group} does not exist.`);
         assert(!this._state.tiles.has(id), `Duplicate tile ID: ${id}.`);
         size ??= "small";
-        x ??= 0;
-        y ??= 0;
+
+        x ??= -1;
+        y ??= -1;
+        if (x == -1)
+        {
+            let last_group: Group | null = this._layout.groups.length == 0 ? null : this._layout.groups[this._layout.groups.length - 1];
+            if (last_group)
+            {
+                if (y == -1)
+                    [x, y] = last_group.last_tile_position();
+                else [x] = last_group.last_tile_position();
+            }
+            else x = 0;
+        }
+        else if (y == -1)
+        {
+            let last_group: Group | null = this._layout.groups.length == 0 ? null : this._layout.groups[this._layout.groups.length - 1];
+            if (last_group)
+                [, y] = last_group.last_tile_position();
+            else y = 0;
+        }
+
         this._state.tiles.set(id, {
             size,
             x,

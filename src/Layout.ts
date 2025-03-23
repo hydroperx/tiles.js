@@ -184,6 +184,26 @@ export class Group
         return true;
     }
 
+    last_tile_position(): [number, number]
+    {
+        let max_horizontal_tiles: Tile[] = [];
+        t: for (const tile of this.tiles)
+        {
+            for (const other of max_horizontal_tiles)
+            {
+                if (tile.x > other.x)
+                    max_horizontal_tiles.length = 0,
+                    max_horizontal_tiles.push(tile);
+                else if (tile.x == other.x)
+                    max_horizontal_tiles.push(tile);
+                else continue t;
+            }
+        }
+        const x = max_horizontal_tiles.length == 0 ? 0 : max_horizontal_tiles[max_horizontal_tiles.length - 1].x;
+        const y = Math.max.apply(null, max_horizontal_tiles.map(t => t.y).concat(0));
+        return [x, y];
+    }
+
     private _resize(): void
     {
         this._width = Math.max.apply(null, this.tiles.map(t => t.x + t.width).concat(0));
