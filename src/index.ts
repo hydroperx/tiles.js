@@ -203,6 +203,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /**
      * Returns the state of the `Tiles` instance.
      */
+    get state(): State
+    {
+        return this._state;
+    }
+
+    /**
+     * Returns the state of the `Tiles` instance, cloned.
+     */
     save(): State
     {
         return this._state.clone();
