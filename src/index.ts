@@ -290,7 +290,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             group,
         });
 
-        const normal_transition = `${this._tile_transition} translate 0.2s ease-out`;
+        const normal_transition = `${this._tile_transition + (this._tile_transition ? ", " : "")} translate 0.2s ease-out`;
         const dragging_transition = `${this._tile_transition}`;
 
         const [w, h] = this.get_tile_size(size);
@@ -342,7 +342,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         
                 const diff_x = drag_start[0] - x
                     , diff_y = drag_start[1] - y
-                    , diff_rad = small_w / 1.1;
+                    , diff_rad = small_w / 4;
                 if (diff_x > -diff_rad && diff_x <= diff_rad && diff_y > -diff_rad && diff_y <= diff_rad)
                 {
                     return;
