@@ -17,8 +17,8 @@ Other:
   - [ ] Trigger `stateUpdated`
 - [ ] Allow removing tile
   - [ ] Destroy and unassign draggable
-  - [ ] Remove it from the Layout as well.
   * [ ] Remove it from the DOM.
+  - [ ] Remove it from the Layout as well.
 - [x] Allow adding groups
 - [ ] Allow renaming group labels
   - [ ] Trigger `stateUpdated`
