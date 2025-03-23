@@ -17,6 +17,9 @@ export * from "./State";
 export class Tiles extends (EventTarget as TypedEventTarget<{
     addedGroup: CustomEvent<{ group: Group, label: HTMLDivElement }>,
     stateUpdated: CustomEvent<State>,
+    dragStart: CustomEvent<{ tile: HTMLButtonElement }>,
+    drag: CustomEvent<{ tile: HTMLButtonElement }>,
+    dragEnd: CustomEvent<{ tile: HTMLButtonElement }>,
 }>)
 {
     /** @private */ _state: State;
@@ -335,6 +338,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                 button.style.transition = dragging_transition;
                 button.style.zIndex = "999999999";
                 this._size_only_grows = true;
+                this.dispatchEvent(new CustomEvent("dragStart", {
+                    detail: { tile: el },
+                }));
             },
             onDrag: (el, x, y, evt) =>
             {
@@ -382,6 +388,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                         active_tiles_hit = false;
                     }
                 }
+
+                this.dispatchEvent(new CustomEvent("drag", {
+                    detail: { tile: el },
+                }));
             },
             onDragEnd: (el, x, y, evt) =>
             {
@@ -407,6 +417,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                 this._layout.readjust_groups();
 
                 active_tiles_hit = false;
+
+                this.dispatchEvent(new CustomEvent("dragEnd", {
+                    detail: { tile: el },
+                }));
             },
         });
         this._draggables.set(button, draggable);

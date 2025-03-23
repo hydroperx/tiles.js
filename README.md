@@ -110,3 +110,33 @@ tiles.addEventListener("stateUpdated", ({ detail: state }) => {
     //
 });
 ```
+
+### dragStart
+
+Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
+
+```ts
+tiles.addEventListener("dragStart", ({ detail: { tile } }) => {
+    //
+});
+```
+
+### drag
+
+Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
+
+```ts
+tiles.addEventListener("drag", ({ detail: { tile } }) => {
+    //
+});
+```
+
+### dragEnd
+
+Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
+
+```ts
+tiles.addEventListener("dragEnd", ({ detail: { tile } }) => {
+    //
+});
+```

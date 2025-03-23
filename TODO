@@ -27,4 +27,3 @@ Other:
   - [ ] Use `group.self_removal();`
 - [ ] Allow checking whether a group exists or not
 - [ ] Allow checking whether a tile exists or not
-- [ ] Drag events
