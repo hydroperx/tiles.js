@@ -450,6 +450,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         // Rearrange
         this._readjust_groups_delayed();
 
+        // Trigger state update
+        this._trigger_state_update();
+
         return button;
     }
 
