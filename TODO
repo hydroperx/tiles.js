@@ -4,11 +4,10 @@ Bugs:
 - [ ] Shifting tiles not working perfectly.
 
 Other:
-
-- [ ] Control the cascading `transition`
+ 
+- [ ] Control the cascading `transition` (to feel more like Windows 8)
   - [ ] of labels
   - [ ] and tiles
-- [ ] Do not set/use `data-group`, `data-size`, `data-horizontal` and `data-vertical` at tiles.
 
 # API
 
