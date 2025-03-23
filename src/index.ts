@@ -489,6 +489,56 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
         return button;
     }
+    
+    resizeTile(id: string, size: TileSize): void
+    {
+        const tile_state = this._state.tiles.get(id);
+        if (!tile_state) return;
+        const group = this._layout.groups.find(g => g.id == tile_state.group);
+        if (!group) return;
+        const tile_data = group.tiles.find(t => t.id == id);
+        if (!tile_data) return;
+        const button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
+            .find(btn => btn.getAttribute("data-id") == id) as HTMLButtonElement | undefined;
+        if (!button) return;
+
+        const w = get_size_width_small(size)
+            , h = get_size_height_small(size);
+        if (!group.is_area_available(tile_state.x, tile_state.y, w, h))
+            return;
+
+        tile_state.size = size;
+        tile_data.width = w;
+        tile_data.height = h;
+
+        const [real_w, real_h] = this.get_tile_size(size);
+        button.style.width = `${real_w}rem`;
+        button.style.height = `${real_h}rem`;
+
+        this._trigger_state_update();
+    }
+
+    removeTile(id: string): void
+    {
+        const tile_state = this._state.tiles.get(id);
+        if (!tile_state) return;
+        const group = this._layout.groups.find(g => g.id == tile_state.group);
+        if (!group) return;
+        const tile_data = group.tiles.find(t => t.id == id);
+        if (!tile_data) return;
+        const button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
+            .find(btn => btn.getAttribute("data-id") == id) as HTMLButtonElement | undefined;
+        if (!button) return;
+
+        const draggable = this._draggables.get(button);
+        if (draggable)
+        {
+            draggable.destroy();
+            this._draggables.delete(button);
+        }
+        button.remove();
+        group.remove(id);
+    }
 
     private get_tile_size(size: TileSize): [number, number]
     {

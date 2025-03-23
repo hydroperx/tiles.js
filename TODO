@@ -12,13 +12,8 @@ Other:
 # API
 
 - [x] Allow adding tiles
-- [ ] Allow resizing tiles
-  - [ ] Update both state size and tile data width/height
-  - [ ] Trigger `stateUpdated`
-- [ ] Allow removing tile
-  - [ ] Destroy and unassign draggable
-  * [ ] Remove it from the DOM.
-  - [ ] Remove it from the Layout as well.
+- [x] Allow resizing tiles
+- [x] Allow removing tile
 - [x] Allow adding groups
 - [ ] Allow renaming group labels
   - [ ] Trigger `stateUpdated`
