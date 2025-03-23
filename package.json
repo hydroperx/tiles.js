@@ -1,6 +1,6 @@
 {
   "name": "com.hydroper.tilelayout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {},
   "main": "src/index.ts",
@@ -17,11 +17,12 @@
   "repository": {
     "url": "https://github.com/realhydroper/tilelayout.git"
   },
-  "description": "Metro design components",
+  "description": "Metro tile layout",
   "license": "Apache-2.0",
   "keywords": [
+    "tile",
     "metro",
-    "ui"
+    "live"
   ],
   "author": "Hydroper <HydroperFox@gmail.com>",
   "devDependencies": {
