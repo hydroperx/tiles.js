@@ -1,6 +1,6 @@
 Bugs:
 
-- [ ] Grid snapping not working at all far away in an auto group, in case an initial far away grid snap occurred in an auto group already.
+- [ ] Grid snapping not working at all far away in an auto group, in case an initial far away grid snap occurred in an auto group already. I think this happening because groups are being automatically removed and the previous groups turn "empty" after a grid snap.
 - [ ] Shifting tiles not working perfectly.
 
 Other:
