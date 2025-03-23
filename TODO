@@ -15,8 +15,7 @@ Other:
 - [x] Allow resizing tiles
 - [x] Allow removing tile
 - [x] Allow adding groups
-- [ ] Allow renaming group labels
-  - [ ] Trigger `stateUpdated`
+- [x] Allow renaming group labels
 - [ ] Allow removing groups
   - [ ] Use `group.self_removal();`
 - [ ] Allow checking whether a group exists or not
