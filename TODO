@@ -1,5 +1,6 @@
 Bugs:
 
+- [ ] Grid snapping not working at all far away in an auto group, in case an initial far away grid snap occurred in an auto group already.
 - [ ] Shifting tiles not working perfectly.
 
 Other:
