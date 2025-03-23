@@ -98,4 +98,14 @@ export class State
         r.set(this);
         return r;
     }
+
+    groupExists(id: string): boolean
+    {
+        return this.groups.has(id);
+    }
+
+    tileExists(id: string): boolean
+    {
+        return this.tiles.has(id);
+    }
 }
