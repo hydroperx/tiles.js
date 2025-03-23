@@ -101,6 +101,16 @@ tiles.addEventListener("addedGroup", ({ detail: { group, label } }) => {
 });
 ```
 
+### addedTile
+
+Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement }>` object.
+
+```ts
+tiles.addEventListener("addedTile", ({ detail: { tile, button } }) => {
+    //
+});
+```
+
 ### stateUpdated
 
 Dispatched whenever the state is updated. Event is given a `CustomEvent<State>` object.

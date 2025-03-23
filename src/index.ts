@@ -16,6 +16,7 @@ export * from "./State";
 
 export class Tiles extends (EventTarget as TypedEventTarget<{
     addedGroup: CustomEvent<{ group: Group, label: HTMLDivElement }>,
+    addedTile: CustomEvent<{ tile: Tile, button: HTMLButtonElement }>,
     stateUpdated: CustomEvent<State>,
     dragStart: CustomEvent<{ tile: HTMLButtonElement }>,
     drag: CustomEvent<{ tile: HTMLButtonElement }>,
@@ -347,7 +348,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
         // Add to layout's group
         const layout_group = this._layout.groups.find(g => g.id == group)!;
-        layout_group.add(new Tile(id, button, x, y, get_size_width_small(size), get_size_height_small(size)));
+        const tile_data = new Tile(id, button, x, y, get_size_width_small(size), get_size_height_small(size));
+        layout_group.add(tile_data);
 
         // Drag vars
         let drag_start: [number, number] | null = null;
@@ -491,6 +493,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
         // Rearrange
         this._readjust_groups_delayed();
+
+        // Trigger addedTile event
+        this.dispatchEvent(new CustomEvent("addedTile", {
+            detail: {
+                tile: tile_data,
+                button,
+            }
+        }));
 
         // Trigger state update
         this._trigger_state_update();
