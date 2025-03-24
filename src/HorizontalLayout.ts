@@ -40,7 +40,6 @@ export class HorizontalLayout extends Layout
                 const group_id = "auto$" + random_hex_large();
                 this.$.addGroup({
                     id: group_id,
-                    index: -1,
                     label: "",
                 });
                 const new_group = this.groups.find(g => g.id == group_id);
@@ -68,7 +67,7 @@ export class HorizontalLayout extends Layout
                     prev_group.remove(tile);
                 if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
-                    if (new_group !== prev_group)
+                    if (prev_group && new_group !== prev_group)
                         prev_group.auto_self_removal();
 
                     tile_data.x = x.x;
@@ -226,6 +225,7 @@ export class HorizontalLayout extends Layout
         // Make sure to insert place_taker into the group that
         // the tile to be shifted is part from.
         const place_taker_state = this.$._state.tiles.get(place_taker);
+        if (!place_taker_state) return;
 
         // Misc vars
         const place_taker_w = get_size_width_small(place_taker_state.size);
@@ -275,15 +275,15 @@ export class HorizontalLayout extends Layout
                     // remove from previous group and insert into new group
                     const place_taker_new_x = to_shift_state.x;
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
-                    const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                    place_taker_state.x = place_taker_new_x;
+                    place_taker_state.y = to_shift_state.y;
+                    place_taker_state.group = group.id;
+                    const place_taker_tile = place_taker_prev_group?.tiles.find(t => t.id == place_taker)
+                        ?? new Tile(place_taker, this.$._buttons.get(place_taker)!, place_taker_state.x, place_taker_state.y, get_size_width_small(place_taker_state.size), get_size_height_small(place_taker_state.size));
                     place_taker_prev_group?.remove(place_taker);
                     place_taker_prev_group?.auto_self_removal();
-                    place_taker_tile.x = place_taker_new_x;
-                    place_taker_tile.y = to_shift_state.y;
-
-                    place_taker_state.x = place_taker_tile.x;
-                    place_taker_state.y = place_taker_tile.y;
-                    place_taker_state.group = group.id;
+                    place_taker_tile.x = place_taker_state.x;
+                    place_taker_tile.y = place_taker_state.y;
 
                     group.add(place_taker_tile);
                 }
@@ -300,15 +300,15 @@ export class HorizontalLayout extends Layout
                     // remove from previous group and insert into new group
                     const place_taker_new_x = to_shift_state.x;
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
-                    const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                    place_taker_state.x = place_taker_new_x;
+                    place_taker_state.y = to_shift_state.y;
+                    place_taker_state.group = group.id;
+                    const place_taker_tile = place_taker_prev_group?.tiles.find(t => t.id == place_taker)
+                        ?? new Tile(place_taker, this.$._buttons.get(place_taker)!, place_taker_state.x, place_taker_state.y, get_size_width_small(place_taker_state.size), get_size_height_small(place_taker_state.size));
                     place_taker_prev_group?.remove(place_taker);
                     place_taker_prev_group?.auto_self_removal();
-                    place_taker_tile.x = place_taker_new_x;
-                    place_taker_tile.y = to_shift_state.y;
-
-                    place_taker_state.x = place_taker_tile.x;
-                    place_taker_state.y = place_taker_tile.y;
-                    place_taker_state.group = group.id;
+                    place_taker_tile.x = place_taker_state.x;
+                    place_taker_tile.y = place_taker_state.y;
 
                     group.add(place_taker_tile);
                 }
@@ -326,16 +326,16 @@ export class HorizontalLayout extends Layout
                 }
 
                 // remove from previous group and insert into new group
+                place_taker_state.x = x;
+                place_taker_state.y = y;
+                place_taker_state.group = group.id;
                 const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
-                const place_taker_tile = place_taker_prev_group.tiles.find(t => t.id == place_taker);
+                const place_taker_tile = place_taker_prev_group?.tiles.find(t => t.id == place_taker)
+                    ?? new Tile(place_taker, this.$._buttons.get(place_taker)!, x, y, get_size_width_small(place_taker_state.size), get_size_height_small(place_taker_state.size));
                 place_taker_prev_group?.remove(place_taker);
                 place_taker_prev_group?.auto_self_removal();
                 place_taker_tile.x = x;
                 place_taker_tile.y = y;
-
-                place_taker_state.x = place_taker_tile.x;
-                place_taker_state.y = place_taker_tile.y;
-                place_taker_state.group = group.id;
 
                 group.add(place_taker_tile);
 

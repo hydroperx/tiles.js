@@ -43,6 +43,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /** @private */ public _rem: number;
 
     /** @private */ public _layout: Layout;
+    /** @private */ public _buttons: Map<string, HTMLButtonElement> = new Map();
 
     /** @private */ public _resize_observer: ResizeObserver;
     private _size_only_grows: boolean = false;
@@ -413,6 +414,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         });
         this._draggables.set(button, draggable);
 
+        // Associate button
+        this._buttons.set(tile_data.id, button);
+
         // Set dragging state
         const set_dragging = (value: boolean): void =>
         {
@@ -513,6 +517,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             draggable.destroy();
             this._draggables.delete(button);
         }
+        this._buttons.delete(id);
         button.remove();
         group.remove(id);
     }
