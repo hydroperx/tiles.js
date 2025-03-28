@@ -5,6 +5,7 @@ Base layout implementation for Windows 8 like live tiles in HTML5.
 ## Status
 
 Shifting during drag-n-drop isn't working currently, but at least grid snapping does.
+For now, code sets `ENABLE_SHIFT` to `false`.
 
 ## Specifications
 

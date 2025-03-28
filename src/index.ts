@@ -14,6 +14,8 @@ import { VerticalLayout } from "./VerticalLayout";
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
+const ENABLE_SHIFT = false; 
+
 export class Tiles extends (EventTarget as TypedEventTarget<{
     addedGroup: CustomEvent<{ group: Group, label: HTMLDivElement }>,
     addedTile: CustomEvent<{ tile: Tile, button: HTMLButtonElement }>,
@@ -354,7 +356,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                 // Shift tiles as needed.
                 const r: DOMRect | null = active_tiles_hit ? button.getBoundingClientRect() : null;
                 const areaOverlap = active_tiles_hit ? getRectangleOverlap(r!, active_tile_hit_area) : null;
-                if (!(areaOverlap && areaOverlap.area != 0))
+                if (!(areaOverlap && areaOverlap.area != 0) && ENABLE_SHIFT)
                 {
                     const hit = hits_another_tile();;
                     if (hit)
