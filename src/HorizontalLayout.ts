@@ -183,7 +183,6 @@ export class HorizontalLayout extends Layout
 
     override readjust_groups(): void
     {
-        console.log("readjust_groups()");
         let x = 0,
             y = this.$._label_height;
         for (const group of this.groups)
@@ -195,7 +194,6 @@ export class HorizontalLayout extends Layout
             // position each tile
             for (const tile of group.tiles)
             {
-                if (tile.id == "tile2") tile2c++;
                 // ... or not if being dragged.
                 if (tile.button.getAttribute("data-dragging") === "true") continue;
 
@@ -203,7 +201,6 @@ export class HorizontalLayout extends Layout
                 const btn_y = y + tile.y * this.$._tile_size.small_h + tile.y * this.$._tile_gap;
                 tile.button.style.translate = `${btn_x}rem ${btn_y}rem`;
             }
-            console.log("  tile2 times =", tile2c);
 
             // position the label
             group.label.style.translate = `${label_x}rem ${y - this.$._label_height}rem`;
