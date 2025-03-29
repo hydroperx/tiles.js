@@ -12,7 +12,6 @@ const tiles = new Tiles({
     groupGap: 9,
     labelHeight: 2,
     maxHeight: 6,
-    scrollNode: undefined,
 });
 
 tiles.addGroup({

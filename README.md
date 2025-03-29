@@ -65,8 +65,6 @@ const tiles = new Tiles({
     maxHeight: 6,
     // Transition function(s) to contribute to tiles.
     tileTransition: "",
-    // Scroll node to resolve offsets from.
-    scrollNode: undefined,
 });
 
 // Adding groups

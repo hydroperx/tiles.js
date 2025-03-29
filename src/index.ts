@@ -39,7 +39,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /** @private */ public _max_width: number;
     /** @private */ public _max_height: number;
     /** @private */ public _tile_transition: string;
-    /** @private */ public _scroll_node: HTMLElement;
 
     /** @private */ public _rem_observer: RemObserver;
     /** @private */ public _rem: number;
@@ -106,10 +105,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
          * Transition function(s) to contribute to tiles.
          */
         tileTransition?: string,
-        /**
-         * Scroll node to resolve offsets from.
-         */
-        scrollNode?: Element,
     }) {
         super();
 
@@ -127,7 +122,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         this._max_width = options.maxWidth ?? Infinity;
         this._max_height = options.maxHeight ?? Infinity;
         this._tile_transition = options.tileTransition ?? "";
-        this._scroll_node = options.scrollNode as HTMLElement;
 
         this._container.style.position = "relative";
 
