@@ -23,6 +23,7 @@ export class HorizontalLayout extends Layout
         dropped_y = dropped_y / this.$._rem;
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
         const tile_state = this.$._state.tiles.get(tile);
+        if (!tile_state) return;
         const tile_data = (prev_group ? prev_group.tiles.find(t => t.id == tile) : null)
             ?? new Tile(tile, el as HTMLButtonElement, tile_state.x, tile_state.y, get_size_width_small(tile_state.size), get_size_height_small(tile_state.size));
 
@@ -85,6 +86,65 @@ export class HorizontalLayout extends Layout
         }
 
         this.$._readjust_groups_delayed();
+    }
+
+    override snap_preview(tile: string, el: HTMLElement): { x: number, y: number, w: number, h: number } | null
+    {
+        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container);
+        dropped_x = dropped_x / this.$._rem;
+        dropped_y = dropped_y / this.$._rem;
+        const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
+        const tile_state = this.$._state.tiles.get(tile);
+        if (!tile_state) return null;
+        const tile_data = (prev_group ? prev_group.tiles.find(t => t.id == tile) : null)
+            ?? new Tile(tile, el as HTMLButtonElement, tile_state.x, tile_state.y, get_size_width_small(tile_state.size), get_size_height_small(tile_state.size));
+
+        let x = this.offset_x_to_x(dropped_x),
+            y = this.offset_y_to_y(dropped_y);
+        
+        if (!x)
+            x = this.forced_offset_x_to_x(dropped_x);
+
+        if (x && y)
+        {
+            if (x.group == "")
+            {
+                // throwaway group
+                const new_group = new Group(this, "", document.createElement("div"));
+
+                // Insert tile
+                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                {
+                    return {
+                        x: this.x_to_offset_x("", x.x),
+                        y: this.y_to_offset_y("", y.y),
+                        w: tile_data.width * this.$._small_size + (tile_data.width - 1) * this.$._tile_gap,
+                        h: tile_data.height * this.$._small_size + (tile_data.height - 1) * this.$._tile_gap,
+                    };
+                }
+            }
+            else
+            {
+                const new_group = this.groups.find(g => g.id == x.group);
+                if (prev_group)
+                    prev_group.remove(tile);
+                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                {
+                    prev_group.add(tile_data);
+
+                    return {
+                        x: this.x_to_offset_x(new_group.id, x.x),
+                        y: this.y_to_offset_y(new_group.id, y.y),
+                        w: tile_data.width * this.$._small_size + (tile_data.width - 1) * this.$._tile_gap,
+                        h: tile_data.height * this.$._small_size + (tile_data.height - 1) * this.$._tile_gap,
+                    };
+                }
+                else if (prev_group)
+                    prev_group.add(tile_data);
+            }
+        }
+
+        return null;
     }
 
     override offset_x_to_x(x: number): { group: string, x: number } | null
@@ -179,6 +239,38 @@ export class HorizontalLayout extends Layout
     override forced_offset_y_to_y(y: number): { group: string, y: number } | null
     {
         throw new Error("does not make sense");
+    }
+
+    override x_to_offset_x(group: string, x: number): number
+    {
+        let group_x = 0;
+        const small_w = this.$._small_size;
+        const tile_gap = this.$._tile_gap;
+        const group_gap = this.$._group_gap;
+        if (group == "")
+        {
+            for (const other_group of this.groups)
+                group_x += Math.max(this.$._tile_size.large_w, other_group.width == 0 ? 0 : other_group.width * small_w + (other_group.width - 1) * tile_gap)
+                    + group_gap;
+            return group_x + x * small_w + x * tile_gap;
+        }
+        for (const other_group of this.groups)
+        {
+            if (other_group.id == group)
+            {
+                return group_x + x * small_w + x * tile_gap;
+            }
+            group_x += Math.max(this.$._tile_size.large_w, other_group.width == 0 ? 0 : other_group.width * small_w + (other_group.width - 1) * tile_gap)
+                + group_gap;
+        }
+        return 0;
+    }
+
+    override y_to_offset_y(group: string, y: number): number
+    {
+        const small_h = this.$._small_size;
+        const tile_gap = this.$._tile_gap;
+        return this.$._label_height + y * small_h + y * tile_gap;
     }
 
     override readjust_groups(): void

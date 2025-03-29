@@ -6,6 +6,7 @@ const tiles = new Tiles({
     element: container,
     direction: "horizontal",
     labelClassName: "label",
+    placeholderClassName: "placeholder",
     tileClassName: "tile",
     smallSize: 3.625,
     tileGap: 0.6,

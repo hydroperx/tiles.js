@@ -16,6 +16,11 @@ export class VerticalLayout extends Layout
         throw new Error("not implemented");
     }
 
+    override snap_preview(tile: string, el: HTMLElement): { x: number, y: number, w: number, h: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
     override offset_x_to_x(x: number): { group: string, x: number } | null
     {
         throw new Error("not implemented");
@@ -32,6 +37,16 @@ export class VerticalLayout extends Layout
     }
 
     override forced_offset_y_to_y(y: number): { group: string, y: number } | null
+    {
+        throw new Error("not implemented");
+    }
+
+    override x_to_offset_x(group: string, x: number): number
+    {
+        throw new Error("not implemented");
+    }
+
+    override y_to_offset_y(group: string, y: number): number
     {
         throw new Error("not implemented");
     }

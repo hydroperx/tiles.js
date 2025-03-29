@@ -26,12 +26,16 @@ export abstract class Layout
 
     abstract snap_to_grid(tile: string, el: HTMLElement): void;
 
+    abstract snap_preview(tile: string, el: HTMLElement): { x: number, y: number, w: number, h: number } | null;
+
     abstract shift(to_shift: string, place_taker: string, place_side: "left" | "top" | "right" | "bottom"): void;
 
     abstract offset_x_to_x(x: number): { group: string, x: number } | null;
     abstract offset_y_to_y(y: number): { group: string, y: number } | null;
     abstract forced_offset_x_to_x(x: number): { group: string, x: number } | null;
     abstract forced_offset_y_to_y(y: number): { group: string, y: number } | null;
+    abstract x_to_offset_x(group: string, x: number): number;
+    abstract y_to_offset_y(group: string, y: number): number;
 }
 
 export class Group

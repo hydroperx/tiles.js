@@ -47,6 +47,9 @@ const tiles = new Tiles({
     labelClassName: "label",
     // Class name used for identifying tiles.
     tileClassName: "tile",
+    // Class name used for identifying the tile placeholder when dragging
+    // a tile.
+    placeholderClassName: "placeholder",
     // The size of small tiles, in cascading "rem" units.
     smallSize: 3.625,
     // Gap between tiles, in cascading "rem" units.

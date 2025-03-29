@@ -32,6 +32,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /** @private */ public _dir: "horizontal" | "vertical";
     /** @private */ public _label_class_name: string;
     /** @private */ public _tile_class_name: string;
+    /** @private */ public _placeholder_class_name: string;
     /** @private */ public _small_size: number;
     /** @private */ public _tile_gap: number;
     /** @private */ public _group_gap: number;
@@ -39,6 +40,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /** @private */ public _max_width: number;
     /** @private */ public _max_height: number;
     /** @private */ public _tile_transition: string;
+
+    private _placeholder_element: HTMLDivElement | null = null;
 
     /** @private */ public _rem_observer: RemObserver;
     /** @private */ public _rem: number;
@@ -75,6 +78,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
          * Class name used for identifying tiles.
          */
         tileClassName: string,
+        /**
+         * Class name used for identifying a special tiled called the "placeholder",
+         * which is created/removed during dragging a tile where the tile may be dropped.
+         */
+        placeholderClassName: string,
         /**
          * The size of small tiles, in cascading "rem" units.
          */
@@ -115,6 +123,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         this._dir = options.direction;
         this._label_class_name = options.labelClassName;
         this._tile_class_name = options.tileClassName;
+        this._placeholder_class_name = options.placeholderClassName;
         this._small_size = options.smallSize;
         this._tile_gap = options.tileGap;
         this._group_gap = options.groupGap;
@@ -374,6 +383,28 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                     }
                 }
 
+                // Display placeholder
+                const snap_preview = this._layout.snap_preview(id, el as HTMLElement);
+                if (snap_preview)
+                {
+                    if (!this._placeholder_element)
+                    {
+                        this._placeholder_element = document.createElement("div");
+                        this._placeholder_element.classList.add(this._placeholder_class_name);
+                        this._placeholder_element.style.position = "absolute";
+                        this._placeholder_element.style.zIndex = "999999999";
+                        this._container.appendChild(this._placeholder_element);
+                    }
+                    this._placeholder_element.style.translate = `${snap_preview.x}rem ${snap_preview.y}rem`;
+                    this._placeholder_element.style.width = snap_preview.w + "rem";
+                    this._placeholder_element.style.height = snap_preview.h + "rem";
+                }
+                else if (this._placeholder_element)
+                {
+                    this._placeholder_element.remove();
+                    this._placeholder_element = null;
+                }
+
                 this.dispatchEvent(new CustomEvent("drag", {
                     detail: { tile: el },
                 }));
@@ -387,6 +418,12 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                 {
                     button.style.inset = "";
                     return;
+                }
+
+                if (this._placeholder_element)
+                {
+                    this._placeholder_element.remove();
+                    this._placeholder_element = null;
                 }
 
                 drag_start = null;
