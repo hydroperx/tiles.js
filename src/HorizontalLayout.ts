@@ -19,6 +19,7 @@ export class HorizontalLayout extends Layout
     override snap_to_grid(tile: string, el: HTMLElement): void
     {
         let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container);
+        console.log("snap.y(px) =", dropped_y);
         dropped_x = dropped_x / this.$._rem;
         dropped_y = dropped_y / this.$._rem;
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
