@@ -1,6 +1,6 @@
 {
   "name": "com.hydroper.tilelayout",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "type": "module",
   "scripts": {},
   "main": "src/index.ts",
