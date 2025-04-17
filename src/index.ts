@@ -1,6 +1,6 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
-import Draggable from "com.hydroper.domdraggable";
+import Draggable from "com.hydroper.draggable";
 import { TypedEventTarget } from "com.hydroper.typedeventtarget";
 
 import { RemObserver } from "./utils/RemObserver";
