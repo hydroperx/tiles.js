@@ -1,4 +1,4 @@
-import { Tiles } from "com.hydroper.tilelayout";
+import { Tiles } from "@hydroper/tilelayout";
 
 const container = document.querySelector("#container")!;
 

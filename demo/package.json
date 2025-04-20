@@ -14,7 +14,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "com.hydroper.tilelayout": "file:..",
+    "@hydroper/tilelayout": "file:..",
     "@types/node": "^22.13.4"
   }
 }

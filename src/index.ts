@@ -1,9 +1,9 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
-import Draggable from "com.hydroper.draggable";
-import { TypedEventTarget } from "com.hydroper.typedeventtarget";
+import Draggable from "@hydroper/draggable";
+import { TypedEventTarget } from "@hydroper/event";
 
-import { RemObserver } from "./utils/RemObserver";
+import { RootFontObserver } from "./utils/RootFontObserver";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
 import { State } from "./State";
 import { draggableHitSide } from "./utils/rect";
@@ -43,7 +43,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
     private _placeholder_element: HTMLDivElement | null = null;
 
-    /** @private */ public _rem_observer: RemObserver;
+    /** @private */ public _root_font_observer: RootFontObserver;
     /** @private */ public _rem: number;
 
     /** @private */ public _layout: Layout;
@@ -147,7 +147,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         this._container.style.height = (this._max_height * this._small_size + this._max_height * this._tile_gap + this._label_height) + "rem";
 
         // Observe the "rem" unit size
-        this._rem_observer = new RemObserver(val => {
+        this._root_font_observer = new RootFontObserver(val => {
             this._rem = val;
         });
 
@@ -177,7 +177,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             if (draggable) draggable.destroy();
             this._draggables.delete(btn);
         }
-        this._rem_observer.cleanup();
+        this._root_font_observer.cleanup();
         this._resize_observer.disconnect();
         this._container.remove();
     }
