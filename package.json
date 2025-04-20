@@ -1,5 +1,5 @@
 {
-  "name": "@hydroper/tile",
+  "name": "@hydroper/tiles",
   "version": "1.1.0",
   "type": "module",
   "scripts": {},
@@ -15,7 +15,8 @@
     "rectangle-overlap": "^2.0.0"
   },
   "repository": {
-    "url": "https://github.com/realhydroper/tile.git"
+    "type": "git",
+    "url": "https://github.com/realhydroper/tiles.git"
   },
   "description": "Metro tile layout",
   "license": "Apache-2.0",

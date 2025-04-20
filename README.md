@@ -1,4 +1,4 @@
-# @hydroper/tile
+# @hydroper/tiles
 
 Base layout implementation for Windows 8 like live tiles in HTML5.
 
@@ -36,7 +36,7 @@ Overrides the `transition` style in tile elements.
 > Note: only horizontal containers are supported currently.
 
 ```ts
-import { Tiles } from "@hydroper/tile";
+import { Tiles } from "@hydroper/tiles";
 
 const tiles = new Tiles({
     // Container.
