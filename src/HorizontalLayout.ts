@@ -18,7 +18,7 @@ export class HorizontalLayout extends Layout
 
     override snap_to_grid(tile: string, el: HTMLElement): void
     {
-        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container);
+        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container)!;
         dropped_x = dropped_x / this.$._rem;
         dropped_y = dropped_y / this.$._rem;
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
@@ -46,7 +46,7 @@ export class HorizontalLayout extends Layout
                 const new_group = this.groups.find(g => g.id == group_id);
 
                 // Insert tile
-                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                if (new_group!.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
                     if (prev_group)
                         prev_group.remove(tile),
@@ -58,7 +58,7 @@ export class HorizontalLayout extends Layout
                     tile_state.y = y.y;
                     tile_state.group = group_id;
 
-                    new_group.add(tile_data);
+                    new_group!.add(tile_data);
                 }
             }
             else
@@ -66,7 +66,7 @@ export class HorizontalLayout extends Layout
                 const new_group = this.groups.find(g => g.id == x.group);
                 if (prev_group)
                     prev_group.remove(tile);
-                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                if (new_group!.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
                     if (prev_group && new_group !== prev_group)
                         prev_group.auto_self_removal();
@@ -78,7 +78,7 @@ export class HorizontalLayout extends Layout
                     tile_state.y = y.y;
                     tile_state.group = x.group;
 
-                    new_group.add(tile_data);
+                    new_group!.add(tile_data);
                 }
                 else if (prev_group)
                     prev_group.add(tile_data);
@@ -90,7 +90,7 @@ export class HorizontalLayout extends Layout
 
     override snap_preview(tile: string, el: HTMLElement): { x: number, y: number, w: number, h: number } | null
     {
-        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container);
+        let { x: dropped_x, y: dropped_y } = getOffset(el, this.$._container)!;
         dropped_x = dropped_x / this.$._rem;
         dropped_y = dropped_y / this.$._rem;
         const prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == tile));
@@ -128,13 +128,13 @@ export class HorizontalLayout extends Layout
                 const new_group = this.groups.find(g => g.id == x.group);
                 if (prev_group)
                     prev_group.remove(tile);
-                if (new_group.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
+                if (new_group!.is_area_available(x.x, y.y, tile_data.width, tile_data.height))
                 {
-                    prev_group.add(tile_data);
+                    prev_group!.add(tile_data);
 
                     return {
-                        x: this.x_to_offset_x(new_group.id, x.x),
-                        y: this.y_to_offset_y(new_group.id, y.y),
+                        x: this.x_to_offset_x(new_group!.id, x.x),
+                        y: this.y_to_offset_y(new_group!.id, y.y),
                         w: tile_data.width * this.$._small_size + (tile_data.width - 1) * this.$._tile_gap,
                         h: tile_data.height * this.$._small_size + (tile_data.height - 1) * this.$._tile_gap,
                     };
@@ -339,12 +339,12 @@ export class HorizontalLayout extends Layout
                 if (!(place_taker_w > to_shift_w || place_taker_h > to_shift_h))
                 {
                     if (
-                        group.is_area_available(to_shift_state.x + place_taker_w, to_shift_state.y, to_shift_w, to_shift_h) &&
-                        to_shift_state.x + place_taker_w + to_shift_w < group.width
+                        group.is_area_available(to_shift_state!.x + place_taker_w, to_shift_state!.y, to_shift_w, to_shift_h) &&
+                        to_shift_state!.x + place_taker_w + to_shift_w < group.width
                     ) {
                         right_available = true;
                     }
-                    if (group.is_area_available(to_shift_state.x - to_shift_w, to_shift_state.y, to_shift_w, to_shift_h))
+                    if (group.is_area_available(to_shift_state!.x - to_shift_w, to_shift_state!.y, to_shift_w, to_shift_h))
                     {
                         left_available = true;
                     }
@@ -357,19 +357,19 @@ export class HorizontalLayout extends Layout
                 if (shift_to == "left")
                 {
                     // shift tile to left
-                    group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
-                    to_shift_tile.x = to_shift_state.x - to_shift_w;
-                    to_shift_tile.y = to_shift_state.y;
-                    to_shift_state.x = to_shift_tile.x;
-                    to_shift_state.y = to_shift_tile.y;
+                    group.clear_area(to_shift_state!.x, to_shift_state!.y, to_shift_w, to_shift_h);
+                    to_shift_tile.x = to_shift_state!.x - to_shift_w;
+                    to_shift_tile.y = to_shift_state!.y;
+                    to_shift_state!.x = to_shift_tile.x;
+                    to_shift_state!.y = to_shift_tile.y;
                     group.add(to_shift_tile);
-                    place_taker_state.group = this.$._state.tiles.get(to_shift).group;
+                    place_taker_state.group = this.$._state.tiles.get(to_shift)!.group;
 
                     // remove from previous group and insert into new group
-                    const place_taker_new_x = to_shift_state.x;
+                    const place_taker_new_x = to_shift_state!.x;
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
                     place_taker_state.x = place_taker_new_x;
-                    place_taker_state.y = to_shift_state.y;
+                    place_taker_state.y = to_shift_state!.y;
                     place_taker_state.group = group.id;
                     const place_taker_tile = place_taker_prev_group?.tiles.find(t => t.id == place_taker)
                         ?? new Tile(place_taker, this.$._buttons.get(place_taker)!, place_taker_state.x, place_taker_state.y, get_size_width_small(place_taker_state.size), get_size_height_small(place_taker_state.size));
@@ -383,18 +383,18 @@ export class HorizontalLayout extends Layout
                 else if (shift_to == "right")
                 {
                     // shift tile to right
-                    group.clear_area(to_shift_state.x, to_shift_state.y, to_shift_w, to_shift_h);
-                    to_shift_tile.x = to_shift_state.x + place_taker_w;
-                    to_shift_tile.y = to_shift_state.y;
-                    to_shift_state.x = to_shift_tile.x;
-                    to_shift_state.y = to_shift_tile.y;
+                    group.clear_area(to_shift_state!.x, to_shift_state!.y, to_shift_w, to_shift_h);
+                    to_shift_tile.x = to_shift_state!.x + place_taker_w;
+                    to_shift_tile.y = to_shift_state!.y;
+                    to_shift_state!.x = to_shift_tile.x;
+                    to_shift_state!.y = to_shift_tile.y;
                     group.add(to_shift_tile);
 
                     // remove from previous group and insert into new group
-                    const place_taker_new_x = to_shift_state.x;
+                    const place_taker_new_x = to_shift_state!.x;
                     const place_taker_prev_group = this.groups.find(g => !!g.tiles.find(t => t.id == place_taker));
                     place_taker_state.x = place_taker_new_x;
-                    place_taker_state.y = to_shift_state.y;
+                    place_taker_state.y = to_shift_state!.y;
                     place_taker_state.group = group.id;
                     const place_taker_tile = place_taker_prev_group?.tiles.find(t => t.id == place_taker)
                         ?? new Tile(place_taker, this.$._buttons.get(place_taker)!, place_taker_state.x, place_taker_state.y, get_size_width_small(place_taker_state.size), get_size_height_small(place_taker_state.size));
@@ -411,8 +411,8 @@ export class HorizontalLayout extends Layout
             case "top":
             {
                 // shift tiles to bottom recursively.
-                let x = to_shift_state.x,
-                    y = to_shift_state.y;
+                let x = to_shift_state!.x,
+                    y = to_shift_state!.y;
                 if (y + place_taker_h >= this.max_height)
                 {
                     return;

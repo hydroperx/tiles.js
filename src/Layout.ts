@@ -111,7 +111,7 @@ export class Group
         this.tiles.push(tile);
         
         // Update state's position
-        const state = this.$.$._state.tiles.get(tile.id);
+        const state = this.$.$._state.tiles.get(tile.id)!;
         state.x = tile.x;
         state.y = tile.y;
 

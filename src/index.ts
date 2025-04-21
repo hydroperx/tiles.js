@@ -44,7 +44,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     private _placeholder_element: HTMLDivElement | null = null;
 
     /** @hidden */ public _root_font_observer: RootFontObserver;
-    /** @hidden */ public _rem: number;
+    /** @hidden */ public _rem: number = 16;
 
     /** @hidden */ public _layout: Layout;
     /** @hidden */ public _buttons: Map<string, HTMLButtonElement> = new Map();
@@ -367,9 +367,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                         // Active hit area
                         const hitted_button = Array.from(this._container.querySelectorAll("." + this._tile_class_name))
                             .find(btn => btn.getAttribute("data-id") == hit.tile);
-                        active_tile_hit_area = hitted_button.getBoundingClientRect();
+                        active_tile_hit_area = hitted_button!.getBoundingClientRect();
 
-                        this._restore_state(previous_state);
+                        this._restore_state(previous_state!);
                         this._layout.shift(hit.tile, id, hit.side);
                         active_tile_hit_id = hit.tile;
                         active_tile_hit_side = hit.side;
@@ -377,7 +377,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                     }
                     else
                     {
-                        this._restore_state(previous_state);
+                        this._restore_state(previous_state!);
                         this._layout.readjust_groups();
                         active_tiles_hit = false;
                     }
@@ -481,7 +481,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
                     continue;
                 }
 
-                if (overlap) return { tile: tile.getAttribute("data-id"), side: place_side };
+                if (overlap) return { tile: tile.getAttribute("data-id")!, side: place_side };
             }
             return null;
         };
@@ -619,8 +619,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         }
 
         if (this._dir == "horizontal")
-            this._container.style.width = Math.max(this._container.parentElement.getBoundingClientRect().width / this._rem, this._layout.total_offset_width) + "rem";
-        else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height / this._rem, this._layout.total_offset_height) + "rem";
+            this._container.style.width = Math.max(this._container.parentElement!.getBoundingClientRect().width / this._rem, this._layout.total_offset_width) + "rem";
+        else this._container.style.height = Math.max(this._container.parentElement!.getBoundingClientRect().height / this._rem, this._layout.total_offset_height) + "rem";
     }
 
     /** @hidden */

@@ -15,6 +15,7 @@
     "noEmit": true,
 
     /* Linting */
+    "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
