@@ -25,31 +25,31 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     dragEnd: CustomEvent<{ tile: HTMLButtonElement }>,
 }>)
 {
-    /** @private */ _state: State;
-    /** @private */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
+    /** @internal */ _state: State;
+    /** @internal */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 
-    /** @private */ public _container: HTMLElement;
-    /** @private */ public _dir: "horizontal" | "vertical";
-    /** @private */ public _label_class_name: string;
-    /** @private */ public _tile_class_name: string;
-    /** @private */ public _placeholder_class_name: string;
-    /** @private */ public _small_size: number;
-    /** @private */ public _tile_gap: number;
-    /** @private */ public _group_gap: number;
-    /** @private */ public _label_height: number;
-    /** @private */ public _max_width: number;
-    /** @private */ public _max_height: number;
-    /** @private */ public _tile_transition: string;
+    /** @internal */ public _container: HTMLElement;
+    /** @internal */ public _dir: "horizontal" | "vertical";
+    /** @internal */ public _label_class_name: string;
+    /** @internal */ public _tile_class_name: string;
+    /** @internal */ public _placeholder_class_name: string;
+    /** @internal */ public _small_size: number;
+    /** @internal */ public _tile_gap: number;
+    /** @internal */ public _group_gap: number;
+    /** @internal */ public _label_height: number;
+    /** @internal */ public _max_width: number;
+    /** @internal */ public _max_height: number;
+    /** @internal */ public _tile_transition: string;
 
     private _placeholder_element: HTMLDivElement | null = null;
 
-    /** @private */ public _root_font_observer: RootFontObserver;
-    /** @private */ public _rem: number;
+    /** @internal */ public _root_font_observer: RootFontObserver;
+    /** @internal */ public _rem: number;
 
-    /** @private */ public _layout: Layout;
-    /** @private */ public _buttons: Map<string, HTMLButtonElement> = new Map();
+    /** @internal */ public _layout: Layout;
+    /** @internal */ public _buttons: Map<string, HTMLButtonElement> = new Map();
 
-    /** @private */ public _resize_observer: ResizeObserver;
+    /** @internal */ public _resize_observer: ResizeObserver;
     private _size_only_grows: boolean = false;
 
     public _tile_size: TileSizeOfResolution = {
@@ -597,7 +597,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         }
     }
 
-    /** @private */
+    /** @internal */
     _readjust_groups_delayed(): void
     {
         if (this._readjust_timeout !== -1)
@@ -607,7 +607,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         }, 10);
     }
 
-    /** @private */
+    /** @internal */
     _resize_container(): void
     {
         if (this._size_only_grows)
@@ -623,7 +623,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         else this._container.style.height = Math.max(this._container.parentElement.getBoundingClientRect().height / this._rem, this._layout.total_offset_height) + "rem";
     }
 
-    /** @private */
+    /** @internal */
     _restore_state(previous_state: State): void
     {
         this._state.clear();
@@ -656,7 +656,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
         }
     }
 
-    /** @private */
+    /** @internal */
     _keep_groups_sequential(): void
     {
         const sorted_groups = Array.from(this._state.groups.entries())
@@ -672,7 +672,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             this._trigger_state_update();
     }
 
-    /** @private */
+    /** @internal */
     _trigger_state_update()
     {
         this.dispatchEvent(new CustomEvent("stateUpdated", { detail: this._state }))
