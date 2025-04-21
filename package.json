@@ -1,5 +1,5 @@
 {
-  "name": "@hydroper/tiles",
+  "name": "@hydroperx/tiles",
   "version": "1.0.0",
   "type": "module",
   "scripts": {},
@@ -7,8 +7,8 @@
   "dependencies": {
     "assert": "^2.1.0",
     "clone": "^2.1.2",
-    "@hydroper/draggable": "^1.0.0",
-    "@hydroper/event": "^1.0.0",
+    "@hydroperx/draggable": "^1.0.0",
+    "@hydroperx/event": "^1.0.0",
     "extend": "^3.0.2",
     "getoffset": "^0.6.4",
     "jquery": "^3.7.1",

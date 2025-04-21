@@ -1,4 +1,4 @@
-import { Tiles } from "@hydroper/tiles";
+import { Tiles } from "@hydroperx/tiles";
 
 const container = document.querySelector("#container")!;
 

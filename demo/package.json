@@ -14,7 +14,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "@hydroper/tiles": "file:..",
+    "@hydroperx/tiles": "file:..",
     "@types/node": "^22.13.4"
   }
 }

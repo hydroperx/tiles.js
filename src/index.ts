@@ -1,7 +1,7 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
-import Draggable from "@hydroper/draggable";
-import { TypedEventTarget } from "@hydroper/event";
+import Draggable from "@hydroperx/draggable";
+import { TypedEventTarget } from "@hydroperx/event";
 
 import { RootFontObserver } from "./utils/RootFontObserver";
 import { TileSizeOfResolution, get_size_width_small, get_size_height_small, TileSize } from "./enum/TileSize";
