@@ -5,6 +5,7 @@
   "files": ["/dist"],
   "scripts": {
     "build": "tsc",
+    "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
   "exports": {
