@@ -1,12 +1,20 @@
 {
   "name": "@hydroperx/tiles",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
-  "scripts": {},
-  "main": "src/index.ts",
+  "files": ["/dist"],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "dependencies": {
     "assert": "^2.1.0",
-    "clone": "^2.1.2",
     "@hydroperx/draggable": "^1.0.0",
     "@hydroperx/event": "^1.0.0",
     "extend": "^3.0.2",
@@ -28,7 +36,6 @@
   "author": "Hydroper <HydroperFox@gmail.com>",
   "devDependencies": {
     "@types/assert": "^1.5.11",
-    "@types/clone": "^2.1.4",
     "@types/extend": "^3.0.4",
     "@types/jquery": "^3.5.32",
     "typescript": "~5.6.2"
