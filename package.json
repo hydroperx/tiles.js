@@ -1,6 +1,6 @@
 {
   "name": "@hydroperx/tiles",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "files": ["/dist"],
   "scripts": {
@@ -9,8 +9,8 @@
   },
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "dependencies": {
