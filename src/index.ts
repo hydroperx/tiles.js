@@ -49,7 +49,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     /** @hidden */ public _layout: Layout;
     /** @hidden */ public _buttons: Map<string, HTMLButtonElement> = new Map();
 
-    /** @hidden */ public _resize_observer: ResizeObserver;
+    /** @hidden */ public _resize_observer: ResizeObserver | null = null;
     private _size_only_grows: boolean = false;
 
     public _tile_size: TileSizeOfResolution = {
@@ -159,10 +159,13 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             new HorizontalLayout(this, this._max_width, this._max_height) :
             new VerticalLayout(this, this._max_width, this._max_height);
 
-        this._resize_observer = new ResizeObserver(() => {
-            this._resize_container();
-        });
-        this._resize_observer.observe(this._container);
+        if (typeof window !== "undefined")
+        {
+            this._resize_observer = new ResizeObserver(() => {
+                this._resize_container();
+            });
+            this._resize_observer.observe(this._container);
+        }
     }
 
     /**
@@ -178,7 +181,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
             this._draggables.delete(btn);
         }
         this._root_font_observer.cleanup();
-        this._resize_observer.disconnect();
+        this._resize_observer?.disconnect();
         this._container.remove();
     }
 
