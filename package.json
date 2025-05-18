@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hydroperx/tiles.git"
+    "url": "https://github.com/hydroperx/tiles.js.git"
   },
   "description": "Metro tile layout",
   "license": "Apache-2.0",
