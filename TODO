@@ -1,0 +1,7 @@
+# How tiles and groups are added
+
+Tiles and groups are directly added as children. Note that tile elements do not nest in groups; instead they have a `data-group` attribute that links to the group ID.
+
+# Tile, content representation
+
+Tiles are `button` elements containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
