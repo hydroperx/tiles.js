@@ -1,0 +1,44 @@
+{
+  "name": "@hydroperx/tiles",
+  "version": "2.0.0",
+  "type": "module",
+  "files": ["/dist"],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "assert": "^2.1.0",
+    "@hydroperx/draggable": "^1.0.0",
+    "@hydroperx/event": "^1.0.0",
+    "extend": "^3.0.2",
+    "getoffset": "^0.6.4",
+    "jquery": "^3.7.1",
+    "rectangle-overlap": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hydroperx/tiles.js.git"
+  },
+  "description": "Metro tile layout",
+  "license": "Apache-2.0",
+  "keywords": [
+    "tile",
+    "metro",
+    "live"
+  ],
+  "author": "Hydroper <HydroperFox@gmail.com>",
+  "devDependencies": {
+    "@types/assert": "^1.5.11",
+    "@types/extend": "^3.0.4",
+    "@types/jquery": "^3.5.32",
+    "typescript": "~5.6.2"
+  }
+}

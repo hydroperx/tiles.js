@@ -1,0 +1,218 @@
+import assert from "assert";
+import getRectangleOverlap from "rectangle-overlap";
+import Draggable from "@hydroperx/draggable";
+import { TypedEventTarget } from "@hydroperx/event";
+
+import { RootFontObserver } from "./utils/RootFontObserver";
+import {
+  TileSizeOfResolution,
+  get_size_width_small,
+  get_size_height_small,
+  TileSize,
+} from "./enum/TileSize";
+import { State } from "./State";
+import { draggableHitSide } from "./utils/rect";
+import { Group, Layout, Tile } from "./Layout";
+import { HorizontalLayout } from "./HorizontalLayout";
+import { VerticalLayout } from "./VerticalLayout";
+
+export { type TileSize } from "./enum/TileSize";
+export * from "./State";
+
+const ENABLE_SHIFT = false;
+
+export class Tiles extends (EventTarget as TypedEventTarget<{
+  addedGroup: CustomEvent<{ group: Group; label: HTMLDivElement }>;
+  addedTile: CustomEvent<{ tile: Tile; button: HTMLButtonElement }>;
+  stateUpdated: CustomEvent<State>;
+  dragStart: CustomEvent<{ tile: HTMLButtonElement }>;
+  drag: CustomEvent<{ tile: HTMLButtonElement }>;
+  dragEnd: CustomEvent<{ tile: HTMLButtonElement }>;
+}>) {
+  /** @hidden */ _state: State;
+  /** @hidden */ _draggables: WeakMap<HTMLButtonElement, Draggable> =
+    new WeakMap();
+
+  /** @hidden */ public _container: HTMLElement;
+  /** @hidden */ public _dir: "horizontal" | "vertical";
+  /** @hidden */ public _label_class_name: string;
+  /** @hidden */ public _tile_class_name: string;
+  /** @hidden */ public _tile_content_class_name: string;
+  /** @hidden */ public _placeholder_class_name: string;
+  /** @hidden */ public _small_size: number;
+  /** @hidden */ public _tile_gap: number;
+  /** @hidden */ public _group_gap: number;
+  /** @hidden */ public _label_height: number;
+  /** @hidden */ public _max_width: number;
+  /** @hidden */ public _max_height: number;
+  /** @hidden */ public _tile_transition: string;
+
+  private _placeholder_element: HTMLDivElement | null = null;
+
+  /** @hidden */ public _root_font_observer: RootFontObserver;
+  /** @hidden */ public _rem: number = 16;
+
+  /** @hidden */ public _layout: Layout;
+  /** @hidden */ public _buttons: Map<string, HTMLButtonElement> = new Map();
+
+  /** @hidden */ public _resize_observer: ResizeObserver | null = null;
+
+  public _tile_size: TileSizeOfResolution = {
+    small_w: 0,
+    small_h: 0,
+    medium_w: 0,
+    medium_h: 0,
+    wide_w: 0,
+    wide_h: 0,
+    large_w: 0,
+    large_h: 0,
+  };
+
+  private _readjust_timeout = -1;
+
+  constructor(options: {
+    /**
+     * Container.
+     */
+    element: Element;
+    /**
+     * The direction of the tile container.
+     */
+    direction: "horizontal" | "vertical";
+    /**
+     * Class name used for identifying group labels.
+     */
+    labelClassName: string;
+    /**
+     * Class name used for identifying tiles.
+     */
+    tileClassName: string;
+    /**
+     * Class name used for identifying tile contents.
+     */
+    tileContentClassName: string;
+    /**
+     * Class name used for identifying a special tiled called the "placeholder",
+     * which is created/removed during dragging a tile where the tile may be dropped.
+     */
+    placeholderClassName: string;
+    /**
+     * The size of small tiles, in cascading "rem" units.
+     */
+    smallSize: number;
+    /**
+     * Gap between tiles, in cascading "rem" units.
+     */
+    tileGap: number;
+    /**
+     * Gap between groups, in cascading "rem" units.
+     */
+    groupGap: number;
+    /**
+     * The height of group labels, in cascading "rem" units.
+     */
+    labelHeight: number;
+    /**
+     * Maximum width in small tiles, effective only
+     * in vertical containers (must be >= 4).
+     */
+    maxWidth?: number;
+    /**
+     * Maximum height in small tiles, effective only
+     * in horizontal containers (must be >= 4).
+     */
+    maxHeight?: number;
+    /**
+     * Transition function(s) to contribute to tiles.
+     */
+    tileTransition?: string;
+  }) {
+    super();
+
+    assert(
+      options.direction == "horizontal",
+      "Vertical direction not supported currently.",
+    );
+    assert(
+      options.direction == "horizontal" ? (options.maxHeight ?? 0) >= 4 : true,
+      "maxHeight must be specified and be >= 4.",
+    );
+
+    this._container = options.element as HTMLElement;
+    this._dir = options.direction;
+    this._label_class_name = options.labelClassName;
+    this._tile_class_name = options.tileClassName;
+    this._tile_content_class_name = options.tileContentClassName;
+    this._placeholder_class_name = options.placeholderClassName;
+    this._small_size = options.smallSize;
+    this._tile_gap = options.tileGap;
+    this._group_gap = options.groupGap;
+    this._label_height = options.labelHeight;
+    this._max_width = options.maxWidth ?? Infinity;
+    this._max_height = options.maxHeight ?? Infinity;
+    this._tile_transition = options.tileTransition ?? "";
+
+    this._container.style.position = "relative";
+
+    this._tile_size.small_w = this._small_size;
+    this._tile_size.small_h = this._small_size;
+    this._tile_size.medium_w = this._small_size * 2 + this._tile_gap;
+    this._tile_size.medium_h = this._tile_size.medium_w;
+    this._tile_size.wide_w = this._tile_size.medium_w * 2 + this._tile_gap;
+    this._tile_size.wide_h = this._tile_size.medium_w;
+    this._tile_size.large_w = this._tile_size.wide_w;
+    this._tile_size.large_h = this._tile_size.wide_w;
+
+    this._container.style.minWidth = "100%";
+    this._container.style.height =
+      this._max_height * this._small_size +
+      this._max_height * this._tile_gap +
+      this._label_height +
+      "rem";
+
+    // Observe the "rem" unit size
+    this._root_font_observer = new RootFontObserver((val) => {
+      this._rem = val;
+    });
+
+    // Set state
+    this._state = new State();
+
+    // Initial layout
+    this._layout =
+      this._dir == "horizontal"
+        ? new HorizontalLayout(this, this._max_width, this._max_height)
+        : new VerticalLayout(this, this._max_width, this._max_height);
+
+    if (typeof window !== "undefined") {
+      this._resize_observer = new ResizeObserver(() => {
+        this._resize_container();
+      });
+      this._resize_observer.observe(this._container);
+    }
+  }
+
+  /**
+   * Destroys the `Tiles` instance, disposing
+   * of any observers and removing the container from the DOM.
+   */
+  destroy() {
+    for (const btn of Array.from(
+      this._container.querySelectorAll("." + this._tile_class_name),
+    ) as HTMLButtonElement[]) {
+      const draggable = this._draggables.get(btn);
+      if (draggable) draggable.destroy();
+      this._draggables.delete(btn);
+    }
+    this._root_font_observer.cleanup();
+    this._resize_observer?.disconnect();
+    this._container.remove();
+  }
+
+  /** @hidden */
+  _trigger_state_update() {
+    this.dispatchEvent(
+      new CustomEvent("stateUpdated", { detail: this._state }),
+    );
+  }
+}
