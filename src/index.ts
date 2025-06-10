@@ -6,7 +6,7 @@ import { TypedEventTarget } from "@hydroperx/event";
 // local imports
 import { RootFontObserver } from "./utils/RootFontObserver";
 import {
-  TileSizeOfResolution,
+  TileResolution,
   get_size_width_small,
   get_size_height_small,
   TileSize,
@@ -54,15 +54,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /** @hidden */ public _resize_observer: ResizeObserver | null = null;
 
-  public _tile_size: TileSizeOfResolution = {
-    small_w: 0,
-    small_h: 0,
-    medium_w: 0,
-    medium_h: 0,
-    wide_w: 0,
-    wide_h: 0,
-    large_w: 0,
-    large_h: 0,
+  public _tile_size: TileResolution = {
+    small: { w: 0, h: 0 },
+    medium: { w: 0, h: 0 },
+    wide: { w: 0, h: 0 },
+    large: { w: 0, h: 0 },
   };
 
   private _readjust_timeout = -1;
@@ -158,14 +154,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     this._container.style.position = "relative";
 
-    this._tile_size.small_w = this._small_size;
-    this._tile_size.small_h = this._small_size;
-    this._tile_size.medium_w = this._small_size * 2 + this._tile_gap;
-    this._tile_size.medium_h = this._tile_size.medium_w;
-    this._tile_size.wide_w = this._tile_size.medium_w * 2 + this._tile_gap;
-    this._tile_size.wide_h = this._tile_size.medium_w;
-    this._tile_size.large_w = this._tile_size.wide_w;
-    this._tile_size.large_h = this._tile_size.wide_w;
+    this._tile_size.small.w = this._small_size;
+    this._tile_size.small.h = this._small_size;
+    this._tile_size.medium.w = this._small_size * 2 + this._tile_gap;
+    this._tile_size.medium.h = this._tile_size.medium.w;
+    this._tile_size.wide.w = this._tile_size.medium.w * 2 + this._tile_gap;
+    this._tile_size.wide.h = this._tile_size.medium.w;
+    this._tile_size.large.w = this._tile_size.wide.w;
+    this._tile_size.large.h = this._tile_size.wide.w;
 
     this._container.style.minWidth = "100%";
     this._container.style.height =
@@ -202,7 +198,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    */
   destroy() {
     for (const btn of Array.from(
-      this._container.querySelectorAll("." + this._tile_class_name),
+      this._container.querySelectorAll("." + this._class_names.tile),
     ) as HTMLButtonElement[]) {
       const draggable = this._draggables.get(btn);
       if (draggable) draggable.destroy();
