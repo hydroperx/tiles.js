@@ -5,7 +5,7 @@
  * @param hitted The rectangle to be hit.
  * @returns The side of `hitted` that `draggable` hits.
  */
-export function draggableHitSide(
+export function hitTestSide(
   draggable: { x: number; y: number; width: number; height: number },
   hitted: { x: number; y: number; width: number; height: number },
 ): "top" | "bottom" | "left" | "right" | null {

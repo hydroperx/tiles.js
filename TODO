@@ -1,3 +1,22 @@
+# Tiles container
+
+- [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.
+- [ ] Vertical: width is fixed and may increase up to 3 times itself; prefer to contribute tiles at horizontal end.
+
+# Scrolling
+
+- [ ] Smooth, fast scrolling with mouse wheel
+
+# While dragging
+
+- [ ] In a horizontal container, if dragging tile far orthogonal axis, then scale tiles down.
+
+# Zoom
+
+- [ ] Near view and far view modes. Vertical container is always in near view.
+- [ ] Allow to zoom in/out switching between near/far view in a horizontal container, either through <kbd>Ctrl + Plus</kbd>, <kbd>Ctrl + Minus</kbd> or pinch gesture.
+- [ ] When in far view, user is not allowed to interact with tiles, but rather with groups, allowing to drag-n-drop groups.
+
 # Tile, content representation
 
-Tiles are `button` elements containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
+- [ ] Tiles are `button` elements containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.

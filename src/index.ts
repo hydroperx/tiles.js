@@ -11,7 +11,7 @@ import {
   TileSize,
 } from "./enum/TileSize";
 import { State } from "./State";
-import { draggableHitSide } from "./utils/rect";
+import { hitTestSide } from "./utils/rect";
 import { Group, Layout, Tile } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
 import { VerticalLayout } from "./VerticalLayout";
@@ -19,26 +19,18 @@ import { VerticalLayout } from "./VerticalLayout";
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
-const ENABLE_SHIFT = false;
-
-export class Tiles extends (EventTarget as TypedEventTarget<{
-  addedGroup: CustomEvent<{ group: Group; label: HTMLDivElement }>;
-  addedTile: CustomEvent<{ tile: Tile; button: HTMLButtonElement }>;
-  stateUpdated: CustomEvent<State>;
-  dragStart: CustomEvent<{ tile: HTMLButtonElement }>;
-  drag: CustomEvent<{ tile: HTMLButtonElement }>;
-  dragEnd: CustomEvent<{ tile: HTMLButtonElement }>;
-}>) {
+export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /** @hidden */ _state: State;
-  /** @hidden */ _draggables: WeakMap<HTMLButtonElement, Draggable> =
-    new WeakMap();
+  /** @hidden */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 
   /** @hidden */ public _container: HTMLElement;
   /** @hidden */ public _dir: "horizontal" | "vertical";
-  /** @hidden */ public _label_class_name: string;
-  /** @hidden */ public _tile_class_name: string;
-  /** @hidden */ public _tile_content_class_name: string;
-  /** @hidden */ public _placeholder_class_name: string;
+  /** @hidden */ public _class_names: {
+    label: string,
+    tile: string,
+    tileContent: string,
+    placeholder: string,
+  };
   /** @hidden */ public _small_size: number;
   /** @hidden */ public _tile_gap: number;
   /** @hidden */ public _group_gap: number;
@@ -80,22 +72,27 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
      */
     direction: "horizontal" | "vertical";
     /**
-     * Class name used for identifying group labels.
+     * Customisable class names.
      */
-    labelClassName: string;
-    /**
-     * Class name used for identifying tiles.
-     */
-    tileClassName: string;
-    /**
-     * Class name used for identifying tile contents.
-     */
-    tileContentClassName: string;
-    /**
-     * Class name used for identifying a special tiled called the "placeholder",
-     * which is created/removed during dragging a tile where the tile may be dropped.
-     */
-    placeholderClassName: string;
+    classNames: {
+      /**
+       * Class name used for identifying group labels.
+       */
+      label: string;
+      /**
+       * Class name used for identifying tiles.
+       */
+      tile: string;
+      /**
+       * Class name used for identifying tile contents.
+       */
+      tileContent: string;
+      /**
+       * Class name used for identifying a special tiled called the "placeholder",
+       * which is created/removed during dragging a tile where the tile may be dropped.
+       */
+      placeholder: string;
+    },
     /**
      * The size of small tiles, in cascading "rem" units.
      */
@@ -140,10 +137,12 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
     this._container = options.element as HTMLElement;
     this._dir = options.direction;
-    this._label_class_name = options.labelClassName;
-    this._tile_class_name = options.tileClassName;
-    this._tile_content_class_name = options.tileContentClassName;
-    this._placeholder_class_name = options.placeholderClassName;
+    this._class_names = {
+      label: options.classNames.label,
+      tile: options.classNames.tile,
+      tileContent: options.classNames.tileContent,
+      placeholder: options.classNames.placeholder,
+    };
     this._small_size = options.smallSize;
     this._tile_gap = options.tileGap;
     this._group_gap = options.groupGap;
@@ -212,7 +211,16 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
   /** @hidden */
   _trigger_state_update() {
     this.dispatchEvent(
-      new CustomEvent("stateUpdated", { detail: this._state }),
+      new CustomEvent("stateupdate", { detail: this._state }),
     );
   }
 }
+
+export type TilesEventMap = {
+  addedgroup: CustomEvent<{ group: Group; label: HTMLDivElement }>;
+  addedtile: CustomEvent<{ tile: Tile; button: HTMLButtonElement }>;
+  stateupdate: CustomEvent<State>;
+  dragstart: CustomEvent<{ tile: HTMLButtonElement }>;
+  drag: CustomEvent<{ tile: HTMLButtonElement }>;
+  dragend: CustomEvent<{ tile: HTMLButtonElement }>;
+};

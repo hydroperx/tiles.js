@@ -36,15 +36,18 @@ const tiles = new Tiles({
     element,
     // The direction of the tile container.
     direction: "horizontal",
-    // Class name used for identifying group labels.
-    labelClassName: "label",
-    // Class name used for identifying tiles.
-    tileClassName: "tile",
-    // Class name used for identifying tile content.
-    tileContentClassName: "tile-content",
-    // Class name used for identifying the tile placeholder when dragging
-    // a tile.
-    placeholderClassName: "placeholder",
+    // Custom class names.
+    classNames: {
+        // Class name used for identifying group labels.
+        label: "label",
+        // Class name used for identifying tiles.
+        tile: "tile",
+        // Class name used for identifying tile content.
+        tileContent: "tile-content",
+        // Class name used for identifying the tile placeholder when dragging
+        // a tile.
+        placeholder: "placeholder",
+    },
     // The size of small tiles, in cascading "rem" units.
     smallSize: 3.625,
     // Gap between tiles, in cascading "rem" units.
@@ -71,42 +74,42 @@ tiles.destroy();
 
 ## Events
 
-### addedGroup
+### addedgroup
 
 Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, label: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
 
 ```ts
-tiles.addEventListener("addedGroup", ({ detail: { group, label } }) => {
+tiles.addEventListener("addedgroup", ({ detail: { group, label } }) => {
     //
 });
 ```
 
-### addedTile
+### addedtile
 
 Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("addedTile", ({ detail: { tile, button } }) => {
+tiles.addEventListener("addedtile", ({ detail: { tile, button } }) => {
     //
 });
 ```
 
-### stateUpdated
+### stateupdate
 
 Dispatched whenever the state is updated. Event is given a `CustomEvent<State>` object.
 
 ```ts
-tiles.addEventListener("stateUpdated", ({ detail: state }) => {
+tiles.addEventListener("stateupdate", ({ detail: state }) => {
     //
 });
 ```
 
-### dragStart
+### dragstart
 
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("dragStart", ({ detail: { tile } }) => {
+tiles.addEventListener("dragstart", ({ detail: { tile } }) => {
     //
 });
 ```
@@ -121,12 +124,12 @@ tiles.addEventListener("drag", ({ detail: { tile } }) => {
 });
 ```
 
-### dragEnd
+### dragend
 
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("dragEnd", ({ detail: { tile } }) => {
+tiles.addEventListener("dragend", ({ detail: { tile } }) => {
     //
 });
 ```
