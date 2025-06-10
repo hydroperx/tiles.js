@@ -3,6 +3,7 @@ import getRectangleOverlap from "rectangle-overlap";
 import Draggable from "@hydroperx/draggable";
 import { TypedEventTarget } from "@hydroperx/event";
 
+// local imports
 import { RootFontObserver } from "./utils/RootFontObserver";
 import {
   TileSizeOfResolution,
@@ -11,7 +12,7 @@ import {
   TileSize,
 } from "./enum/TileSize";
 import { State } from "./State";
-import { hitTestSide } from "./utils/rect";
+import * as RectangleUtils from "./utils/RectangleUtils";
 import { Group, Layout, Tile } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
 import { VerticalLayout } from "./VerticalLayout";
@@ -20,6 +21,10 @@ export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
 export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
+  static readonly ATTR_ID = "data-id";
+  static readonly ATTR_SIZE = "data-size";
+  static readonly ATTR_DRAGGING = "data-dragging";
+
   /** @hidden */ _state: State;
   /** @hidden */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 

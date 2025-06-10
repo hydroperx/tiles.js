@@ -2,6 +2,7 @@
 
 - [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.
 - [ ] Vertical: width is fixed and may increase up to 3 times itself; prefer to contribute tiles at horizontal end.
+- [ ] Representation: the Tiles container contains a groups container. The placeholder being dragged appears as a direct child of the Tiles container with a fixed position.
 
 # Scrolling
 

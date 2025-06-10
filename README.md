@@ -2,31 +2,33 @@
 
 Base layout implementation for Windows 8 like live tiles in HTML5.
 
-## Specifications
+## Documentation
+
+### Specifications
 
 <blockquote>
 
-Used positioning style: cascading `translate`
+**Positioning style**: cascading `translate`
 
-Group-label element tag: `div`
+**Group-label element tag**: `div`
 
-Group-label element attribute `data-id`: the group ID.
+**Group-label element attribute** `data-id`: the group ID.
 
-Tile element tag: `button`
+**Tile element tag**: `button`
 
-Tile element attribute `data-id`: the tile ID.
+**Tile element attribute** `Tiles.ATTR_ID`: the tile ID.
 
-Tile element attribute `data-size`: the tile size (`small`, `medium`, `wide` or `large`).
+**Tile element attribute** `Tiles.ATTR_SIZE`: the tile size (`small`, `medium`, `wide` or `large`).
 
-Tile element attribute `data-dragging`: false or true.
+**Tile element attribute** `Tiles.ATTR_DRAGGING`: false or true.
 
-Tile size: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
+**Tile size**: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
 
-Overrides the `transition` style in tile elements.
+**Transition style**: Overrides the `transition` style in tile elements.
 
 </blockquote>
 
-## Getting started
+### Getting started
 
 ```ts
 import { Tiles } from "@hydroperx/tiles";
@@ -38,14 +40,13 @@ const tiles = new Tiles({
     direction: "horizontal",
     // Custom class names.
     classNames: {
-        // Class name used for identifying group labels.
+        // Group labels.
         label: "label",
-        // Class name used for identifying tiles.
+        // Tile buttons.
         tile: "tile",
-        // Class name used for identifying tile content.
+        // Tile content.
         tileContent: "tile-content",
-        // Class name used for identifying the tile placeholder when dragging
-        // a tile.
+        // The tile placeholder when dragging a tile.
         placeholder: "placeholder",
     },
     // The size of small tiles, in cascading "rem" units.
@@ -72,9 +73,9 @@ const tiles = new Tiles({
 tiles.destroy();
 ```
 
-## Events
+### Events
 
-### addedgroup
+#### addedgroup
 
 Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, label: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
 
@@ -84,7 +85,7 @@ tiles.addEventListener("addedgroup", ({ detail: { group, label } }) => {
 });
 ```
 
-### addedtile
+#### addedtile
 
 Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement }>` object.
 
@@ -94,7 +95,7 @@ tiles.addEventListener("addedtile", ({ detail: { tile, button } }) => {
 });
 ```
 
-### stateupdate
+#### stateupdate
 
 Dispatched whenever the state is updated. Event is given a `CustomEvent<State>` object.
 
@@ -104,7 +105,7 @@ tiles.addEventListener("stateupdate", ({ detail: state }) => {
 });
 ```
 
-### dragstart
+#### dragstart
 
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
@@ -114,7 +115,7 @@ tiles.addEventListener("dragstart", ({ detail: { tile } }) => {
 });
 ```
 
-### drag
+#### drag
 
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
@@ -124,7 +125,7 @@ tiles.addEventListener("drag", ({ detail: { tile } }) => {
 });
 ```
 
-### dragend
+#### dragend
 
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
@@ -133,3 +134,7 @@ tiles.addEventListener("dragend", ({ detail: { tile } }) => {
     //
 });
 ```
+
+## License
+
+Apache 2.0

@@ -1,18 +1,18 @@
 /**
- * Determines the side a draggable rectangle hits.
+ * Determines the side that a moving rectangle hits of another rectangle.
  *
- * @param draggable The draggable rectangle.
- * @param hitted The rectangle to be hit.
+ * @param moving The moving rectangle.
+ * @param hitting The rectangle to be hit.
  * @returns The side of `hitted` that `draggable` hits.
  */
-export function hitTestSide(
-  draggable: { x: number; y: number; width: number; height: number },
-  hitted: { x: number; y: number; width: number; height: number },
+export function side(
+  moving: { x: number; y: number; width: number; height: number },
+  hitting: { x: number; y: number; width: number; height: number },
 ): "top" | "bottom" | "left" | "right" | null {
   // ChatGPT-based
 
-  let { x: xA, y: yA, width: wA, height: hA } = hitted;
-  let { x: xB, y: yB, width: wB, height: hB } = draggable;
+  let { x: xA, y: yA, width: wA, height: hA } = hitting;
+  let { x: xB, y: yB, width: wB, height: hB } = moving;
 
   // Compute overlap distances
   let leftOverlap = Math.max(0, xA + wA - xB);
