@@ -7,8 +7,8 @@ import { TypedEventTarget } from "@hydroperx/event";
 import { RootFontObserver } from "./utils/RootFontObserver";
 import {
   TileResolution,
-  get_size_width_small,
-  get_size_height_small,
+  getWidth,
+  getHeight,
   TileSize,
 } from "./enum/TileSize";
 import { State } from "./State";
@@ -54,7 +54,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /** @hidden */ public _resize_observer: ResizeObserver | null = null;
 
-  public _tile_size: TileResolution = {
+  public _tile_rem_size: TileResolution = {
     small: { w: 0, h: 0 },
     medium: { w: 0, h: 0 },
     wide: { w: 0, h: 0 },
@@ -154,14 +154,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     this._container.style.position = "relative";
 
-    this._tile_size.small.w = this._small_size;
-    this._tile_size.small.h = this._small_size;
-    this._tile_size.medium.w = this._small_size * 2 + this._tile_gap;
-    this._tile_size.medium.h = this._tile_size.medium.w;
-    this._tile_size.wide.w = this._tile_size.medium.w * 2 + this._tile_gap;
-    this._tile_size.wide.h = this._tile_size.medium.w;
-    this._tile_size.large.w = this._tile_size.wide.w;
-    this._tile_size.large.h = this._tile_size.wide.w;
+    this._tile_rem_size.small.w = this._small_size;
+    this._tile_rem_size.small.h = this._small_size;
+    this._tile_rem_size.medium.w = this._small_size * 2 + this._tile_gap;
+    this._tile_rem_size.medium.h = this._tile_rem_size.medium.w;
+    this._tile_rem_size.wide.w = this._tile_rem_size.medium.w * 2 + this._tile_gap;
+    this._tile_rem_size.wide.h = this._tile_rem_size.medium.w;
+    this._tile_rem_size.large.w = this._tile_rem_size.wide.w;
+    this._tile_rem_size.large.h = this._tile_rem_size.wide.w;
 
     this._container.style.minWidth = "100%";
     this._container.style.height =
