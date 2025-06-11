@@ -1,11 +1,11 @@
 /**
- * Observes the value of the CSS `rem` unit.
+ * Observes the pixels measure of the cascading `rem` unit.
  */
 export class RFObserver {
   private element: HTMLDivElement | null = null;
-  private resizeObserver: ResizeObserver | null = null;
+  private resize_observer: ResizeObserver | null = null;
 
-  constructor(updateCallback: (value: number) => void) {
+  constructor(updateFn: (value: number) => void) {
     if (typeof window !== "object") {
       return;
     }
@@ -16,16 +16,16 @@ export class RFObserver {
     this.element.style.width = "1rem";
     document.body.append(this.element);
 
-    updateCallback(this.read());
+    updateFn(this.read());
 
-    this.resizeObserver = new ResizeObserver(() => {
-      updateCallback(this.read());
+    this.resize_observer = new ResizeObserver(() => {
+      updateFn(this.read());
     });
-    this.resizeObserver.observe(this.element);
+    this.resize_observer.observe(this.element);
   }
 
   cleanup() {
-    this.resizeObserver?.disconnect();
+    this.resize_observer?.disconnect();
     this.element?.remove();
   }
 
