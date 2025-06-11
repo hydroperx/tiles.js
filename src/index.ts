@@ -4,7 +4,7 @@ import Draggable from "@hydroperx/draggable";
 import { TypedEventTarget } from "@hydroperx/event";
 
 // local imports
-import { RootFontObserver } from "./utils/RootFontObserver";
+import { RFObserver } from "./utils/RFObserver";
 import {
   TileResolution,
   getWidth,
@@ -46,7 +46,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   private _placeholder_element: HTMLDivElement | null = null;
 
-  /** @hidden */ public _root_font_observer: RootFontObserver;
+  /** @hidden */ public _rf_observer: RFObserver;
   /** @hidden */ public _rem: number = 16;
 
   /** @hidden */ public _layout: Layout;
@@ -171,7 +171,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       "rem";
 
     // Observe the "rem" unit size
-    this._root_font_observer = new RootFontObserver((val) => {
+    this._rf_observer = new RFObserver((val) => {
       this._rem = val;
     });
 
@@ -204,7 +204,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       if (draggable) draggable.destroy();
       this._draggables.delete(btn);
     }
-    this._root_font_observer.cleanup();
+    this._rf_observer.cleanup();
     this._resize_observer?.disconnect();
     this._container.remove();
   }

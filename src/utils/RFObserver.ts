@@ -1,7 +1,7 @@
 /**
  * Observes the value of the CSS `rem` unit.
  */
-export class RootFontObserver {
+export class RFObserver {
   private element: HTMLDivElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
 
@@ -11,7 +11,7 @@ export class RootFontObserver {
     }
 
     this.element = document.createElement("div");
-    this.element.classList.add("rem-unit");
+    this.element.classList.add("RFObserver-element");
     this.element.style.pointerEvents = "none";
     this.element.style.width = "1rem";
     document.body.append(this.element);
