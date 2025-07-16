@@ -1,6 +1,6 @@
 {
   "name": "@hydroperx/tiles",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "files": ["/dist"],
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "assert": "^2.1.0",
-    "@hydroperx/draggable": "^1.0.0",
+    "@hydroperx/draggable": "^1",
     "@hydroperx/event": "^1.0.0",
     "extend": "^3.0.2",
     "getoffset": "^0.6.4",

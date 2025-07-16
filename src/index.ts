@@ -397,6 +397,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
 
     // Setup draggable
     const draggable = new Draggable(button, {
+      setPosition: false,
       onDragStart: (el, x, y, evt) => {
         drag_start = [x, y];
         previous_state = this._state.clone();
