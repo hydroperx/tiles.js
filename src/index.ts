@@ -212,6 +212,41 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
   }
 
   /**
+   * Clears everything.
+   */
+  clear() {
+    // Clear state
+    this.state.clear();
+
+    // Clear layout measurements
+    this._layout.groups.length = 0;
+    this._layout.total_offset_width = 0;
+    this._layout.total_offset_height = 0;
+
+    // Clear button mappings
+    this._buttons.clear();
+
+    // remove tiles
+    for (const button of Array.from(this._container.querySelectorAll("." + this._tile_class_name)) as HTMLElement[]) {
+      button.remove();
+    }
+
+    // remove labels
+    for (const label of Array.from(this._container.querySelectorAll("." + this._label_class_name)) as HTMLElement[]) {
+      label.remove();
+    }
+
+    // remove placeholder
+    if (this._placeholder_element) {
+      this._placeholder_element.remove();
+      this._placeholder_element = null;
+    }
+
+    // resize container
+    this._resize_container();
+  }
+
+  /**
    * Adds a group to the end and returns its label's `div` element.
    */
   addGroup({ id, label }: { id: string; label?: string }): HTMLDivElement {
