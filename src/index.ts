@@ -223,6 +223,12 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     this._layout.total_offset_width = 0;
     this._layout.total_offset_height = 0;
 
+    // Discard draggables
+    for (const [,btn] of this._buttons) {
+      this._draggables.get(btn)?.destroy();
+      this._draggables.delete(btn);
+    }
+
     // Clear button mappings
     this._buttons.clear();
 
