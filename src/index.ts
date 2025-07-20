@@ -158,7 +158,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     this._tile_size.large_w = this._tile_size.wide_w;
     this._tile_size.large_h = this._tile_size.wide_w;
 
-    this._container.style.minWidth = "100%";
+    // this._container.style.minWidth = "100%";
     this._container.style.height =
       this._max_height * this._small_size +
       this._max_height * this._tile_gap +
@@ -690,33 +690,19 @@ export class Tiles extends (EventTarget as TypedEventTarget<{
     if (this._size_only_grows) {
       if (this._dir == "horizontal")
         this._container.style.width =
-          Math.max(
-            this._container.getBoundingClientRect().width / this._rem,
-            this._layout.total_offset_width,
-          ) + "rem";
+          this._layout.total_offset_width + "rem";
       else
         this._container.style.height =
-          Math.max(
-            this._container.getBoundingClientRect().height / this._rem,
-            this._layout.total_offset_height,
-          ) + "rem";
+          this._layout.total_offset_height + "rem";
       return;
     }
 
     if (this._dir == "horizontal")
       this._container.style.width =
-        Math.max(
-          this._container.parentElement!.getBoundingClientRect().width /
-            this._rem,
-          this._layout.total_offset_width,
-        ) + "rem";
+        this._layout.total_offset_width + "rem";
     else
       this._container.style.height =
-        Math.max(
-          this._container.parentElement!.getBoundingClientRect().height /
-            this._rem,
-          this._layout.total_offset_height,
-        ) + "rem";
+        this._layout.total_offset_height + "rem";
   }
 
   /** @hidden */
