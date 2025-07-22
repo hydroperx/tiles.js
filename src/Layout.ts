@@ -21,6 +21,19 @@ export abstract class Layout {
   public constructor($: Tiles) {
     this.$ = $;
   }
+
+  /**
+   * Rearranges group tiles.
+   */
+  public rearrange(): void {
+    // Rearrange group tiles
+    for (const group of this.groups) {
+      group.rearrange();
+    }
+
+    // Reposition groups
+    fixme();
+  }
 }
 
 /**
@@ -38,14 +51,14 @@ export class LayoutGroup {
   public readonly solver: kiwi.Solver = new kiwi.Solver();
 
   /**
-   * Group's width in cascading `rem` units.
+   * Group's width in cascading `em` units.
    */
-  public widthREM: number = 0;
+  public widthEM: number = 0;
 
   /**
-   * Group's height in cascading `rem` units.
+   * Group's height in cascading `em` units.
    */
-  public heightREM: number = 0;
+  public heightEM: number = 0;
 
   /**
    * Constructor.
@@ -87,6 +100,19 @@ export class LayoutGroup {
       }
     }
   }
+
+  /**
+   * Rearranges group tiles.
+   */
+  public rearrange(): void {
+    // Update Cassowary variables
+    this.solver.updateVariables();
+
+    // Reposition tiles (update the group's width/height EM together)
+    this.widthEM = 0;
+    this.heightEM = 0;
+    fixme();
+  }
 }
 
 /**
@@ -109,22 +135,18 @@ export class LayoutTile {
    * Non-overlapping constraint.
    */
   public nonOverlappingConstraints: kiwi.Constraint[] = [];
-
   /**
    * X variable in small tiles.
    */
   public readonly x: kiwi.Variable = new kiwi.Variable();
-
   /**
    * Y variable in small tiles.
    */
   public readonly y: kiwi.Variable = new kiwi.Variable();
-
   /**
    * Width variable in small tiles.
    */
   public readonly width: kiwi.Variable = new kiwi.Variable();
-
   /**
    * Height variable in small tiles.
    */

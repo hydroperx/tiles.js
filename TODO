@@ -23,6 +23,7 @@
 - [ ] `Tiles#addTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
+  - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.

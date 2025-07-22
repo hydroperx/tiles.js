@@ -44,6 +44,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _class_names: {
     group: string,
     groupLabel: string,
+    groupTiles: string,
     tile: string,
     tileContent: string,
   };
@@ -116,6 +117,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
        */
       groupLabel: string;
       /**
+       * Class name used for identifying the group tiles container.
+       */
+      groupTiles: string;
+      /**
        * Class name used for identifying tiles.
        */
       tile: string;
@@ -180,6 +185,7 @@ z     * in horizontal containers (must be >= 4).
     this._class_names = {
       group: params.classNames.group,
       groupLabel: params.classNames.groupLabel,
+      groupTiles: params.classNames.groupTiles,
       tile: params.classNames.tile,
       tileContent: params.classNames.tileContent,
     };
