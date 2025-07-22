@@ -1,6 +1,18 @@
 - [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
 - [ ] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
 
+# API
+
+- [ ] `Tiles#groupWidth()` (for the vertical layout)
+- [ ] `Tiles#inlineGroups()` (for the vertical layout)
+
+# Interactivity
+
+- [ ] When dragging a tile, disable pointer events on other tiles.
+- [ ] When stopping dragging a tile, enable pointer events on other tiles back.
+- [ ] When dragging a group, disable pointer events on all tiles.
+- [ ] When stopping dragging a group, enable pointer events back on all tiles back.
+
 # Tiles container
 
 - [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.

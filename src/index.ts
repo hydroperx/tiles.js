@@ -5,7 +5,7 @@ import { TypedEventTarget } from "@hydroperx/event";
 // local imports
 import { EMObserver } from "./utils/EMObserver";
 import {
-  TileResolution,
+  TileSizeMap,
   getWidth,
   getHeight,
   TileSize,
@@ -32,20 +32,20 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /** @hidden */ public _container: HTMLElement;
   /** @hidden */ public _dir: "horizontal" | "vertical";
   /** @hidden */ public _class_names: {
-    label: string,
+    group: string,
+    groupLabel: string,
     tile: string,
     tileContent: string,
-    placeholder: string,
   };
   /** @hidden */ public _small_size: number;
   /** @hidden */ public _tile_gap: number;
   /** @hidden */ public _group_gap: number;
   /** @hidden */ public _label_height: number;
-  /** @hidden */ public _max_width: number;
-  /** @hidden */ public _max_height: number;
   /** @hidden */ public _tile_transition: string;
 
-  private _placeholder_element: HTMLDivElement | null = null;
+  /** @hidden */ public _group_width: number;
+  /** @hidden */ public _inline_groups: number;
+  /** @hidden */ public _height: number;
 
   /** @hidden */ public _em_observer: EMObserver;
   /** @hidden */ public _em: number = 16;
@@ -55,7 +55,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /** @hidden */ public _resize_observer: ResizeObserver | null = null;
 
-  public _tile_em: TileResolution = {
+  public _tile_em: TileSizeMap = {
     small: { w: 0, h: 0 },
     medium: { w: 0, h: 0 },
     wide: { w: 0, h: 0 },
@@ -76,9 +76,13 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
      */
     classNames: {
       /**
+       * Class name used for identifying groups.
+       */
+      group: string;
+      /**
        * Class name used for identifying group labels.
        */
-      label: string;
+      groupLabel: string;
       /**
        * Class name used for identifying tiles.
        */
@@ -87,11 +91,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
        * Class name used for identifying tile contents.
        */
       tileContent: string;
-      /**
-       * Class name used for identifying a special tiled called the "placeholder",
-       * which is created/removed during dragging a tile where the tile may be dropped.
-       */
-      placeholder: string;
     };
     /**
      * The size of small tiles, in cascading "em" units.
@@ -110,15 +109,23 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
      */
     labelHeight: number;
     /**
-     * Maximum width in small tiles, effective only
+     * Group width in small tiles, effective only
      * in vertical containers (must be >= 4).
+     * @default 6
      */
-    maxWidth?: number;
+    groupWidth?: number;
     /**
-     * Maximum height in small tiles, effective only
-     * in horizontal containers (must be >= 4).
+     * Number of inline groups, effective only
+     * in vertical containers.
+     * @default 1
      */
-    maxHeight?: number;
+    inlineGroups?: number;
+    /**
+     * Height in small tiles, effective only
+z     * in horizontal containers (must be >= 4).
+     * @default 6
+     */
+    height?: number;
     /**
      * Transition function(s) to contribute to tiles.
      */
@@ -134,17 +141,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._container = params.element as HTMLElement;
     this._dir = params.direction;
     this._class_names = {
-      label: params.classNames.label,
+      group: params.classNames.group,
+      groupLabel: params.classNames.groupLabel,
       tile: params.classNames.tile,
       tileContent: params.classNames.tileContent,
-      placeholder: params.classNames.placeholder,
     };
     this._small_size = params.smallSize;
     this._tile_gap = params.tileGap;
     this._group_gap = params.groupGap;
     this._label_height = params.labelHeight;
-    this._max_width = params.maxWidth ?? Infinity;
-    this._max_height = params.maxHeight ?? Infinity;
     this._tile_transition = params.tileTransition ?? "";
 
     this._container.style.position = "relative";
@@ -158,6 +163,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._tile_em.large.w = this._tile_em.wide.w;
     this._tile_em.large.h = this._tile_em.wide.w;
 
+    this._group_width = params.groupWidth ?? 6;
+    this._inline_groups = params.inlineGroups ?? 1;
+    this._height = params.height ?? 6;
+
     // Observe the "em" unit size
     this._em_observer = new EMObserver(this._container, (val) => {
       this._em = val;
@@ -169,8 +178,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     // Initial layout
     this._layout =
       this._dir == "horizontal"
-        ? new HorizontalLayout(this, this._max_width, this._max_height)
-        : new VerticalLayout(this, this._max_width, this._max_height);
+        ? new HorizontalLayout(this)
+        : new VerticalLayout(this);
 
     if (typeof window !== "undefined") {
       this._resize_observer = new ResizeObserver(() => {
