@@ -66,6 +66,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _height: number;
 
   /** @hidden */
+  public _drag_enabled: boolean;
+  /** @hidden */
+  public _selection_enabled: boolean;
+
+  /** @hidden */
   public _em_observer: EMObserver;
   /** @hidden */
   public _em: number = 16;
@@ -119,6 +124,16 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
        */
       tileContent: string;
     };
+    /**
+     * Whether drag-n-drop is enabled.
+     * @default true
+     */
+    dragEnabled?: boolean;
+    /**
+     * Whether tile selection is enabled.
+     * @default true
+     */
+    selectionEnabled?: boolean;
     /**
      * The size of small tiles, in cascading `em` units.
      */
@@ -184,6 +199,12 @@ z     * in horizontal containers (must be >= 4).
     this._tile_em.wide.h = this._tile_em.medium.w;
     this._tile_em.large.w = this._tile_em.wide.w;
     this._tile_em.large.h = this._tile_em.wide.w;
+
+    // dragEnabled
+    this._drag_enabled = params.dragEnabled ?? true;
+
+    // selectionEnabled
+    this._selection_enabled = params.selectionEnabled ?? true;
 
     this._group_width = params.groupWidth ?? 6;
     this._inline_groups = params.inlineGroups ?? 1;

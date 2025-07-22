@@ -1,5 +1,7 @@
 - [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
 - [ ] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
+- [ ] Allow browsing tile focus through the arrows (input action navigateLeft/Right/Up/Down).
+  - [ ] Requires an option so that the library can decide whether it has the responsibility for navigating the focus.
 
 # API
 
@@ -15,6 +17,24 @@
 - [ ] `Tiles#moveGroup()`
 - [ ] `Tiles#resizeTile()`
 - [ ] `Tiles#moveTile()`
+
+# Tile selection
+
+- [ ] Allow (un)checking tiles
+  - [ ] through touch long hold
+  - [ ] through click long hold
+  - [ ] if currently in selection mode, through a touch tap
+  - [ ] if currently in selection mode, through a click
+  - [ ] through the API
+- [ ] Disable tile (un)checking depending on the `selectionEnabled` option.
+- [ ] Provide API method for changing the `selectionEnabled` option.
+- [ ] Provide API method for retrieving the IDs of checked tiles.
+- [ ] Provide selection change events.
+
+# Drag enabled
+
+- [ ] Disable drag-n-drop (both of tiles and groups) depending on the `dragEnabled` option.
+- [ ] Provide API method for changing the `dragEnabled` option.
 
 # Interactivity
 
