@@ -12,13 +12,18 @@
 - [ ] `Tiles#clear()` - Clears attached groups and tiles.
 - [ ] `Tiles#addGroup()`
 - [ ] `Tiles#addTile()`
+  - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
+  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
+  - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
+  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
 - [ ] `Tiles#resizeTile()`
-  - [ ] 
+  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
 - [ ] `Tiles#moveTile()`
+  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
 
 # Tile selection
 
