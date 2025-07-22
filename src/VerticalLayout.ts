@@ -16,13 +16,16 @@ export class VerticalLayout extends Layout {
    * Rearranges group tiles.
    */
   public override rearrange(): void {
-    // Rearrange group tiles
-    for (const group of this.groups) {
-      group.rearrange();
-    }
+    const column_y_em = new Map<number, number>();
 
-    // Reposition groups
-    let groupIndex: number = 0;
-    fixme();
+    // Rearrange group tiles and reposition groups
+    for (let i = 0; i < this.groups.length; i++) {
+      const group = this.groups[i];
+      group.rearrange();
+
+      // Reposition
+      const column = i % this.$._inline_groups;
+      fixme();
+    }
   }
 }

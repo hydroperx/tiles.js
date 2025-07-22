@@ -12,9 +12,13 @@
   - [ ] Insert ghost tile
   - [ ] `.refreshNonOverlappingConstraints()`
 
+# Clipping
+
+- [ ] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
+
 # Disabling pointer events
 
-- [ ] When disabling pointer events: for everything, add the `Tiles-pointer-events-off` class to the container, and add `Tiles-pointer-events-on` to the specific element that should have them enabled.
+- [ ] When disabling pointer events: for everything, set `pointer-events: none;` for the Tiles container, and set `pointer-events: auto;` for the specific element that should have them enabled.
 
 # API
 
