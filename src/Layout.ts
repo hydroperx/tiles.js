@@ -11,11 +11,6 @@ export abstract class Layout {
   public readonly $: Tiles;
 
   /**
-   * Cassowary constrant solver.
-   */
-  public solver: kiwi.Solver = new kiwi.Solver();
-
-  /**
    * Constructor.
    */
   public constructor($: Tiles) {
@@ -27,14 +22,21 @@ export abstract class Layout {
  * Group.
  */
 export class LayoutGroup {
-  // Random order tiles
+  /**
+   * Unordered tiles
+   */
   public tiles: LayoutTile[] = [];
+
+  /**
+   * Cassowary constrant solver.
+   */
+  public solver: kiwi.Solver = new kiwi.Solver();
 
   /**
    * Constructor.
    */
   public constructor(
-    private $: Layout,
+    public $: Layout,
     public id: string,
     public label: HTMLDivElement,
   ) {}
@@ -46,7 +48,7 @@ export class LayoutGroup {
     const l = this.tiles.length;
     for (const t of this.tiles) {
       for (const c of t.nonOverlappingConstraints) {
-        this.$.solver.removeConstraint(c);
+        this.solver.removeConstraint(c);
       }
       t.nonOverlappingConstraints.length = 0;
     }
@@ -63,8 +65,8 @@ export class LayoutGroup {
         // a.y + a.height >= b.y
         const yConstraint = new kiwi.Constraint(a.y.plus(a.height), kiwi.Operator.Ge, b.y);
 
-        this.$.solver.addConstraint(xConstraint);
-        this.$.solver.addConstraint(xConstraint);
+        this.solver.addConstraint(xConstraint);
+        this.solver.addConstraint(xConstraint);
 
         a.nonOverlappingConstraints.push(xConstraint, yConstraint);
       }
@@ -85,7 +87,7 @@ export class LayoutTile {
    * Cosntructor.
    */
   public constructor(
-    private $: Layout,
+    private $: LayoutGroup,
     public id: string,
     public button: HTMLButtonElement,
     public x: kiwi.Variable,
@@ -93,17 +95,10 @@ export class LayoutTile {
     public width: kiwi.Variable,
     public height: kiwi.Variable
   ) {
-    const minXConstraint = new kiwi.Constraint(x, kiwi.Operator.Ge, 0);
-    const minYConstraint = new kiwi.Constraint(y, kiwi.Operator.Ge, 0);
-    $.solver.addConstraint(minXConstraint);
-    $.solver.addConstraint(minYConstraint);
-    this.minConstraints.push(
-      minXConstraint,
-      minYConstraint,
-    );
+    this.refreshMinConstraints();
 
     // maximum X/Y constraint
-    if (this.$.$._dir == "horizontal") {
+    if (this.$.$.$._dir == "horizontal") {
       this.refreshMaxYConstraint();
     } else {
       this.refreshMaxXConstraint();
@@ -136,13 +131,27 @@ export class LayoutTile {
   }
 
   /**
+   * Refreshes minimum-X/Y constraints.
+   */
+  public refreshMinConstraints(): void {
+    const minXConstraint = new kiwi.Constraint(this.x, kiwi.Operator.Ge, 0);
+    const minYConstraint = new kiwi.Constraint(this.y, kiwi.Operator.Ge, 0);
+    this.$.solver.addConstraint(minXConstraint);
+    this.$.solver.addConstraint(minYConstraint);
+    this.minConstraints.push(
+      minXConstraint,
+      minYConstraint,
+    );
+  }
+
+  /**
    * Refreshes maximum-X constraint.
    */
   public refreshMaxXConstraint(): void {
     if (this.maxXConstraint) {
       this.$.solver.removeConstraint(this.maxXConstraint!);
     }
-    this.maxXConstraint = new kiwi.Constraint(this.x.plus(this.width), kiwi.Operator.Le, this.$.$._group_width - 1);
+    this.maxXConstraint = new kiwi.Constraint(this.x.plus(this.width), kiwi.Operator.Le, this.$.$.$._group_width - 1);
     this.$.solver.addConstraint(this.maxXConstraint!);
   }
 
@@ -153,7 +162,7 @@ export class LayoutTile {
     if (this.maxYConstraint) {
       this.$.solver.removeConstraint(this.maxYConstraint!);
     }
-    this.maxYConstraint = new kiwi.Constraint(this.y.plus(this.height), kiwi.Operator.Le, this.$.$._height - 1);
+    this.maxYConstraint = new kiwi.Constraint(this.y.plus(this.height), kiwi.Operator.Le, this.$.$.$._height - 1);
     this.$.solver.addConstraint(this.maxYConstraint!);
   }
 }

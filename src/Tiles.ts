@@ -232,13 +232,6 @@ z     * in horizontal containers (must be >= 4).
       this._dir == "horizontal"
         ? new HorizontalLayout(this)
         : new VerticalLayout(this);
-
-    if (typeof window !== "undefined") {
-      this._resize_observer = new ResizeObserver(() => {
-        this._resize();
-      });
-      this._resize_observer.observe(this._container);
-    }
   }
 
   /**
