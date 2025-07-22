@@ -12,6 +12,15 @@
   - [ ] Insert ghost tile
   - [ ] `.refreshNonOverlappingConstraints()`
 
+# Transition
+
+While rearranging tiles:
+
+(To stop current transition, get the interpolated cascading value of `top`/`left` and set it as the current, then run a very short timeout (3ms) to proceed.)
+
+- [ ] From -Y top to +Y (e.g. ignore X transition when changing both XY)
+- [ ] From +Y bottom to -Y (e.g. ignore X transition when changing both XY)
+
 # Clipping
 
 - [ ] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
