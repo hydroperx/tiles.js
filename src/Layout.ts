@@ -25,15 +25,7 @@ export abstract class Layout {
   /**
    * Rearranges group tiles.
    */
-  public rearrange(): void {
-    // Rearrange group tiles
-    for (const group of this.groups) {
-      group.rearrange();
-    }
-
-    // Reposition groups
-    fixme();
-  }
+  public abstract rearrange(): void;
 }
 
 /**
@@ -111,6 +103,7 @@ export class LayoutGroup {
     this.solver.updateVariables();
 
     // Reposition tiles (update the group's width/height EM together)
+    let changed = false;
     this.tilesWidthEM = 0;
     this.tilesHeightEM = 0;
     if (this.$.$._dir == "vertical") {
@@ -130,6 +123,24 @@ export class LayoutGroup {
       // change tiles size rem
       this.tilesWidthEM = Math.max(x_rem + w_rem, this.tilesWidthEM);
       this.tilesHeightEM = Math.max(y_rem + h_rem, this.tilesHeightEM);
+
+      // change tracked X/Y state
+      const state = this.$.$._state.tiles.get(tile.id);
+      if (state) {
+        const
+          old_x = state.x,
+          old_y = state.y;
+        state.x = tile.x.value();
+        state.y = tile.y.value();
+        if (!(old_x == state.x && old_y == state.y)) {
+          changed = true;
+        }
+      }
+    }
+
+    // State update signal
+    if (changed) {
+      this.$.$._state_update_signal();
     }
   }
 }
