@@ -84,7 +84,7 @@ export class LayoutGroup {
   }
 
   /**
-   * Rearranges group tiles.
+   * Rearranges group tiles and resizes the group's tiles div.
    */
   public rearrange(): void {
     // Update Cassowary variables
