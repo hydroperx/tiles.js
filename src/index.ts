@@ -218,7 +218,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /** @hidden */
-  _trigger_state_update() {
+  _state_update_signal() {
     this.dispatchEvent(
       new CustomEvent("stateupdate", { detail: this._state }),
     );
