@@ -55,14 +55,12 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /** @hidden */ public _resize_observer: ResizeObserver | null = null;
 
-  public _tile_em_size: TileResolution = {
+  public _tile_em: TileResolution = {
     small: { w: 0, h: 0 },
     medium: { w: 0, h: 0 },
     wide: { w: 0, h: 0 },
     large: { w: 0, h: 0 },
   };
-
-  private _readjust_timeout = -1;
 
   constructor(params: {
     /**
@@ -151,14 +149,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     this._container.style.position = "relative";
 
-    this._tile_em_size.small.w = this._small_size;
-    this._tile_em_size.small.h = this._small_size;
-    this._tile_em_size.medium.w = this._small_size * 2 + this._tile_gap;
-    this._tile_em_size.medium.h = this._tile_em_size.medium.w;
-    this._tile_em_size.wide.w = this._tile_em_size.medium.w * 2 + this._tile_gap;
-    this._tile_em_size.wide.h = this._tile_em_size.medium.w;
-    this._tile_em_size.large.w = this._tile_em_size.wide.w;
-    this._tile_em_size.large.h = this._tile_em_size.wide.w;
+    this._tile_em.small.w = this._small_size;
+    this._tile_em.small.h = this._small_size;
+    this._tile_em.medium.w = this._small_size * 2 + this._tile_gap;
+    this._tile_em.medium.h = this._tile_em.medium.w;
+    this._tile_em.wide.w = this._tile_em.medium.w * 2 + this._tile_gap;
+    this._tile_em.wide.h = this._tile_em.medium.w;
+    this._tile_em.large.w = this._tile_em.wide.w;
+    this._tile_em.large.h = this._tile_em.wide.w;
 
     // Observe the "em" unit size
     this._em_observer = new EMObserver(this._container, (val) => {
