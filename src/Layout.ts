@@ -102,7 +102,7 @@ export class LayoutTile {
    */
   public maxXConstraint: null | kiwi.Constraint = null;
   /**
-   * Maximum XYconstraint.
+   * Maximum Y constraint.
    */
   public maxYConstraint: null | kiwi.Constraint = null;
   /**
@@ -111,17 +111,33 @@ export class LayoutTile {
   public nonOverlappingConstraints: kiwi.Constraint[] = [];
 
   /**
+   * X variable in small tiles.
+   */
+  public readonly x: kiwi.Variable = new kiwi.Variable();
+
+  /**
+   * Y variable in small tiles.
+   */
+  public readonly y: kiwi.Variable = new kiwi.Variable();
+
+  /**
+   * Width variable in small tiles.
+   */
+  public readonly width: kiwi.Variable = new kiwi.Variable();
+
+  /**
+   * Height variable in small tiles.
+   */
+  public readonly height: kiwi.Variable = new kiwi.Variable();
+
+  /**
    * Cosntructor.
    * @param button If `null` indicates this is a placeholder tile.
    */
   public constructor(
     private $: LayoutGroup,
     public readonly id: string,
-    public readonly button: null | HTMLButtonElement,
-    public readonly x: kiwi.Variable,
-    public readonly y: kiwi.Variable,
-    public readonly width: kiwi.Variable,
-    public readonly height: kiwi.Variable
+    public readonly button: null | HTMLButtonElement
   ) {
     // Refresh min/max constraints
     this.refreshMinConstraints();
