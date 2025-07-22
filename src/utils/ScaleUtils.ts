@@ -19,6 +19,7 @@ export function getScale(el: HTMLElement): { x: number, y: number } {
       const s1_y = s1[1] ? parseFloat(s1[1]) : s1_x;
       scaleX *= s1_x;
       scaleY *= s1_y;
+      current = current.parentElement;
       continue;
     }
 
