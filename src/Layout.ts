@@ -23,14 +23,24 @@ export abstract class Layout {
  */
 export class LayoutGroup {
   /**
-   * Unordered tiles
+   * Unordered tiles.
    */
   public readonly tiles: LayoutTile[] = [];
 
   /**
-   * Cassowary constrant solver.
+   * Cassowary constrant solver for tiles.
    */
   public readonly solver: kiwi.Solver = new kiwi.Solver();
+
+  /**
+   * Group's width in cascading `rem` units.
+   */
+  public widthREM: number = 0;
+
+  /**
+   * Group's height in cascading `rem` units.
+   */
+  public heightREM: number = 0;
 
   /**
    * Constructor.
@@ -108,14 +118,9 @@ export class LayoutTile {
     public readonly width: kiwi.Variable,
     public readonly height: kiwi.Variable
   ) {
+    // Refresh min/max constraints
     this.refreshMinConstraints();
-
-    // maximum X/Y constraint
-    if (this.$.$.$._dir == "horizontal") {
-      this.refreshMaxYConstraint();
-    } else {
-      this.refreshMaxXConstraint();
-    }
+    this.refreshMaxConstraints();
   }
 
   /**
@@ -155,6 +160,15 @@ export class LayoutTile {
       minXConstraint,
       minYConstraint,
     );
+  }
+
+  public refreshMaxConstraints(): void {
+    // maximum X/Y constraint
+    if (this.$.$.$._dir == "horizontal") {
+      this.refreshMaxYConstraint();
+    } else {
+      this.refreshMaxXConstraint();
+    }
   }
 
   /**
