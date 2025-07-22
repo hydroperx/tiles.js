@@ -51,14 +51,16 @@ export class LayoutGroup {
   public readonly solver: kiwi.Solver = new kiwi.Solver();
 
   /**
-   * Group's width in cascading `em` units.
+   * Group's width in cascading `em` units, corresponding
+   * to the tiles area.
    */
-  public widthEM: number = 0;
+  public tilesWidthEM: number = 0;
 
   /**
-   * Group's height in cascading `em` units.
+   * Group's height in cascading `em` units, corresponding
+   * to the tiles area.
    */
-  public heightEM: number = 0;
+  public tilesHeightEM: number = 0;
 
   /**
    * Constructor.
@@ -109,9 +111,26 @@ export class LayoutGroup {
     this.solver.updateVariables();
 
     // Reposition tiles (update the group's width/height EM together)
-    this.widthEM = 0;
-    this.heightEM = 0;
-    fixme();
+    this.tilesWidthEM = 0;
+    this.tilesHeightEM = 0;
+    if (this.$.$._dir == "vertical") {
+      this.tilesWidthEM =
+        this.$.$._group_width * this.$.$._small_size +
+        (this.$.$._group_width - 1) * this.$.$._tile_gap;
+    }
+    for (const tile of this.tiles) {
+      const x_rem = tile.x.value() * this.$.$._small_size + tile.x.value() * this.$.$._tile_gap;
+      const y_rem = tile.y.value() * this.$.$._small_size + tile.y.value() * this.$.$._tile_gap;
+      if (tile.button) {
+        tile.button!.style.left = x_rem + "em";
+        tile.button!.style.top = y_rem + "em";
+      }
+      const w_rem = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
+      const h_rem = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
+      // change tiles size rem
+      this.tilesWidthEM = Math.max(x_rem + w_rem, this.tilesWidthEM);
+      this.tilesHeightEM = Math.max(y_rem + h_rem, this.tilesHeightEM);
+    }
   }
 }
 
@@ -135,31 +154,23 @@ export class LayoutTile {
    * Non-overlapping constraint.
    */
   public nonOverlappingConstraints: kiwi.Constraint[] = [];
-  /**
-   * X variable in small tiles.
-   */
-  public readonly x: kiwi.Variable = new kiwi.Variable();
-  /**
-   * Y variable in small tiles.
-   */
-  public readonly y: kiwi.Variable = new kiwi.Variable();
-  /**
-   * Width variable in small tiles.
-   */
-  public readonly width: kiwi.Variable = new kiwi.Variable();
-  /**
-   * Height variable in small tiles.
-   */
-  public readonly height: kiwi.Variable = new kiwi.Variable();
 
   /**
    * Cosntructor.
    * @param button If `null` indicates this is a placeholder tile.
+   * @param x X variable in small tiles.
+   * @param y Y variable in small tiles.
+   * @param width Width variable in small tiles.
+   * @param height Height variable in small tiles.
    */
   public constructor(
     private $: LayoutGroup,
     public readonly id: string,
-    public readonly button: null | HTMLButtonElement
+    public readonly button: null | HTMLButtonElement,
+    public readonly x: kiwi.Variable,
+    public readonly y: kiwi.Variable,
+    public readonly width: number,
+    public readonly height: number
   ) {
     // Refresh min/max constraints
     this.refreshMinConstraints();
@@ -195,6 +206,10 @@ export class LayoutTile {
    * Refreshes minimum-X/Y constraints.
    */
   public refreshMinConstraints(): void {
+    for (const c of this.minConstraints) {
+      this.$.solver.removeConstraint(c);
+    }
+    this.minConstraints.length = 0;
     const minXConstraint = new kiwi.Constraint(this.x, kiwi.Operator.Ge, 0);
     const minYConstraint = new kiwi.Constraint(this.y, kiwi.Operator.Ge, 0);
     this.$.solver.addConstraint(minXConstraint);
@@ -205,7 +220,18 @@ export class LayoutTile {
     );
   }
 
+  /**
+   * Refreshes maximum-X/Y constraints.
+   */
   public refreshMaxConstraints(): void {
+    if (this.maxXConstraint) {
+      this.$.solver.removeConstraint(this.maxXConstraint!);
+      this.maxXConstraint = null;
+    }
+    if (this.maxYConstraint) {
+      this.$.solver.removeConstraint(this.maxYConstraint!);
+      this.maxYConstraint = null;
+    }
     // maximum X/Y constraint
     if (this.$.$.$._dir == "horizontal") {
       this.refreshMaxYConstraint();

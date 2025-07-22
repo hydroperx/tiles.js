@@ -22,18 +22,20 @@
 - [ ] `Tiles#addGroup()`
 - [ ] `Tiles#addTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
-  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
   - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
+  - [ ] Clear constraints from the specified tile.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
-  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
+  - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
 - [ ] `Tiles#resizeTile()`
-  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
+  - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
+  - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
+  - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#moveTile()`
-  - [ ] Call Cassowary solver's `.updateVariables()` for the respective group.
+  - [ ] Call `layout.rearrange()`
 
 # Tile selection
 
@@ -77,6 +79,8 @@
 - [ ] Allow to zoom in/out switching between near/far view in a horizontal container, either through <kbd>Ctrl + Plus</kbd>, <kbd>Ctrl + Minus</kbd> or pinch gesture.
 - [ ] When in far view, user is not allowed to interact with tiles, but rather with groups, allowing to drag-n-drop groups.
 
-# Tile, content representation
+# Representation
 
+- [ ] Groups have `position: absolute`
+- [ ] Groups contain groupLabel and groupTiles
 - [ ] Tiles are `button` elements containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
