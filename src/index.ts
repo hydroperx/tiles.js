@@ -23,38 +23,68 @@ export * from "./State";
  * Tiles layout.
  */
 export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
+  /**
+   * Attribute name used for identifying a tile's ID.
+   */
   static readonly ATTR_ID = "data-id";
+  /**
+   * Attribute name used for indicating a tile's size.
+   */
   static readonly ATTR_SIZE = "data-size";
+  /**
+   * Attribute name used for indicating that a tile is actively in drag.
+   */
   static readonly ATTR_DRAGGING = "data-dragging";
 
-  /** @hidden */ _state: State;
+  /** @hidden */
+  public _state: State;
 
-  /** @hidden */ public _container: HTMLElement;
-  /** @hidden */ public _dir: "horizontal" | "vertical";
-  /** @hidden */ public _class_names: {
+  /** @hidden */
+  public _container: HTMLElement;
+  /** @hidden */
+  public _dir: "horizontal" | "vertical";
+  /** @hidden */
+  public _class_names: {
     group: string,
     groupLabel: string,
     tile: string,
     tileContent: string,
   };
-  /** @hidden */ public _small_size: number;
-  /** @hidden */ public _tile_gap: number;
-  /** @hidden */ public _group_gap: number;
-  /** @hidden */ public _label_height: number;
-  /** @hidden */ public _tile_transition: string;
+  /** @hidden */
+  public _small_size: number;
+  /** @hidden */
+  public _tile_gap: number;
+  /** @hidden */
+  public _group_gap: number;
+  /** @hidden */
+  public _label_height: number;
+  /** @hidden */
+  public _tile_transition: string;
 
-  /** @hidden */ public _group_width: number;
-  /** @hidden */ public _inline_groups: number;
-  /** @hidden */ public _height: number;
+  /** @hidden */
+  public _group_width: number;
+  /** @hidden */
+  public _inline_groups: number;
+  /** @hidden */
+  public _height: number;
 
-  /** @hidden */ public _em_observer: EMObserver;
-  /** @hidden */ public _em: number = 16;
+  /** @hidden */
+  public _em_observer: EMObserver;
+  /** @hidden */
+  public _em: number = 16;
 
-  /** @hidden */ public _layout: Layout;
-  /** @hidden */ public _buttons: Map<string, HTMLButtonElement> = new Map();
+  /** @hidden */
+  public _layout: Layout;
+  /** @hidden */
+  public _buttons: Map<string, HTMLButtonElement> = new Map();
 
-  /** @hidden */ public _resize_observer: ResizeObserver | null = null;
+  /** @hidden */
+  public _resize_observer: ResizeObserver | null = null;
 
+  /**
+   * Tile sizes in the cascading `em` unit.
+   * @hidden
+   */
   public _tile_em: TileSizeMap = {
     small: { w: 0, h: 0 },
     medium: { w: 0, h: 0 },
@@ -93,19 +123,19 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       tileContent: string;
     };
     /**
-     * The size of small tiles, in cascading "em" units.
+     * The size of small tiles, in cascading `em` units.
      */
     smallSize: number;
     /**
-     * Gap between tiles, in cascading "em" units.
+     * Gap between tiles, in cascading `em` units.
      */
     tileGap: number;
     /**
-     * Gap between groups, in cascading "em" units.
+     * Gap between groups, in cascading `em` units.
      */
     groupGap: number;
     /**
-     * The height of group labels, in cascading "em" units.
+     * The height of group labels, in cascading `em` units.
      */
     labelHeight: number;
     /**
@@ -132,11 +162,6 @@ z     * in horizontal containers (must be >= 4).
     tileTransition?: string;
   }) {
     super();
-
-    assert(
-      params.direction == "horizontal" ? (params.maxHeight ?? 0) >= 4 : true,
-      "maxHeight must be specified and be >= 4.",
-    );
 
     this._container = params.element as HTMLElement;
     this._dir = params.direction;
@@ -167,7 +192,7 @@ z     * in horizontal containers (must be >= 4).
     this._inline_groups = params.inlineGroups ?? 1;
     this._height = params.height ?? 6;
 
-    // Observe the "em" unit size
+    // Observe the `em` unit size
     this._em_observer = new EMObserver(this._container, (val) => {
       this._em = val;
     });

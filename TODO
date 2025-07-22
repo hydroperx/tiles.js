@@ -16,16 +16,13 @@
 # Tiles container
 
 - [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.
-- [ ] Vertical: width is fixed and may increase up to 3 times itself; prefer to contribute tiles at horizontal end.
-- [ ] Representation: the Tiles container contains a groups container. The placeholder being dragged appears as a direct child of the Tiles container with a fixed position.
-
-# Scrolling
-
-- [ ] Smooth, fast scrolling with mouse wheel
+- [ ] Vertical: width is fixed and consists of N inline groups; prefer to contribute tiles at horizontal end.
+- [ ] While a tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
 
 # While dragging
 
-- [ ] In a horizontal container, if dragging tile far orthogonal axis, then scale tiles down.
+- [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
+  - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
 
 # Zoom
 
