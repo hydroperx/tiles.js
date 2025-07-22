@@ -120,7 +120,7 @@ export class LayoutGroup {
       }
       const w_rem = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
       const h_rem = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
-      // change tiles size rem
+      // change tiles size em
       this.tilesWidthEM = Math.max(x_rem + w_rem, this.tilesWidthEM);
       this.tilesHeightEM = Math.max(y_rem + h_rem, this.tilesHeightEM);
 

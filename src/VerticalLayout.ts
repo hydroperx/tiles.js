@@ -23,7 +23,7 @@ export class VerticalLayout extends Layout {
       const group = this.groups[i];
       group.rearrange();
 
-      // Reposition
+      // Reposition group
       const column = i % this.$._inline_groups;
       fixme();
     }
