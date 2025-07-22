@@ -3,8 +3,18 @@
 
 # API
 
+- [ ] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
 - [ ] `Tiles#groupWidth()` (for the vertical layout)
 - [ ] `Tiles#inlineGroups()` (for the vertical layout)
+- [ ] `Tiles#clear()` - Clears attached groups and tiles.
+- [ ] `Tiles#addGroup()`
+- [ ] `Tiles#addTile()`
+- [ ] `Tiles#removeGroup()`
+- [ ] `Tiles#removeTile()`
+- [ ] `Tiles#renameGroup()`
+- [ ] `Tiles#moveGroup()`
+- [ ] `Tiles#resizeTile()`
+- [ ] `Tiles#moveTile()`
 
 # Interactivity
 
