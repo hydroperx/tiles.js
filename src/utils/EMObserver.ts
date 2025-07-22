@@ -1,20 +1,23 @@
 /**
- * Observes the pixels measure of the cascading `rem` unit.
+ * Observes the pixels measure of the cascading `em` unit.
  */
-export class RFObserver {
+export class EMObserver {
   private element: HTMLDivElement | null = null;
   private resize_observer: ResizeObserver | null = null;
 
-  constructor(updateFn: (value: number) => void) {
+  constructor(container: HTMLElement, updateFn: (value: number) => void) {
     if (typeof window !== "object") {
       return;
     }
 
     this.element = document.createElement("div");
-    this.element.classList.add("RFObserver-element");
+    this.element.classList.add("EMObserver-element");
+    this.element.style.position = "absolute";
+    this.element.style.left = "0";
+    this.element.style.top = "0";
     this.element.style.pointerEvents = "none";
-    this.element.style.width = "1rem";
-    document.body.append(this.element);
+    this.element.style.width = "1em";
+    container.append(this.element);
 
     updateFn(this.read());
 

@@ -1,10 +1,9 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
-import Draggable from "@hydroperx/draggable";
 import { TypedEventTarget } from "@hydroperx/event";
 
 // local imports
-import { RFObserver } from "./utils/RFObserver";
+import { EMObserver } from "./utils/EMObserver";
 import {
   TileResolution,
   getWidth,
@@ -20,13 +19,15 @@ import { VerticalLayout } from "./VerticalLayout";
 export { type TileSize } from "./enum/TileSize";
 export * from "./State";
 
+/**
+ * Tiles layout.
+ */
 export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   static readonly ATTR_ID = "data-id";
   static readonly ATTR_SIZE = "data-size";
   static readonly ATTR_DRAGGING = "data-dragging";
 
   /** @hidden */ _state: State;
-  /** @hidden */ _draggables: WeakMap<HTMLButtonElement, Draggable> = new WeakMap();
 
   /** @hidden */ public _container: HTMLElement;
   /** @hidden */ public _dir: "horizontal" | "vertical";
@@ -46,15 +47,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   private _placeholder_element: HTMLDivElement | null = null;
 
-  /** @hidden */ public _rf_observer: RFObserver;
-  /** @hidden */ public _rem: number = 16;
+  /** @hidden */ public _em_observer: EMObserver;
+  /** @hidden */ public _em: number = 16;
 
   /** @hidden */ public _layout: Layout;
   /** @hidden */ public _buttons: Map<string, HTMLButtonElement> = new Map();
 
   /** @hidden */ public _resize_observer: ResizeObserver | null = null;
 
-  public _tile_rem_size: TileResolution = {
+  public _tile_em_size: TileResolution = {
     small: { w: 0, h: 0 },
     medium: { w: 0, h: 0 },
     wide: { w: 0, h: 0 },
@@ -63,7 +64,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   private _readjust_timeout = -1;
 
-  constructor(options: {
+  constructor(params: {
     /**
      * Container.
      */
@@ -93,21 +94,21 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
        * which is created/removed during dragging a tile where the tile may be dropped.
        */
       placeholder: string;
-    },
+    };
     /**
-     * The size of small tiles, in cascading "rem" units.
+     * The size of small tiles, in cascading "em" units.
      */
     smallSize: number;
     /**
-     * Gap between tiles, in cascading "rem" units.
+     * Gap between tiles, in cascading "em" units.
      */
     tileGap: number;
     /**
-     * Gap between groups, in cascading "rem" units.
+     * Gap between groups, in cascading "em" units.
      */
     groupGap: number;
     /**
-     * The height of group labels, in cascading "rem" units.
+     * The height of group labels, in cascading "em" units.
      */
     labelHeight: number;
     /**
@@ -128,51 +129,40 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     super();
 
     assert(
-      options.direction == "horizontal",
-      "Vertical direction not supported currently.",
-    );
-    assert(
-      options.direction == "horizontal" ? (options.maxHeight ?? 0) >= 4 : true,
+      params.direction == "horizontal" ? (params.maxHeight ?? 0) >= 4 : true,
       "maxHeight must be specified and be >= 4.",
     );
 
-    this._container = options.element as HTMLElement;
-    this._dir = options.direction;
+    this._container = params.element as HTMLElement;
+    this._dir = params.direction;
     this._class_names = {
-      label: options.classNames.label,
-      tile: options.classNames.tile,
-      tileContent: options.classNames.tileContent,
-      placeholder: options.classNames.placeholder,
+      label: params.classNames.label,
+      tile: params.classNames.tile,
+      tileContent: params.classNames.tileContent,
+      placeholder: params.classNames.placeholder,
     };
-    this._small_size = options.smallSize;
-    this._tile_gap = options.tileGap;
-    this._group_gap = options.groupGap;
-    this._label_height = options.labelHeight;
-    this._max_width = options.maxWidth ?? Infinity;
-    this._max_height = options.maxHeight ?? Infinity;
-    this._tile_transition = options.tileTransition ?? "";
+    this._small_size = params.smallSize;
+    this._tile_gap = params.tileGap;
+    this._group_gap = params.groupGap;
+    this._label_height = params.labelHeight;
+    this._max_width = params.maxWidth ?? Infinity;
+    this._max_height = params.maxHeight ?? Infinity;
+    this._tile_transition = params.tileTransition ?? "";
 
     this._container.style.position = "relative";
 
-    this._tile_rem_size.small.w = this._small_size;
-    this._tile_rem_size.small.h = this._small_size;
-    this._tile_rem_size.medium.w = this._small_size * 2 + this._tile_gap;
-    this._tile_rem_size.medium.h = this._tile_rem_size.medium.w;
-    this._tile_rem_size.wide.w = this._tile_rem_size.medium.w * 2 + this._tile_gap;
-    this._tile_rem_size.wide.h = this._tile_rem_size.medium.w;
-    this._tile_rem_size.large.w = this._tile_rem_size.wide.w;
-    this._tile_rem_size.large.h = this._tile_rem_size.wide.w;
+    this._tile_em_size.small.w = this._small_size;
+    this._tile_em_size.small.h = this._small_size;
+    this._tile_em_size.medium.w = this._small_size * 2 + this._tile_gap;
+    this._tile_em_size.medium.h = this._tile_em_size.medium.w;
+    this._tile_em_size.wide.w = this._tile_em_size.medium.w * 2 + this._tile_gap;
+    this._tile_em_size.wide.h = this._tile_em_size.medium.w;
+    this._tile_em_size.large.w = this._tile_em_size.wide.w;
+    this._tile_em_size.large.h = this._tile_em_size.wide.w;
 
-    this._container.style.minWidth = "100%";
-    this._container.style.height =
-      this._max_height * this._small_size +
-      this._max_height * this._tile_gap +
-      this._label_height +
-      "rem";
-
-    // Observe the "rem" unit size
-    this._rf_observer = new RFObserver((val) => {
-      this._rem = val;
+    // Observe the "em" unit size
+    this._em_observer = new EMObserver(this._container, (val) => {
+      this._em = val;
     });
 
     // Set state
@@ -186,10 +176,17 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     if (typeof window !== "undefined") {
       this._resize_observer = new ResizeObserver(() => {
-        this._resize_container();
+        this._resize();
       });
       this._resize_observer.observe(this._container);
     }
+  }
+
+  /**
+   * Clears attached groups and tiles.
+   */
+  clear(): void {
+    fixme();
   }
 
   /**
@@ -197,16 +194,27 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    * of any observers and removing the container from the DOM.
    */
   destroy() {
-    for (const btn of Array.from(
-      this._container.querySelectorAll("." + this._class_names.tile),
-    ) as HTMLButtonElement[]) {
-      const draggable = this._draggables.get(btn);
-      if (draggable) draggable.destroy();
-      this._draggables.delete(btn);
-    }
-    this._rf_observer.cleanup();
+    this._em_observer.cleanup();
     this._resize_observer?.disconnect();
     this._container.remove();
+  }
+
+  /**
+   * Shorthand to `addEventListener()`.
+   */
+  on<K extends keyof TilesEventMap>(type: K, listenerFn: (event: TilesEventMap[K]) => void, options?: AddEventListenerOptions): void;
+  on(type: string, listenerFn: (event: Event) => void, options?: AddEventListenerOptions): void;
+  on(type: any, listenerFn: any, options?: AddEventListenerOptions): void {
+    this.addEventListener(type, listenerFn, options);
+  }
+
+  /**
+   * Shorthand to `removeEventListener()`.
+   */
+  off<K extends keyof TilesEventMap>(type: K, listenerFn: (event: TilesEventMap[K]) => void, options?: EventListenerOptions): void;
+  off(type: string, listenerFn: (event: Event) => void, options?: EventListenerOptions): void;
+  off(type: any, listenerFn: any, options?: EventListenerOptions): void {
+    this.removeEventListener(type, listenerFn, options);
   }
 
   /** @hidden */

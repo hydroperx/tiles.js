@@ -1,3 +1,6 @@
+- [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
+- [ ] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
+
 # Tiles container
 
 - [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.
