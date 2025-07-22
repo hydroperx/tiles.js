@@ -11,6 +11,11 @@ export abstract class Layout {
   public readonly $: Tiles;
 
   /**
+   * Ordered groups.
+   */
+  public readonly groups: LayoutGroup[] = [];
+
+  /**
    * Constructor.
    */
   public constructor($: Tiles) {
