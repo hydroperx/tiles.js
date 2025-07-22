@@ -25,12 +25,12 @@ export class LayoutGroup {
   /**
    * Unordered tiles
    */
-  public tiles: LayoutTile[] = [];
+  public readonly tiles: LayoutTile[] = [];
 
   /**
    * Cassowary constrant solver.
    */
-  public solver: kiwi.Solver = new kiwi.Solver();
+  public readonly solver: kiwi.Solver = new kiwi.Solver();
 
   /**
    * Constructor.
@@ -78,22 +78,35 @@ export class LayoutGroup {
  * Tile.
  */
 export class LayoutTile {
+  /**
+   * Minimum X/Y constraints.
+   */
   public minConstraints: kiwi.Constraint[] = [];
+  /**
+   * Maximum X constraint.
+   */
   public maxXConstraint: null | kiwi.Constraint = null;
+  /**
+   * Maximum XYconstraint.
+   */
   public maxYConstraint: null | kiwi.Constraint = null;
+  /**
+   * Non-overlapping constraint.
+   */
   public nonOverlappingConstraints: kiwi.Constraint[] = [];
 
   /**
    * Cosntructor.
+   * @param button If `null` indicates this is a placeholder tile.
    */
   public constructor(
     private $: LayoutGroup,
-    public id: string,
-    public button: HTMLButtonElement,
-    public x: kiwi.Variable,
-    public y: kiwi.Variable,
-    public width: kiwi.Variable,
-    public height: kiwi.Variable
+    public readonly id: string,
+    public readonly button: null | HTMLButtonElement,
+    public readonly x: kiwi.Variable,
+    public readonly y: kiwi.Variable,
+    public readonly width: kiwi.Variable,
+    public readonly height: kiwi.Variable
   ) {
     this.refreshMinConstraints();
 

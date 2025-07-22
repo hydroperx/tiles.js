@@ -6,6 +6,12 @@
 - [ ] Allow browsing tile focus through the arrows (input action navigateLeft/Right/Up/Down).
   - [ ] Requires an option so that the library can decide whether it has the responsibility for navigating the focus.
 
+# Tile dragging
+
+- [ ] Placeholder 
+  - [ ] Insert ghost tile
+  - [ ] `.refreshNonOverlappingConstraints()`
+
 # API
 
 - [ ] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
