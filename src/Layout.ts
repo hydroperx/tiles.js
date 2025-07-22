@@ -43,24 +43,12 @@ export class LayoutGroup {
   public readonly solver: kiwi.Solver = new kiwi.Solver();
 
   /**
-   * Group's width in cascading `em` units, corresponding
-   * to the tiles area.
-   */
-  public tilesWidthEM: number = 0;
-
-  /**
-   * Group's height in cascading `em` units, corresponding
-   * to the tiles area.
-   */
-  public tilesHeightEM: number = 0;
-
-  /**
    * Constructor.
    */
   public constructor(
     public $: Layout,
     public id: string,
-    public label: HTMLDivElement,
+    public div: HTMLDivElement,
   ) {}
 
   /**
@@ -104,25 +92,26 @@ export class LayoutGroup {
 
     // Reposition tiles (update the group's width/height EM together)
     let changed = false;
-    this.tilesWidthEM = 0;
-    this.tilesHeightEM = 0;
+    let
+      tiles_width_em: number = 0,
+      tiles_height_em: number = 0;
     if (this.$.$._dir == "vertical") {
-      this.tilesWidthEM =
+      tiles_width_em =
         this.$.$._group_width * this.$.$._small_size +
         (this.$.$._group_width - 1) * this.$.$._tile_gap;
     }
     for (const tile of this.tiles) {
-      const x_rem = tile.x.value() * this.$.$._small_size + tile.x.value() * this.$.$._tile_gap;
-      const y_rem = tile.y.value() * this.$.$._small_size + tile.y.value() * this.$.$._tile_gap;
+      const x_em = tile.x.value() * this.$.$._small_size + tile.x.value() * this.$.$._tile_gap;
+      const y_em = tile.y.value() * this.$.$._small_size + tile.y.value() * this.$.$._tile_gap;
       if (tile.button) {
-        tile.button!.style.left = x_rem + "em";
-        tile.button!.style.top = y_rem + "em";
+        tile.button!.style.left = x_em + "em";
+        tile.button!.style.top = y_em + "em";
       }
-      const w_rem = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
-      const h_rem = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
+      const w_em = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
+      const h_em = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
       // change tiles size em
-      this.tilesWidthEM = Math.max(x_rem + w_rem, this.tilesWidthEM);
-      this.tilesHeightEM = Math.max(y_rem + h_rem, this.tilesHeightEM);
+      tiles_width_em = Math.max(x_em + w_em, tiles_width_em);
+      tiles_height_em = Math.max(y_em + h_em, tiles_height_em);
 
       // change tracked X/Y state
       const state = this.$.$._state.tiles.get(tile.id);
@@ -137,6 +126,11 @@ export class LayoutGroup {
         }
       }
     }
+
+    // Resize groupTiles div
+    const group_tiles_div = this.div.getElementsByClassName(this.$.$._class_names.groupTiles)[0] as HTMLElement;
+    group_tiles_div.style.width = tiles_width_em + "em";
+    group_tiles_div.style.height = tiles_height_em + "em";
 
     // State update signal
     if (changed) {

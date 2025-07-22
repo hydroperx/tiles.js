@@ -1,3 +1,4 @@
+import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 
@@ -25,7 +26,9 @@ export class VerticalLayout extends Layout {
 
       // Reposition group
       const column = i % this.$._inline_groups;
-      fixme();
+      group.div.style.left = (column * this.$._small_size + column * this.$._tile_gap) + "em";
+      group.div.style.top = column_y_em.get(column)! + "em";
+      column_y_em.set(column, ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em) + this.$._tile_gap);
     }
   }
 }

@@ -90,5 +90,6 @@
 # Representation
 
 - [ ] Groups have `position: absolute`
+- [ ] GroupTiles have `position: relative`
 - [ ] Groups contain groupLabel and groupTiles
-- [ ] Tiles are `button` elements containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
+- [ ] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
