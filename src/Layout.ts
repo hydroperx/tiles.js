@@ -123,6 +123,19 @@ export class LayoutTile {
   }
 
   /**
+   * Clears constraints.
+   */
+  public clearConstraints(): void {
+    for (const c of this.constraints) {
+      this.$.solver.removeConstraint(c);
+    }
+    this.minConstraints.length = 0;
+    this.nonOverlappingConstraints.length = 0;
+    this.maxXConstraint = null;
+    this.maxYConstraint = null;
+  }
+
+  /**
    * Refreshes maximum-X constraint.
    */
   public refreshMaxXConstraint(): void {

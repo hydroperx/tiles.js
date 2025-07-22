@@ -1,5 +1,8 @@
 - [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
 - [ ] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
+
+# Arrow navigation
+
 - [ ] Allow browsing tile focus through the arrows (input action navigateLeft/Right/Up/Down).
   - [ ] Requires an option so that the library can decide whether it has the responsibility for navigating the focus.
 
