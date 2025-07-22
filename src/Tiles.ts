@@ -158,7 +158,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     groupWidth?: number;
     /**
      * Number of inline groups, effective only
-     * in vertical containers.
+     * in vertical containers (must be >= 1).
      * @default 1
      */
     inlineGroups?: number;
@@ -209,6 +209,15 @@ z     * in horizontal containers (must be >= 4).
     this._group_width = params.groupWidth ?? 6;
     this._inline_groups = params.inlineGroups ?? 1;
     this._height = params.height ?? 6;
+
+    // Height >= 4 assertion
+    assert(this._dir == "horizontal" ? this._height >= 4 : true, "Tiles.height must be >= 4.");
+
+    // Group width >= 4 assertion
+    assert(this._dir == "vertical" ? this._group_width >= 4 : true, "Tiles.groupWidth must be >= 4.");
+
+    // Inline groups assertion
+    assert(this._dir == "vertical" ? this._inline_groups >= 1 : true, "Tiles.inlineGroups must be >= 1.");
 
     // Observe the `em` unit size
     this._em_observer = new EMObserver(this._container, (val) => {
