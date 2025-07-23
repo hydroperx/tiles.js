@@ -448,7 +448,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     }
     this._rearrange_timeout = window.setTimeout(() => {
       this._layout.rearrange();
-    }, 1);
+    }, 0);
   }
 }
 
