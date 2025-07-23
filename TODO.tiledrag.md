@@ -8,6 +8,8 @@
 - [ ] Set `.style.pointerEvents = "auto";` for the tile's button itself.
 - [ ] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
 - [ ] Cache current state (the "old state")
+- [ ] Reset ghost tile caches
+- [ ] Reset grid snap caches
 
 # Drag move
 
@@ -31,14 +33,17 @@
 - [ ] Remove it from the layout
 - [ ] Recreate the Cassowary solver for the respective group
 - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-  - [ ] Use strong-suggestions for each tile's X/Y.
+  - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
+  - [ ] Use weak-suggestions for each tile's X/Y.
 
 # Drag end
 
 - [ ] Put pointer events enabled back for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
 - [ ] If the tile has been removed
-  - [ ] ...
+  - [ ] Execute the procedure above for *Reverting a ghost tile*
+  - [ ] `.refreshNonOverlappingConstraints()`
+  - [ ] `._deferred_rearrange()`
   - [ ] Return
 - [ ] If grid snap resolves to blank area in a blank group (e.g. after the last)
   - [ ] ...
