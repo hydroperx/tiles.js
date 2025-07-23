@@ -12,3 +12,8 @@ export const ATTR_SIZE = "data-size";
  * Attribute name used for indicating that a pointer is actively dragging a group or tile.
  */
 export const ATTR_DRAGGING = "data-dragging";
+
+/**
+ * Attribute name used for indicating that a tile is checked.
+ */
+export const ATTR_CHECKED = "data-checked";

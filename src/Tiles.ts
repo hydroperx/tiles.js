@@ -26,15 +26,19 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /**
    * Attribute name used for identifying a tile's ID.
    */
-  static readonly ATTR_ID = Attributes.ATTR_ID;
+  public static readonly ATTR_ID = Attributes.ATTR_ID;
   /**
    * Attribute name used for indicating a tile's size.
    */
-  static readonly ATTR_SIZE = Attributes.ATTR_SIZE;
+  public static readonly ATTR_SIZE = Attributes.ATTR_SIZE;
   /**
    * Attribute name used for indicating that a tile is actively in drag.
    */
-  static readonly ATTR_DRAGGING = Attributes.ATTR_DRAGGING;
+  public static readonly ATTR_DRAGGING = Attributes.ATTR_DRAGGING;
+  /**
+   * Attribute name used for indicating that a tile is checked.
+   */
+  public static readonly ATTR_CHECKED = Attributes.ATTR_CHECKED;
 
   /** @hidden */
   public _state: State;

@@ -24,11 +24,13 @@ Group element attribute:
 
 Group element:
 
-- Consists of a group label div and a group tiles div (where the floating tile elements go).
+- Consists of:
+  - A group label div (contains a group label text div)
+  - A group tiles div (where the tiles float).
 
 Tile element tag:
 
-- `button`, consisting of a content div where the user may apply custom transforms such as tilting.
+- A `button`, consisting of a content div where the user may apply custom transforms such as tilting.
 
 Tile element attribute:
 
@@ -41,6 +43,10 @@ Tile element attribute
 Tile element attribute
 
 - `Tiles.ATTR_DRAGGING`: false or true.
+
+Tile element attribute:
+
+- `Tiles.ATTR_CHECKED`: false or true.
 
 Tile size:
 
