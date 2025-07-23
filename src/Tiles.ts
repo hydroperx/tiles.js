@@ -298,14 +298,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    * Adds a group to the end and returns its `div` element.
    */
   addGroup({ id, label }: { id: string; label?: string }): HTMLDivElement {
+    // Enforce non-duplicate ID
+    assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
+
     // Keep groups contiguous
     this._keep_groups_contiguous();
 
     // Default label = empty
     label ??= "";
-
-    // Enforce non-duplicate ID
-    assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
 
     // State + index
     const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
