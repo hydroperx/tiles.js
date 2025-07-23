@@ -38,6 +38,7 @@ While rearranging tiles:
 - [x] `Tiles#inlineGroups` (for the vertical layout)
 - [x] `Tiles#clear()` - Clears attached groups and tiles.
 - [x] `Tiles#addGroup()`
+  - [ ] Setup group draggable (contribute to `_group_draggables`)
 - [ ] `Tiles#addTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `layout.rearrange()`

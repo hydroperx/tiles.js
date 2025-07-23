@@ -78,7 +78,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /** @hidden */
   public _buttons: Map<string, HTMLButtonElement> = new Map();
   /** @hidden */
-  public _draggables: Map<HTMLButtonElement, Draggable> = new Map();
+  public _group_draggables: Map<HTMLDivElement, Draggable> = new Map();
+  /** @hidden */
+  public _tile_draggables: Map<HTMLButtonElement, Draggable> = new Map();
 
   /** @hidden */
   public _resize_observer: ResizeObserver | null = null;
@@ -251,10 +253,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._layout.groups.length = 0;
 
     // Discard draggables
-    for (const [, draggable] of this._draggables) {
+    for (const [, draggable] of this._group_draggables) {
       draggable.destroy();
     }
-    this._draggables.clear();
+    for (const [, draggable] of this._tile_draggables) {
+      draggable.destroy();
+    }
+    this._group_draggables.clear();
+    this._tile_draggables.clear();
 
     // Clear button mappings
     this._buttons.clear();
@@ -278,10 +284,14 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._container.remove();
 
     // Discard draggables
-    for (const [button, draggable] of this._draggables) {
+    for (const [, draggable] of this._group_draggables) {
       draggable.destroy();
     }
-    this._draggables.clear();
+    for (const [, draggable] of this._tile_draggables) {
+      draggable.destroy();
+    }
+    this._group_draggables.clear();
+    this._tile_draggables.clear();
   }
 
   /**
