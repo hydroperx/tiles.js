@@ -1,5 +1,8 @@
+// Third-party imports
 import * as kiwi from "@lume/kiwi";
 import { gsap } from "gsap";
+
+// Local imports
 import type { Tiles } from "./Tiles";
 
 /**

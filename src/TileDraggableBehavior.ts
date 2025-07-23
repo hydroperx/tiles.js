@@ -2,7 +2,11 @@
 import getRectangleOverlap from "rectangle-overlap";
 
 // Local imports
+import * as RandomUtils from "./utils/RandomUtils";
+import * as RectangleUtils from "./utils/RectangleUtils";
 import type { Tiles } from "./Tiles";
+import * as Attributes from "./Attributes";
+import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 
 /**
  * Drag-n-drop behavior for tiles.

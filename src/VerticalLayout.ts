@@ -1,3 +1,4 @@
+// Local imports
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
