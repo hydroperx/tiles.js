@@ -40,14 +40,16 @@ const tiles = new Tiles({
     direction: "horizontal",
     // Custom class names.
     classNames: {
+        // Groups.
+        group: "group",
         // Group labels.
-        label: "label",
+        groupLabel: "group-label",
+        // Group tiles.
+        groupTiles: "group-tiles",
         // Tile buttons.
         tile: "tile",
         // Tile content.
         tileContent: "tile-content",
-        // The tile placeholder when dragging a tile.
-        placeholder: "placeholder",
     },
     // The size of small tiles, in cascading "rem" units.
     smallSize: 3.625,
@@ -55,18 +57,6 @@ const tiles = new Tiles({
     tileGap: 0.6,
     // Gap between groups, in cascading "rem" units.
     groupGap: 9,
-    // The height of group labels, in cascading "rem" units.
-    labelHeight: 2,
-    // Maximum width in small tiles.
-    // Effective only in vertical containers.
-    // Must be >= 4 for vertical containers.
-    maxWidth: undefined,
-    // Maximum height in small tiles.
-    // Effective only in horizontal containers.
-    // Must be >= 4 for horizontal containers.
-    maxHeight: 6,
-    // Transition function(s) to contribute to tiles.
-    tileTransition: "",
 });
 
 // Disposal

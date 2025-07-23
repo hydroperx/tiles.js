@@ -54,10 +54,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _tile_gap: number;
   /** @hidden */
   public _group_gap: number;
-  /** @hidden */
-  public _label_height: number;
-  /** @hidden */
-  public _tile_transition: string;
 
   /** @hidden */
   public _group_width: number;
@@ -152,10 +148,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
      */
     groupGap: number;
     /**
-     * The height of group labels, in cascading `em` units.
-     */
-    labelHeight: number;
-    /**
      * Group width in small tiles, effective only
      * in vertical containers (must be >= 4).
      * @default 6
@@ -192,8 +184,6 @@ z     * in horizontal containers (must be >= 4).
     this._small_size = params.smallSize;
     this._tile_gap = params.tileGap;
     this._group_gap = params.groupGap;
-    this._label_height = params.labelHeight;
-    this._tile_transition = params.tileTransition ?? "";
 
     this._container.style.position = "relative";
 
