@@ -130,13 +130,13 @@ export class LayoutGroup {
             }
             if (old_x != state.x && old_y != state.y) {
               // change only Y
-              tile.button!.style.left = x_em + "em";
+              tile.button!.style.transform = `translateX(${x_em}em) translateY(-1000em)`;
               to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
             } else {
               // change either only X or only Y
               tile.tween = gsap.to(tile.button!, {
-                left: x_em + "em",
-                top: y_em + "em",
+                x: x_em + "em",
+                y: y_em + "em",
                 duration: 0.18
               });
             }
@@ -150,10 +150,10 @@ export class LayoutGroup {
     for (const { tile, button, hEM, yEM } of to_tween_y_late) {
       tile.tween = gsap.fromTo(tile.button!,
         {
-          top: (yEM + hEM < middle ? -hEM : tiles_height_em + hEM) + "em",
+          y: (yEM + hEM < middle ? -hEM : tiles_height_em + hEM) + "em",
         },
         {
-          top: yEM + "em",
+          y: yEM + "em",
           duration: 0.18
         }
       );

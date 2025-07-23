@@ -4,35 +4,54 @@ Base layout implementation for Windows 8 like live tiles in HTML5.
 
 ## Documentation
 
-### Specifications
+### Structure
 
-<blockquote>
+Positioning style:
 
-**Positioning style**: cascading `translate`
+- Cascading `transform: translateX(...) translateY(...)`
 
-**Group-label element tag**: `div`
+Group element tag:
 
-**Group-label element attribute** `data-id`: the group ID.
+- `div`
 
-**Tile element tag**: `button`
+Group element attribute:
 
-**Tile element attribute** `Tiles.ATTR_ID`: the tile ID.
+- `data-id`: the group ID.
 
-**Tile element attribute** `Tiles.ATTR_SIZE`: the tile size (`small`, `medium`, `wide` or `large`).
+Group element attribute:
 
-**Tile element attribute** `Tiles.ATTR_DRAGGING`: false or true.
+- `Tiles.ATTR_DRAGGING`: false or true.
 
-**Tile size**: supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
+Group element:
 
-**Transition style**: Overrides the `transition` style in tile elements.
+- Consists of a group label div and a group tiles div (where the floating tile elements go).
 
-</blockquote>
+Tile element tag:
+
+- `button`, consisting of a content div where the user may apply custom transforms such as tilting.
+
+Tile element attribute:
+
+- `Tiles.ATTR_ID`: the tile ID.
+
+Tile element attribute
+
+- `Tiles.ATTR_SIZE`: the tile size (`small`, `medium`, `wide` or `large`).
+
+Tile element attribute
+
+- `Tiles.ATTR_DRAGGING`: false or true.
+
+Tile size:
+
+- Supports small (1x1), medium (2x2), wide (4x2) and large tiles (4x4).
 
 ### Getting started
 
 ```ts
 import { Tiles } from "@hydroperx/tiles";
 
+// Create a Tiles layout.
 const tiles = new Tiles({
     // Container.
     element,
@@ -67,10 +86,10 @@ tiles.destroy();
 
 #### addedgroup
 
-Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, label: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
+Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, div: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
 
 ```ts
-tiles.addEventListener("addedgroup", ({ detail: { group, label } }) => {
+tiles.addEventListener("addedgroup", ({ detail: { group, div } }) => {
     //
 });
 ```

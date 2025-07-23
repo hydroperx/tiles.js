@@ -3,5 +3,5 @@ export function hex() {
 }
 
 export function hexLarge() {
-  return [0, 0, 0, 0, 0, 0, 0].map((_) => hex()).join("");
+  return [0, 0, 0, 0, 0, 0, 0].map(_ => hex()).join("");
 }

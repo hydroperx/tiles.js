@@ -26,7 +26,7 @@ While rearranging tiles:
 
 # Clipping
 
-- [ ] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
+- [x] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
 
 # Disabling pointer events
 
@@ -37,7 +37,7 @@ While rearranging tiles:
 - [x] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
 - [x] `Tiles#inlineGroups` (for the vertical layout)
 - [x] `Tiles#clear()` - Clears attached groups and tiles.
-- [ ] `Tiles#addGroup()`
+- [x] `Tiles#addGroup()`
 - [ ] `Tiles#addTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `layout.rearrange()`
@@ -80,10 +80,14 @@ While rearranging tiles:
 - [ ] When dragging a group, disable pointer events on all tiles.
 - [ ] When stopping dragging a group, enable pointer events back on all tiles back.
 
+# Tile contribution
+
+- [ ] Tile placeholders have strong-strength suggestions.
+- [ ] Tiles restored from state have medium-strength suggestions.
+- [ ] Tiles added manually have weak-strength suggestions.
+
 # Tiles container
 
-- [ ] Horizontal: width is infinite and groups are stacked horizontally; prefer to contribute tiles at vertical end.
-- [ ] Vertical: width is fixed and consists of N inline groups; prefer to contribute tiles at horizontal end.
 - [ ] While a tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
 
 # While dragging
@@ -99,11 +103,13 @@ While rearranging tiles:
 
 # Representation
 
-- [ ] Groups have `position: absolute`
-- [ ] GroupTiles have `position: relative`
-- [ ] Groups contain groupLabel and groupTiles
+- [x] Groups have `position: absolute`
+- [x] GroupTiles have `position: relative`
+- [x] Groups contain groupLabel and groupTiles
 - [ ] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
 
 # Group dragging
 
 - [ ] Use filterTarget so that dragging can only happen from the label.
+- [ ] Use a threshold of like 12 pixels for the group Draggable.
+- [ ] Set `ATTR_DRAGGING` in the group's div too.
