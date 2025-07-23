@@ -21,10 +21,6 @@ While rearranging tiles:
 
 - [x] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
 
-# Disabling pointer events
-
-- [ ] When disabling pointer events: for everything, set `pointer-events: none;` for the Tiles container, and set `pointer-events: auto;` for the specific element that should have them enabled.
-
 # API
 
 - [x] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
@@ -62,17 +58,6 @@ While rearranging tiles:
 - [ ] Provide API method for retrieving the IDs of checked tiles.
 - [ ] Provide selection change events.
 
-# Drag enabled
-
-- [ ] Disable drag-n-drop (both of tiles and groups) depending on the `dragEnabled` option.
-
-# Interactivity
-
-- [ ] When dragging a tile, disable pointer events on other tiles.
-- [ ] When stopping dragging a tile, enable pointer events on other tiles back.
-- [ ] When dragging a group, disable pointer events on all tiles.
-- [ ] When stopping dragging a group, enable pointer events back on all tiles back.
-
 # Zoom
 
 - [ ] Near view and far view modes. Vertical container is always in near view.
@@ -84,10 +69,12 @@ While rearranging tiles:
 - [x] Groups have `position: absolute`
 - [x] GroupTiles have `position: relative`
 - [x] Groups contain groupLabel and groupTiles
-- [ ] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
+- [x] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, the user may slightly scale down tile contents rather than the tile's button itself.
 
 # Group dragging
 
+- [ ] Groups support drag-n-drop if `dragEnabled`.
 - [ ] Use filterTarget so that dragging can only happen from the label.
 - [ ] Use a threshold of `"0.5em"` for the group Draggable.
 - [ ] Set `ATTR_DRAGGING` in the group's div too.
+- [ ] While dragging a group, for the Tiles container set `.style.pointerEvents = "none";`, set `group.style.pointerEvents = "auto"` and set `groupTiles.style.pointerEvents = "none"`.

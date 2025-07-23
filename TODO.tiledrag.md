@@ -4,6 +4,7 @@
 - [ ] Tiles restored from old state have medium-strength suggestions.
   - [ ] For restoring, reset the Cassowary solver for the respective group.
   - [ ] Note that restoring needs to take care of newly added tiles as well.
+- [ ] Set the `ATTR_DRAGGING` attribute where appropriate.
 
 # Drag start
 
