@@ -73,21 +73,6 @@ While rearranging tiles:
 - [ ] When dragging a group, disable pointer events on all tiles.
 - [ ] When stopping dragging a group, enable pointer events back on all tiles back.
 
-# Tile contribution
-
-- [ ] Tile placeholders have strong-strength suggestions.
-- [ ] Tiles restored from state have medium-strength suggestions.
-- [ ] Tiles added manually have weak-strength suggestions.
-
-# Tiles container
-
-- [ ] While a tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
-
-# While dragging
-
-- [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
-  - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
-
 # Zoom
 
 - [ ] Near view and far view modes. Vertical container is always in near view.
