@@ -39,11 +39,14 @@ While rearranging tiles:
   - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
+  - [ ] Do nothing if there's a group being actively dragged.
 - [ ] `Tiles#resizeTile()`
+  - [ ] Do nothing if there's a tile being actively dragged.
   - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
   - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#moveTile()`
+  - [ ] Do nothing if there's a tile being actively dragged.
   - [ ] Call `layout.rearrange()`
 
 # Tile selection
