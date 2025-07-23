@@ -64,6 +64,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _height: number;
 
   /** @hidden */
+  public _rearrange_timeout: number = -1;
+
+  /** @hidden */
   public _drag_enabled: boolean;
   /** @hidden */
   public _selection_enabled: boolean;
@@ -271,7 +274,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     }
 
     // Rearrange layout
-    this._layout.rearrange();
+    this._deferred_rearrange();
   }
 
   /**
@@ -292,6 +295,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     }
     this._group_draggables.clear();
     this._tile_draggables.clear();
+
+    // Discard deferred rearrange
+    if (this._rearrange_timeout != -1) {
+      window.clearTimeout(this._rearrange_timeout);
+    }
   }
 
   /**
@@ -337,7 +345,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     // Layout group
     const layout_group = new LayoutGroup(this._layout, id, div);
     this._layout.groups.push(layout_group);
-    this._layout.rearrange();
+    this._deferred_rearrange();
 
     // Added group signal
     this.dispatchEvent(
@@ -409,7 +417,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   set inlineGroups(val) {
     assert(this._dir == "vertical", "Tiles.inlineGroups can only be changed on vertical layouts.");
     this._inline_groups = val;
-    this._layout.rearrange();
+    this._deferred_rearrange();
   }
 
   /** @hidden */
@@ -431,6 +439,16 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       group.index = i;
     }
     if (changed) this._state_update_signal();
+  }
+
+  /** @hidden */
+  _deferred_rearrange() {
+    if (this._rearrange_timeout != -1) {
+      window.clearTimeout(this._rearrange_timeout);
+    }
+    this._rearrange_timeout = window.setTimeout(() => {
+      this._layout.rearrange();
+    }, 1);
   }
 }
 
