@@ -226,7 +226,7 @@ export class LayoutTile {
   public constructor(
     private $: LayoutGroup,
     public readonly id: string,
-    public readonly button: null | HTMLButtonElement,
+    public button: null | HTMLButtonElement,
     public readonly x: kiwi.Variable,
     public readonly y: kiwi.Variable,
     public width: number,

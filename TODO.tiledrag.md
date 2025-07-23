@@ -10,11 +10,11 @@
 - [ ] Cache current state (the "old state")
 - [ ] Reset ghost tile caches
 - [ ] Reset grid snap caches
+- [ ] Trigger Tiles drag start event
 
 # Drag move
 
 - [ ] If the tile is removed while dragging
-  - [ ] Trigger drag end with a fake event parameter
   - [ ] Return
 - [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
   - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
@@ -27,6 +27,7 @@
   - [ ] Suggest a strong-strength value for the X/Y of that ghost tile
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
+- [ ] Trigger Tiles drag event (regardless of ghost X/Y threshold)
 
 *Reverting a ghost tile*
 
@@ -40,10 +41,16 @@
 
 - [ ] Enable pointer events again for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
-- [ ] If the tile has been removed
+- [ ] If the tile has been removed from the DOM
+  - [ ] Clear constraints from the specified tile.
+  - [ ] Uninstall draggable behavior
+  - [ ] Remove from state
+  - [ ] Remove from layout
+  - [ ] If checked, trigger selection change event.
   - [ ] Execute the procedure above for *Reverting a ghost tile*
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
+  - [ ] Trigger Tiles drag end event
   - [ ] Return
 - [ ] If grid snap resolves to blank area in a blank group (e.g. after the last)
   - [ ] ...
@@ -56,3 +63,4 @@
   - [ ] If the previous group is empty, remove it (from state/layout/DOM).
   - [ ] Call `._keep_groups_contiguous()`
   - [ ] `._deferred_rearrange()`
+- [ ] Trigger Tiles drag end event

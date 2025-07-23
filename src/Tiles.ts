@@ -93,6 +93,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _group_draggables: Map<HTMLDivElement, Draggable> = new Map();
   /** @hidden */
   public _tile_draggables: Map<HTMLButtonElement, Draggable> = new Map();
+  /** @hidden */
+  public _tile_drag_end_handlers: WeakMap<HTMLButtonElement, (element: Element, x: number, y: number, event: Event) => void> = new WeakMap();
 
   /** @hidden */
   public _resize_observer: ResizeObserver | null = null;
@@ -470,6 +472,9 @@ export type TilesEventMap = {
   dragstart: CustomEvent<{ tile: HTMLButtonElement }>;
   drag: CustomEvent<{ tile: HTMLButtonElement }>;
   dragend: CustomEvent<{ tile: HTMLButtonElement }>;
+  groupdragstart: CustomEvent<{ group: HTMLDivElement }>;
+  groupdrag: CustomEvent<{ group: HTMLDivElement }>;
+  groupdragend: CustomEvent<{ group: HTMLDivElement }>;
 };
 
 /**

@@ -31,13 +31,18 @@ While rearranging tiles:
 - [x] `Tiles#addTile()`
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
+  - [ ] If tile is being dragged
+    - [ ] Remove the button from the DOM
+    - [ ] Nullify the LayoutTile's `button`
+    - [ ] Trigger drag end with a fake parameter
+    - [ ] Return
   - [ ] Clear constraints from the specified tile.
-  - [ ] Uninstalls draggable behavior
+  - [ ] Uninstall draggable behavior
   - [ ] Remove from state
   - [ ] Remove from layout
   - [ ] If checked, trigger selection change event.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
-  - [ ] Call `layout.rearrange()`
+  - [ ] Call `._deferred_rearrange()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
   - [ ] Do nothing if there's a group being actively dragged.
@@ -45,10 +50,10 @@ While rearranging tiles:
   - [ ] Do nothing if there's a tile being actively dragged.
   - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
   - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
-  - [ ] Call `layout.rearrange()`
+  - [ ] Call `._deferred_rearrange()`
 - [ ] `Tiles#moveTile()`
   - [ ] Do nothing if there's a tile being actively dragged.
-  - [ ] Call `layout.rearrange()`
+  - [ ] Call `._deferred_rearrange()`
 
 # Tile selection
 

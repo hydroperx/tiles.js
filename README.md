@@ -152,6 +152,36 @@ tiles.addEventListener("dragend", ({ detail: { tile } }) => {
 });
 ```
 
+#### groupdragstart
+
+Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
+
+```ts
+tiles.addEventListener("groupdragstart", ({ detail: { group } }) => {
+    //
+});
+```
+
+#### groupdrag
+
+Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
+
+```ts
+tiles.addEventListener("groupdrag", ({ detail: { group } }) => {
+    //
+});
+```
+
+#### groupdragend
+
+Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
+
+```ts
+tiles.addEventListener("groupdragend", ({ detail: { group } }) => {
+    //
+});
+```
+
 ## License
 
 Apache 2.0
