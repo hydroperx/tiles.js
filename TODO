@@ -46,6 +46,9 @@ While rearranging tiles:
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
   - [ ] Clear constraints from the specified tile.
+  - [ ] Uninstalls draggable behavior
+  - [ ] Remove from state
+  - [ ] Remove from layout
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#renameGroup()`

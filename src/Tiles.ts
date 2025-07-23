@@ -313,10 +313,24 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /**
+   * Removes a group.
+   */
+  removeGroup(id: string) {
+    new GroupFactory(this).remove(id);
+  }
+
+  /**
    * Adds a tile.
    */
   addTile(params: AddTileParams): HTMLButtonElement {
     return new TileFactory(this).add(params);
+  }
+
+  /**
+   * Removes a tile.
+   */
+  removeTile(id: string) {
+    new TileFactory(this).remove(id);
   }
 
   /**
