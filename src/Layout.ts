@@ -170,7 +170,7 @@ export class LayoutGroup {
 
     // State update signal
     if (changed) {
-      this.$.$._state_update_signal();
+      this.$.$._deferred_state_update_signal();
     }
   }
 }

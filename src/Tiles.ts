@@ -1,5 +1,4 @@
 import assert from "assert";
-import getRectangleOverlap from "rectangle-overlap";
 import { TypedEventTarget } from "@hydroperx/event";
 import Draggable from "@hydroperx/draggable";
 
@@ -12,10 +11,12 @@ import {
   TileSize,
 } from "./enum/TileSize";
 import { State } from "./State";
-import * as RectangleUtils from "./utils/RectangleUtils";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
 import { VerticalLayout } from "./VerticalLayout";
+import { GroupFactory } from "./GroupFactory";
+import { TileFactory } from "./TileFactory";
+import * as Attributes from "./Attributes";
 
 /**
  * Tiles layout.
@@ -24,15 +25,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /**
    * Attribute name used for identifying a tile's ID.
    */
-  static readonly ATTR_ID = "data-id";
+  static readonly ATTR_ID = Attributes.ATTR_ID;
   /**
    * Attribute name used for indicating a tile's size.
    */
-  static readonly ATTR_SIZE = "data-size";
+  static readonly ATTR_SIZE = Attributes.ATTR_SIZE;
   /**
    * Attribute name used for indicating that a tile is actively in drag.
    */
-  static readonly ATTR_DRAGGING = "data-dragging";
+  static readonly ATTR_DRAGGING = Attributes.ATTR_DRAGGING;
 
   /** @hidden */
   public _state: State;
@@ -65,6 +66,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /** @hidden */
   public _rearrange_timeout: number = -1;
+  /** @hidden */
+  public _state_update_timeout: number = -1;
 
   /** @hidden */
   public _drag_enabled: boolean;
@@ -305,60 +308,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /**
    * Adds a group to the end and returns its `div` element.
    */
-  addGroup({ id, label }: { id: string; label?: string }): HTMLDivElement {
-    // Enforce non-duplicate ID
-    assert(!this._state.groups.has(id), "Duplicate group ID: " + id);
+  addGroup(params: AddGroupParams): HTMLDivElement {
+    return new GroupFactory(this).add(params);
+  }
 
-    // Keep groups contiguous
-    this._keep_groups_contiguous();
-
-    // Default label = empty
-    label ??= "";
-
-    // State + index
-    const existing_indices = Array.from(this._state.groups.values()).map(g => g.index);
-    const index = existing_indices.length == 0 ?
-      0 : Math.max.apply(null, existing_indices) + 1;
-    this._state.groups.set(id, { index, label });
-
-    // Group div
-    const div = document.createElement("div");
-    div.setAttribute("data-id", id);
-    div.setAttribute(Tiles.ATTR_DRAGGING, id);
-    div.classList.add(this._class_names.group);
-    div.style.position = "absolute";
-    this._container.appendChild(div);
-
-    // Group's label div
-    const labelDiv = document.createElement("div");
-    labelDiv.classList.add(this._class_names.groupLabel);
-    labelDiv.innerText = label;
-    div.appendChild(labelDiv);
-
-    // Group's tiles div
-    const tilesDiv = document.createElement("div");
-    tilesDiv.classList.add(this._class_names.groupTiles);
-    tilesDiv.style.position = "relative";
-    tilesDiv.style.overflow = "hidden";
-    div.appendChild(tilesDiv);
-
-    // Layout group
-    const layout_group = new LayoutGroup(this._layout, id, div);
-    this._layout.groups.push(layout_group);
-    this._deferred_rearrange();
-
-    // Added group signal
-    this.dispatchEvent(
-      new CustomEvent("addedgroup", {
-        detail: { group: layout_group, div },
-      }),
-    );
-
-    // State update signal
-    this._state_update_signal();
-
-    // Resulting div
-    return div;
+  /**
+   * Adds a tile.
+   */
+  addTile(params: AddTileParams): HTMLButtonElement {
+    return new TileFactory(this).add(params);
   }
 
   /**
@@ -421,13 +379,6 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /** @hidden */
-  _state_update_signal() {
-    this.dispatchEvent(
-      new CustomEvent("stateupdate", { detail: this._state }),
-    );
-  }
-
-  /** @hidden */
   _keep_groups_contiguous(): void {
     const sorted_groups = Array.from(this._state.groups.entries()).sort(
       (a, b) => a[1].index - b[1].index,
@@ -438,7 +389,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       if (group.index != i) changed = true;
       group.index = i;
     }
-    if (changed) this._state_update_signal();
+    if (changed) this._deferred_state_update_signal();
   }
 
   /** @hidden */
@@ -450,8 +401,28 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       this._layout.rearrange();
     }, 0);
   }
+
+  /** @hidden */
+  _deferred_state_update_signal() {
+    if (this._state_update_timeout != -1) {
+      window.clearTimeout(this._state_update_timeout);
+    }
+    this._state_update_timeout = window.setTimeout(() => {
+      this._state_update_signal();
+    }, 0);
+  }
+
+  /** @hidden */
+  _state_update_signal() {
+    this.dispatchEvent(
+      new CustomEvent("stateupdate", { detail: this._state }),
+    );
+  }
 }
 
+/**
+ * Tiles event map.
+ */
 export type TilesEventMap = {
   addedgroup: CustomEvent<{ group: LayoutGroup; div: HTMLDivElement }>;
   addedtile: CustomEvent<{ tile: LayoutTile; button: HTMLButtonElement }>;
@@ -459,4 +430,48 @@ export type TilesEventMap = {
   dragstart: CustomEvent<{ tile: HTMLButtonElement }>;
   drag: CustomEvent<{ tile: HTMLButtonElement }>;
   dragend: CustomEvent<{ tile: HTMLButtonElement }>;
+};
+
+/**
+ * Parameters for adding a group.
+ */
+export type AddGroupParams = {
+  /**
+   * Unique group ID.
+   */
+  id: string,
+
+  /**
+   * Initial label to display for the group.
+   */
+  label?: string,
+};
+
+/**
+ * Parameters for adding a tile.
+ */
+export type AddTileParams = {
+  /**
+   * Tile ID.
+   */
+  id: string;
+  /**
+   * Group to attach tile to. If unspecified,
+   * tile is attached to either the last group (if unlabeled)
+   * or a new last anonymous group.
+   */
+  group?: string;
+  /**
+   * Horizontal position in small tiles.
+   */
+  x?: number;
+  /**
+   * Vertical position in small tiles.
+   */
+  y?: number;
+
+  /**
+   * Tile size.
+   */
+  size?: TileSize;
 };
