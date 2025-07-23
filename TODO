@@ -104,5 +104,5 @@ While rearranging tiles:
 # Group dragging
 
 - [ ] Use filterTarget so that dragging can only happen from the label.
-- [ ] Use a threshold of like 12 pixels for the group Draggable.
+- [ ] Use a threshold of `"0.5em"` for the group Draggable.
 - [ ] Set `ATTR_DRAGGING` in the group's div too.

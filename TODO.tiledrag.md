@@ -1,5 +1,5 @@
 - [ ] Finish TileDraggableBehavior (contribute to `_tile_draggables`)
-- [ ] Use threshold for Draggable (1em)
+- [ ] Use threshold for Draggable (`"1em"`)
 
 # Drag start
 

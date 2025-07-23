@@ -280,6 +280,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     // Remove children
     for (const child of Array.from(this._container.children)) {
+      if (child.classList.contains(EMObserver.CLASS)) {
+        continue;
+      }
       child.remove();
     }
 

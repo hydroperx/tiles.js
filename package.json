@@ -17,7 +17,7 @@
     }
   },
   "dependencies": {
-    "@hydroperx/draggable": "^1.1.0",
+    "@hydroperx/draggable": "^1",
     "@hydroperx/event": "^1.0.0",
     "@hydroperx/inputaction": "^1.1.1",
     "@lume/kiwi": "^0.4.4",
