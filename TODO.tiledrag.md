@@ -38,7 +38,7 @@
 
 # Drag end
 
-- [ ] Put pointer events enabled back for the entire Tiles container.
+- [ ] Enable pointer events again for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
 - [ ] If the tile has been removed
   - [ ] Execute the procedure above for *Reverting a ghost tile*

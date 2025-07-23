@@ -35,6 +35,7 @@ While rearranging tiles:
   - [ ] Uninstalls draggable behavior
   - [ ] Remove from state
   - [ ] Remove from layout
+  - [ ] If checked, trigger selection change event.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `layout.rearrange()`
 - [ ] `Tiles#renameGroup()`
