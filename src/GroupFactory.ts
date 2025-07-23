@@ -53,8 +53,13 @@ export class GroupFactory {
     // Group's label div
     const labelDiv = document.createElement("div");
     labelDiv.classList.add(this.$._class_names.groupLabel);
-    labelDiv.innerText = label;
     div.appendChild(labelDiv);
+
+    // Group label's text div
+    const labelTextDiv = document.createElement("div");
+    labelTextDiv.classList.add(this.$._class_names.groupLabelText);
+    labelTextDiv.innerText = label;
+    labelDiv.appendChild(labelTextDiv);
 
     // Group's tiles div
     const tilesDiv = document.createElement("div");
@@ -71,7 +76,7 @@ export class GroupFactory {
     // addedgroup signal
     this.$.dispatchEvent(
       new CustomEvent("addedgroup", {
-        detail: { group: layout_group, div, labelDiv, tilesDiv },
+        detail: { group: layout_group, div, labelDiv, labelTextDiv, tilesDiv },
       }),
     );
 

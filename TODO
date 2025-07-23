@@ -8,13 +8,6 @@
 - [ ] Allow browsing tile focus through the arrows (input action navigateLeft/Right/Up/Down).
   - [ ] Requires an option so that the library can decide whether it has the responsibility for navigating the focus.
 
-# Tile dragging
-
-- [ ] Use threshold for Draggable (maybe 20 pixels)
-- [ ] Placeholder 
-  - [ ] Insert ghost tile
-  - [ ] `.refreshNonOverlappingConstraints()`
-
 # Transition
 
 While rearranging tiles:
@@ -38,9 +31,8 @@ While rearranging tiles:
 - [x] `Tiles#inlineGroups` (for the vertical layout)
 - [x] `Tiles#clear()` - Clears attached groups and tiles.
 - [x] `Tiles#addGroup()`
-  - [ ] Setup group draggable (contribute to `_group_draggables`)
-- [ ] `Tiles#addTile()`
-  - [ ] Finish TileDraggableBehavior (contribute to `_tile_draggables`)
+  - [ ] Setup group draggable (contribute to `_group_draggables`) if drag is enabled.
+- [x] `Tiles#addTile()`
 - [ ] `Tiles#removeGroup()`
 - [ ] `Tiles#removeTile()`
   - [ ] Clear constraints from the specified tile.

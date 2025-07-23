@@ -108,7 +108,9 @@ export class TileFactory {
     layout_group.refreshNonOverlappingConstraints();
 
     // Install Draggable behavior
-    new TileDraggableBehavior(this.$, params.id).install();
+    if (this.$._drag_enabled) {
+      new TileDraggableBehavior(this.$, params.id).install();
+    }
 
     // State update
     this.$._deferred_state_update_signal();
