@@ -112,7 +112,7 @@ export class LayoutGroup {
       tiles_width_em = Math.max(x_em + w_em, tiles_width_em);
       tiles_height_em = Math.max(y_em + h_em, tiles_height_em);
 
-      // tracked X/Y state
+      // new X/Y state
       const state = this.$.$._state.tiles.get(tile.id);
       if (state) {
         const
@@ -150,7 +150,7 @@ export class LayoutGroup {
     for (const { tile, button, hEM, yEM } of to_tween_y_late) {
       tile.tween = gsap.fromTo(tile.button!,
         {
-          y: (yEM + hEM < middle ? -hEM : tiles_height_em + hEM) + "em",
+          y: (yEM + hEM / 2 < middle ? -hEM : tiles_height_em + hEM) + "em",
         },
         {
           y: yEM + "em",
