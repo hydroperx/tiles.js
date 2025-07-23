@@ -1,4 +1,5 @@
 import * as kiwi from "@lume/kiwi";
+import { gsap } from "gsap";
 import type { Tiles } from "./Tiles";
 
 /**
@@ -100,20 +101,18 @@ export class LayoutGroup {
         this.$.$._group_width * this.$.$._small_size +
         (this.$.$._group_width - 1) * this.$.$._tile_gap;
     }
+    const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
     for (const tile of this.tiles) {
       const x_em = tile.x.value() * this.$.$._small_size + tile.x.value() * this.$.$._tile_gap;
       const y_em = tile.y.value() * this.$.$._small_size + tile.y.value() * this.$.$._tile_gap;
-      if (tile.button) {
-        tile.button!.style.left = x_em + "em";
-        tile.button!.style.top = y_em + "em";
-      }
+
       const w_em = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
       const h_em = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
       // change tiles size em
       tiles_width_em = Math.max(x_em + w_em, tiles_width_em);
       tiles_height_em = Math.max(y_em + h_em, tiles_height_em);
 
-      // change tracked X/Y state
+      // tracked X/Y state
       const state = this.$.$._state.tiles.get(tile.id);
       if (state) {
         const
@@ -123,8 +122,41 @@ export class LayoutGroup {
         state.y = tile.y.value();
         if (!(old_x == state.x && old_y == state.y)) {
           changed = true;
+
+          // affect button
+          if (tile.button) {
+            if (tile.tween) {
+              tile.tween.kill();
+            }
+            if (old_x != state.x && old_y != state.y) {
+              // change only Y
+              tile.button!.style.left = x_em + "em";
+              to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
+            } else {
+              // change either only X or only Y
+              tile.tween = gsap.to(tile.button!, {
+                left: x_em + "em",
+                top: y_em + "em",
+                duration: 0.18
+              });
+            }
+          }
         }
       }
+    }
+
+    // Tween Y from off view
+    const middle = tiles_height_em / 2;
+    for (const { tile, button, hEM, yEM } of to_tween_y_late) {
+      tile.tween = gsap.fromTo(tile.button!,
+        {
+          top: (yEM + hEM < middle ? -hEM : tiles_height_em + hEM) + "em",
+        },
+        {
+          top: yEM + "em",
+          duration: 0.18
+        }
+      );
     }
 
     // Resize groupTiles div
@@ -163,6 +195,11 @@ export class LayoutTile {
    * Non-overlapping constraint.
    */
   public nonOverlappingConstraints: kiwi.Constraint[] = [];
+
+  /**
+   * Cached tween.
+   */
+  public tween: null | gsap.core.Tween = null;
 
   /**
    * Cosntructor.
