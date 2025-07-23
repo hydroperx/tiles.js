@@ -71,6 +71,6 @@
   - [ ] Put the tile back at the initial respective layout group.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
-    - [ ] `.refreshNonOverlappingConstraints()`
-    - [ ] `._deferred_rearrange()`
+  - [ ] `.refreshNonOverlappingConstraints()`
+  - [ ] `._deferred_rearrange()`
 - [ ] Trigger Tiles drag end event
