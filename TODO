@@ -34,11 +34,9 @@ While rearranging tiles:
 
 # API
 
-- [ ] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
-- [ ] `Tiles#groupWidth()` (for the vertical layout)
-  - [ ] On change, refresh Cassowary X-constraints on layout's tiles. `refreshMaxConstraints()`
-- [ ] `Tiles#inlineGroups()` (for the vertical layout)
-- [ ] `Tiles#clear()` - Clears attached groups and tiles.
+- [x] `Tiles#inlineGroupsAvailable()` (for the vertical layout) - Returns the number of inline groups available for the given width (either in `px` or `em`).
+- [x] `Tiles#inlineGroups` (for the vertical layout)
+- [x] `Tiles#clear()` - Clears attached groups and tiles.
 - [ ] `Tiles#addGroup()`
 - [ ] `Tiles#addTile()`
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.

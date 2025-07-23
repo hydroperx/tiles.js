@@ -1,6 +1,7 @@
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 import { TypedEventTarget } from "@hydroperx/event";
+import Draggable from "@hydroperx/draggable";
 
 // local imports
 import { EMObserver } from "./utils/EMObserver";
@@ -76,6 +77,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _layout: Layout;
   /** @hidden */
   public _buttons: Map<string, HTMLButtonElement> = new Map();
+  /** @hidden */
+  public _draggables: Map<HTMLButtonElement, Draggable> = new Map();
 
   /** @hidden */
   public _resize_observer: ResizeObserver | null = null;
@@ -161,7 +164,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     inlineGroups?: number;
     /**
      * Height in small tiles, effective only
-z     * in horizontal containers (must be >= 4).
+     * in horizontal containers (must be >= 4).
      * @default 6
      */
     height?: number;
@@ -231,6 +234,41 @@ z     * in horizontal containers (must be >= 4).
   }
 
   /**
+   * The overall tiles state.
+   */
+  get state(): State {
+    return this._state;
+  }
+
+  /**
+   * Clears everything.
+   */
+  clear() {
+    // Clear state
+    this.state.clear();
+
+    // Clear layout measurements
+    this._layout.groups.length = 0;
+
+    // Discard draggables
+    for (const [, draggable] of this._draggables) {
+      draggable.destroy();
+    }
+    this._draggables.clear();
+
+    // Clear button mappings
+    this._buttons.clear();
+
+    // Remove children
+    for (const child of Array.from(this._container.children)) {
+      child.remove();
+    }
+
+    // Rearrange layout
+    this._layout.rearrange();
+  }
+
+  /**
    * Destroys the `Tiles` instance, disposing
    * of any observers and removing the container from the DOM.
    */
@@ -238,6 +276,12 @@ z     * in horizontal containers (must be >= 4).
     this._em_observer.cleanup();
     this._resize_observer?.disconnect();
     this._container.remove();
+
+    // Discard draggables
+    for (const [button, draggable] of this._draggables) {
+      draggable.destroy();
+    }
+    this._draggables.clear();
   }
 
   /**
@@ -256,6 +300,47 @@ z     * in horizontal containers (must be >= 4).
   off(type: string, listenerFn: (event: Event) => void, options?: EventListenerOptions): void;
   off(type: any, listenerFn: any, options?: EventListenerOptions): void {
     this.removeEventListener(type, listenerFn, options);
+  }
+
+  /**
+   * Returns the number of inline groups available for
+   * the given width (either in `px` or `em`).
+   * *Applies to vertical layouts only.*
+   * 
+   * @throws If not in a vertical layout.
+   */
+  inlineGroupsAvailable(width: string): number {
+    assert(this._dir == "vertical", "Tiles.inlineGroupsAvailable() can only be called on vertical layouts.");
+    const unitMatch = width.match(/(px|em)$/i);
+    assert(!!unitMatch, "Tiles.inlineGroupsAvailable() takes a width with a 'px' or 'em' unit.");
+    const unit = unitMatch[1];
+    let w = parseFloat(width);
+    // convert px to em
+    if (unit == "px") {
+      w /= this._em;
+    }
+    let r: number = 0;
+    for (let acc: number = 0; acc < w; r++) {
+      if (acc != 0) {
+        acc += this._tile_gap;
+      }
+      acc += this._group_width;
+    }
+    return r;
+  }
+
+  /**
+   * Indicates the number of inline groups in a vertical layout.
+   *
+   * @throws If not in a vertical layout.
+   */
+  get inlineGroups(): number {
+    return this._inline_groups;
+  }
+  set inlineGroups(val) {
+    assert(this._dir == "vertical", "Tiles.inlineGroups can only be changed on vertical layouts.");
+    this._inline_groups = val;
+    this._layout.rearrange();
   }
 
   /** @hidden */
