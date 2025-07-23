@@ -129,7 +129,11 @@ export class LayoutGroup {
 
     // Resize groupTiles div
     const group_tiles_div = this.div.getElementsByClassName(this.$.$._class_names.groupTiles)[0] as HTMLElement;
-    group_tiles_div.style.width = tiles_width_em + "em";
+    let min_w = 0;
+    if (this.$.$._dir == "horizontal") {
+      min_w = 18;
+    }
+    group_tiles_div.style.width = Math.max(min_w, tiles_width_em) + "em";
     group_tiles_div.style.height = tiles_height_em + "em";
 
     // State update signal
