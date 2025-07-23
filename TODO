@@ -10,6 +10,7 @@
 
 # Tile dragging
 
+- [ ] Use threshold for Draggable (maybe 20 pixels)
 - [ ] Placeholder 
   - [ ] Insert ghost tile
   - [ ] `.refreshNonOverlappingConstraints()`
@@ -104,3 +105,7 @@ While rearranging tiles:
 - [ ] GroupTiles have `position: relative`
 - [ ] Groups contain groupLabel and groupTiles
 - [ ] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, tile contents are slightly scaled down rather than the tile's button itself.
+
+# Group dragging
+
+- [ ] Use filterTarget so that dragging can only happen from the label.
