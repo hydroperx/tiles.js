@@ -1,5 +1,7 @@
+// Third-party imports
 import getRectangleOverlap from "rectangle-overlap";
 
+// Local imports
 import type { Tiles } from "./Tiles";
 
 /**

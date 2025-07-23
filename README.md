@@ -86,20 +86,20 @@ tiles.destroy();
 
 #### addedgroup
 
-Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, div: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
+Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, div: HTMLDivElement, labelDiv: HTMLDivElement, tilesDiv: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
 
 ```ts
-tiles.addEventListener("addedgroup", ({ detail: { group, div } }) => {
+tiles.addEventListener("addedgroup", ({ detail: { group, div, labelDiv, tilesDiv } }) => {
     //
 });
 ```
 
 #### addedtile
 
-Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement }>` object.
+Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement, contentDiv: HTMLDivElement }>` object.
 
 ```ts
-tiles.addEventListener("addedtile", ({ detail: { tile, button } }) => {
+tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
     //
 });
 ```

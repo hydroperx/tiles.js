@@ -307,9 +307,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /**
    * Adds a group to the end and returns its `div` element.
+   * @throws If group ID is duplicate.
    */
-  addGroup(params: AddGroupParams): HTMLDivElement {
-    return new GroupFactory(this).add(params);
+  addGroup(params: AddGroupParams) {
+    new GroupFactory(this).add(params);
   }
 
   /**
@@ -321,9 +322,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /**
    * Adds a tile.
+   * @throws If tile ID is duplicate.
+   * @throws If group is specified and does not exist.
    */
-  addTile(params: AddTileParams): HTMLButtonElement {
-    return new TileFactory(this).add(params);
+  addTile(params: AddTileParams) {
+    new TileFactory(this).add(params);
   }
 
   /**
@@ -438,8 +441,17 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
  * Tiles event map.
  */
 export type TilesEventMap = {
-  addedgroup: CustomEvent<{ group: LayoutGroup; div: HTMLDivElement }>;
-  addedtile: CustomEvent<{ tile: LayoutTile; button: HTMLButtonElement }>;
+  addedgroup: CustomEvent<{
+    group: LayoutGroup;
+    div: HTMLDivElement;
+    labelDiv: HTMLDivElement;
+    tilesDiv: HTMLDivElement;
+  }>;
+  addedtile: CustomEvent<{
+    tile: LayoutTile;
+    button: HTMLButtonElement;
+    contentDiv: HTMLDivElement;
+  }>;
   stateupdate: CustomEvent<State>;
   dragstart: CustomEvent<{ tile: HTMLButtonElement }>;
   drag: CustomEvent<{ tile: HTMLButtonElement }>;
@@ -457,6 +469,7 @@ export type AddGroupParams = {
 
   /**
    * Initial label to display for the group.
+   * @default ""
    */
   label?: string,
 };
@@ -486,6 +499,7 @@ export type AddTileParams = {
 
   /**
    * Tile size.
+   * @default medium
    */
   size?: TileSize;
 };

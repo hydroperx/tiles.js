@@ -125,20 +125,26 @@ export class LayoutGroup {
 
           // affect button
           if (tile.button) {
-            if (tile.tween) {
-              tile.tween.kill();
-            }
-            if (old_x != state.x && old_y != state.y) {
-              // change only Y
-              tile.button!.style.transform = `translateX(${x_em}em) translateY(-1000em)`;
-              to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
+            if (tile.positioned) {
+              if (tile.tween) {
+                tile.tween.kill();
+              }
+              if (old_x != state.x && old_y != state.y) {
+                // change only Y
+                tile.button!.style.transform = `translateX(${x_em}em) translateY(-1000em)`;
+                to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
+              } else {
+                // change either only X or only Y
+                tile.tween = gsap.to(tile.button!, {
+                  x: x_em + "em",
+                  y: y_em + "em",
+                  duration: 0.18
+                });
+              }
+            // first position
             } else {
-              // change either only X or only Y
-              tile.tween = gsap.to(tile.button!, {
-                x: x_em + "em",
-                y: y_em + "em",
-                duration: 0.18
-              });
+              tile.button!.style.transform = `translateX(${x_em}em) translateY(${y_em}em)`;
+              tile.positioned = true;
             }
           }
         }
@@ -202,6 +208,11 @@ export class LayoutTile {
   public tween: null | gsap.core.Tween = null;
 
   /**
+   * Cached indicator for initial position.
+   */
+  public positioned: boolean = false;
+
+  /**
    * Cosntructor.
    * @param button If `null` indicates this is a placeholder tile.
    * @param x X variable in small tiles.
@@ -215,8 +226,8 @@ export class LayoutTile {
     public readonly button: null | HTMLButtonElement,
     public readonly x: kiwi.Variable,
     public readonly y: kiwi.Variable,
-    public readonly width: number,
-    public readonly height: number
+    public width: number,
+    public height: number
   ) {
     // Refresh min/max constraints
     this.refreshMinConstraints();

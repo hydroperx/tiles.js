@@ -1,3 +1,4 @@
+// Local imports
 import { TileSize } from "./enum/TileSize";
 
 /**

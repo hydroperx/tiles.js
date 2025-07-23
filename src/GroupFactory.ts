@@ -1,6 +1,8 @@
+// third-party imports
 import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 
+// local imports
 import {
   TileSizeMap,
   getWidth,
@@ -22,7 +24,7 @@ export class GroupFactory {
   }
 
   // Adds a group.
-  public add(params: AddGroupParams): HTMLDivElement {
+  public add(params: AddGroupParams) {
     let { id, label } = params;
 
     // Enforce non-duplicate ID
@@ -66,18 +68,15 @@ export class GroupFactory {
     this.$._layout.groups.push(layout_group);
     this.$._deferred_rearrange();
 
-    // Added group signal
+    // addedgroup signal
     this.$.dispatchEvent(
       new CustomEvent("addedgroup", {
-        detail: { group: layout_group, div },
+        detail: { group: layout_group, div, labelDiv, tilesDiv },
       }),
     );
 
     // State update signal
     this.$._state_update_signal();
-
-    // Resulting div
-    return div;
   }
 
   // Removes a group.
