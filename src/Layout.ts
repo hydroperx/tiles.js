@@ -41,7 +41,7 @@ export class LayoutGroup {
   /**
    * Cassowary constrant solver for tiles.
    */
-  public readonly solver: kiwi.Solver = new kiwi.Solver();
+  public solver: kiwi.Solver = new kiwi.Solver();
 
   /**
    * Constructor.
