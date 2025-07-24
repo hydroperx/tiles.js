@@ -1,4 +1,8 @@
+// Third-party imports
+import getOffset from "getoffset";
+
 // Local imports
+import * as PaddingUtils from "./utils/PaddingUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
@@ -41,7 +45,48 @@ export class HorizontalLayout extends Layout {
   /**
    * Snaps location to grid.
    */
-  public override snapToGrid(rect: DOMRect): null | GridSnapResult {
+  public override snapToGrid(tile: HTMLButtonElement): null | GridSnapResult {
+    const offset = getOffset(tile, this.$._container)!;
+    offset.x /= this.$._em;
+    offset.y /= this.$._em;
+    offset.left = offset.x;
+    offset.top = offset.y;
+    offset.width /= this.$._em;
+    offset.height /= this.$._em;
+    offset.w = offset.width;
+    offset.h = offset.height;
+    offset.bottom /= this.$._em;
+    offset.right /= this.$._em;
+    let accX = 0, accY = 0, resultX = 0, resultY = 0;
+
+    // resultY
+    const tiles_h_em = this.$._height*this.$._small_size + (this.$._height - 1)*this.$._tile_gap;
+    const full_h_em = tiles_h_em + this.$._label_height + this.$._tile_gap;
+    // skip label
+    accY += this.$._label_height;
+    // skip gap between the label and tile divs.
+    accY += this.$._tile_gap;
+    // resultY check 1
+    if (offset.y + offset.h / 2 < accY) {
+      return null;
+    }
+    const v_start_em = accY;
+    for (; accY < full_h_em; resultY++) {
+      fixme();
+      if (accY != v_start_em) {
+        accY += this.$._tile_gap;
+      }
+      accY += this.$._small_size;
+    }
+    if (offset.y + offset.h / 2 > accY) {
+      return null;
+    }
+
+    // resultX
+    for (const group of this.$._layout.groups) {
+      //
+    }
+
     fixme();
   }
 }

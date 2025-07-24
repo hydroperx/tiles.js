@@ -9,6 +9,7 @@ Base layout implementation for Windows 8 like live tiles in HTML5.
 Positioning style:
 
 - Cascading `transform: translateX(...) translateY(...)`
+- Uses the cascading `em` unit for measurement everywhere (which means the (?inherited) `font-size`).
 
 Group element tag:
 
@@ -84,6 +85,8 @@ const tiles = new Tiles({
     tileGap: 0.6,
     // Gap between groups, in cascading "rem" units.
     groupGap: 9,
+    // Group label height, in cascading "rem units".
+    labelHeight: 3.5,
 });
 
 // Disposal
@@ -181,6 +184,12 @@ tiles.addEventListener("groupdragend", ({ detail: { group } }) => {
     //
 });
 ```
+
+### Style recommendations
+
+- Do not add border, margin or padding to `classNames.group` to avoid inconsistencies in grid-snapping.
+- Do not add border, margin or padding to `classNames.groupTiles` to avoid inconsistencies in grid-snapping.
+- Do not add border or margin to `classNames.tile`.
 
 ## License
 

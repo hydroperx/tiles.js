@@ -1,4 +1,8 @@
+// Third-party imports
+import getOffset from "getoffset";
+
 // Local imports
+import * as PaddingUtils from "./utils/PaddingUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
@@ -49,7 +53,7 @@ export class VerticalLayout extends Layout {
   /**
    * Snaps location to grid.
    */
-  public override snapToGrid(rect: DOMRect): null | GridSnapResult {
+  public override snapToGrid(tile: HTMLButtonElement): null | GridSnapResult {
     fixme();
   }
 }

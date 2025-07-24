@@ -35,7 +35,7 @@ export abstract class Layout {
   /**
    * Snaps location to grid.
    */
-  public abstract snapToGrid(rect: DOMRect): null | GridSnapResult;
+  public abstract snapToGrid(tile: HTMLButtonElement): null | GridSnapResult;
 }
 
 /**
@@ -133,8 +133,12 @@ export class LayoutGroup {
       tiles_height_em: number = 0;
     if (this.$.$._dir == "vertical") {
       tiles_width_em =
-        this.$.$._group_width * this.$.$._small_size +
-        (this.$.$._group_width - 1) * this.$.$._tile_gap;
+        this.$.$._group_width*this.$.$._small_size +
+        (this.$.$._group_width-1)*this.$.$._tile_gap;
+    } else {
+      tiles_height_em =
+        this.$.$._height*this.$.$._small_size +
+        (this.$.$._height-1)*this.$.$._tile_gap;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
     for (const tile of this.tiles) {

@@ -47,17 +47,24 @@ export class GroupFactory {
     div.setAttribute(Attributes.ATTR_ID, id);
     div.setAttribute(Attributes.ATTR_DRAGGING, id);
     div.classList.add(this.$._class_names.group);
+    div.style.display = "flex";
+    div.style.flexDirection = "column";
+    div.style.gap = this.$._tile_gap + "em";
     div.style.position = "absolute";
     this.$._container.appendChild(div);
 
     // Group's label div
     const labelDiv = document.createElement("div");
     labelDiv.classList.add(this.$._class_names.groupLabel);
+    labelDiv.style.boxSizing = "border-box";
+    labelDiv.style.height = this.$._label_height + "em";
     div.appendChild(labelDiv);
 
     // Group label's text div
     const labelTextDiv = document.createElement("div");
     labelTextDiv.classList.add(this.$._class_names.groupLabelText);
+    labelTextDiv.style.wordBreak = "keep-all";
+    labelTextDiv.style.boxSizing = "border-box";
     labelTextDiv.innerText = label;
     labelDiv.appendChild(labelTextDiv);
 

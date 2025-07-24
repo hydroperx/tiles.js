@@ -1,5 +1,5 @@
 /**
- * Computes the direct cascading translate X/Y of an element.
+ * Computes the direct cascading translate X/Y of an element as pixels.
  */
 export function ownTranslate(el: HTMLElement): { x: number, y: number } {
   // Get computed style

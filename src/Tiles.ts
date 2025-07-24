@@ -69,6 +69,8 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   public _inline_groups: number;
   /** @hidden */
   public _height: number;
+  /** @hidden */
+  public _label_height: number;
 
   /** @hidden */
   public _rearrange_timeout: number = -1;
@@ -189,6 +191,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
      */
     height?: number;
     /**
+     * Group label height in the cascading `em` unit.
+     */
+    labelHeight: number,
+    /**
      * Transition function(s) to contribute to tiles.
      */
     tileTransition?: string;
@@ -229,6 +235,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._group_width = params.groupWidth ?? 6;
     this._inline_groups = params.inlineGroups ?? 1;
     this._height = params.height ?? 6;
+    this._label_height = params.labelHeight;
 
     // Height >= 4 assertion
     assert(this._dir == "horizontal" ? this._height >= 4 : true, "Tiles.height must be >= 4.");

@@ -58,7 +58,7 @@ export class TileFactory {
     // Group div
     const group_div = Array.from(this.$._container.getElementsByClassName(this.$._class_names.group))
       .find(div => div.getAttribute(Attributes.ATTR_ID) == group)! as HTMLDivElement;
-    const group_tiles_div = group_div.querySelector(this.$._class_names.groupTiles)! as HTMLDivElement;
+    const group_tiles_div = group_div.getElementsByClassName(this.$._class_names.groupTiles)[0];
 
     // Button
     const button = document.createElement("button");
@@ -69,6 +69,7 @@ export class TileFactory {
     button.style.position = "absolute";
     button.style.width = this.$._tile_em[size].w + "em";
     button.style.height = this.$._tile_em[size].h + "em";
+    button.style.boxSizing = "border-box";
     group_tiles_div.appendChild(button);
     this.$._buttons.set(params.id, button);
 
@@ -77,6 +78,7 @@ export class TileFactory {
     content_div.classList.add(this.$._class_names.tileContent);
     content_div.style.width = "100%";
     content_div.style.height = "100%";
+    content_div.style.boxSizing = "border-box";
     button.appendChild(content_div);
 
     // Contribute to overall state
