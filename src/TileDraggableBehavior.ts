@@ -129,6 +129,9 @@ export class TileDraggableBehavior {
       this._startY + current_pos.y  // y
     );
 
+    // Try snapping to grid
+    const grid_snap = this.$._layout.gridSnap();
+
     //
     fixme();
   }
