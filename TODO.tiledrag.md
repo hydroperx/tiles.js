@@ -1,10 +1,10 @@
-- [ ] Finish TileDraggableBehavior (contribute to `_tile_draggables`)
+- [ ] Contribute to `_tile_draggables`
 - [ ] Use threshold for Draggable (`"1em"`)
-- [ ] Set the `ATTR_DRAGGING` attribute where appropriate.
+- [ ] Set the drag end handler mapping.
 
 # Drag start
 
-- [ ] Disable pointer events for the entire Tiles container.
+- [ ] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "auto";` for the tile's button itself.
 - [ ] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
 - [ ] Remove the tile from the layout.
@@ -48,7 +48,9 @@
 
 # Drag end
 
-- [ ] Enable pointer events again for the entire Tiles container.
+- [ ] If `ATTR_DRAGGING` is not `"true"`
+  - Return.
+- [ ] Set `.style.pointerEvents = "";` for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
 - [ ] Set the `ATTR_DRAGGING` attribute to `"false"`.
 - [ ] If the tile has been removed from the DOM

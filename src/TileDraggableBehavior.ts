@@ -1,5 +1,6 @@
 // Third-party imports
 import getRectangleOverlap from "rectangle-overlap";
+import Draggable from "@hydroperx/draggable";
 
 // Local imports
 import * as RandomUtils from "./utils/RandomUtils";
