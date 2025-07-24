@@ -187,9 +187,9 @@ tiles.addEventListener("groupdragend", ({ detail: { group } }) => {
 
 ### Style recommendations
 
-- Do not add border, margin or padding to `classNames.group` to avoid inconsistencies in grid-snapping.
-- Do not add border, margin or padding to `classNames.groupTiles` to avoid inconsistencies in grid-snapping.
-- Do not add border or margin to `classNames.tile`.
+- Do not add border, margin, padding or scale to `classNames.group` to avoid inconsistencies in grid-snapping.
+- Do not add border, margin, padding or scale to `classNames.groupTiles` to avoid inconsistencies in grid-snapping.
+- Do not add border, margin or scale to `classNames.tile`.
 
 ## License
 
