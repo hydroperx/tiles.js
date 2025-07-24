@@ -43,9 +43,13 @@ While rearranging tiles:
   - [ ] If checked, trigger selection change event.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
+  - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
   - [ ] Do nothing if there's a group being actively dragged.
+  - [ ] ...
+  - [ ] Call `._deferred_rearrange()`
+  - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#resizeTile()`
   - [ ] Do nothing if there's a tile being actively dragged.
   - [ ] Update the layout tile's width and height.
@@ -54,9 +58,12 @@ While rearranging tiles:
   - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
   - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
+  - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#moveTile()`
   - [ ] Do nothing if there's a tile being actively dragged.
+  - [ ] ...
   - [ ] Call `._deferred_rearrange()`
+  - [ ] Call `._deferred_state_update_signal()`
 
 # Tile selection
 

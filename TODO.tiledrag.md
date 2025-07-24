@@ -57,10 +57,12 @@
   - [ ] Remove from state
   - [ ] Remove from layout
   - [ ] If checked, trigger selection change event.
-  - [ ] Execute the procedure above for *Reverting a ghost tile*
+  - [ ] If there is a ghost tile
+    - [ ] Execute the procedure above for *Reverting a ghost tile*
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
   - [ ] Trigger Tiles drag end event
+  - [ ] `._deferred_state_update_signal()`
   - [ ] Return
 - [ ] If grid snap resolves successfully to an existing area
   - [ ] Remove the ghost tile from the layout
@@ -74,6 +76,7 @@
   - [ ] If the previous group is empty, remove it (from state/layout/DOM).
   - [ ] Call `._keep_groups_contiguous()`
   - [ ] `._deferred_rearrange()`
+  - [ ] `._deferred_state_update_signal()`
 - [ ] Else if grid snap resolves successfully to a blank area
   - [ ] ...
 - [ ] Else
