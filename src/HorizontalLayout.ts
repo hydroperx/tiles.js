@@ -59,8 +59,8 @@ export class HorizontalLayout extends Layout {
     let accX = 0, accY = 0, resultX = 0, resultY = 0;
 
     // resultY
-    const tiles_h_em = this.$._height*this.$._small_size + (this.$._height - 1)*this.$._tile_gap;
-    const full_h_em = tiles_h_em + this.$._label_height + this.$._tile_gap;
+    const tilesHeight = this.$._height*this.$._small_size + (this.$._height - 1)*this.$._tile_gap;
+    const fullHeight = tilesHeight + this.$._label_height + this.$._tile_gap;
     // skip label
     accY += this.$._label_height;
     // skip gap between the label and tile divs.
@@ -70,12 +70,12 @@ export class HorizontalLayout extends Layout {
     if (offset_middle_y < accY) {
       return null;
     }
-    const v_start_em = accY;
-    for (; accY < full_h_em; resultY++) {
-      if (offset_middle_y + offset.h / 2 < accY) {
+    const vertical_start = accY;
+    for (; accY < fullHeight; resultY++) {
+      if (offset_middle_y < accY) {
         break;
       }
-      if (accY != v_start_em) {
+      if (accY != vertical_start) {
         accY += this.$._tile_gap;
       }
       accY += this.$._small_size;
@@ -84,11 +84,48 @@ export class HorizontalLayout extends Layout {
       return null;
     }
 
+    let resultGroup: undefined | string = undefined;
+
     // resultX
+    const offset_center_x = offset.x + offset.w / 2;
+    if (offset_center_x < 0) {
+      return null;
+    }
     for (const group of this.$._layout.groups) {
-      fixme();
+      const w = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+      const endX = accX + w;
+      const group_horizontal_start = accX;
+      resultGroup = group.id;
+      for (resultX = 0; accX < endX; resultX++) {
+        if (offset_center_x < accX) {
+          break;
+        }
+        if (accX != group_horizontal_start) {
+          accX += this.$._tile_gap;
+        }
+        accX += this.$._small_size;
+      }
+      if (accX != 0) {
+        accX += this.$._group_gap;
+      }
+      accX += w;
+    }
+    if (offset.x > accX) {
+      // Request anonymous group
+      return {
+        group: undefined,
+        column: undefined,
+        x: resultX,
+        y: resultY,
+      };
     }
 
-    fixme();
+    // Result
+    return {
+      group: resultGroup,
+      column: undefined,
+      x: resultX,
+      y: resultY,
+    };
   }
 }
