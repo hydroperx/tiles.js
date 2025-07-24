@@ -45,6 +45,7 @@ While rearranging tiles:
   - [ ] Remove from layout
   - [ ] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
+  - [ ] *Maybe later when I am more energetic*: Pull nearby-following tiles.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
   - [ ] Call `._deferred_state_update_signal()`
