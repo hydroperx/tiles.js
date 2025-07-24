@@ -1,5 +1,5 @@
 - [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
-- [ ] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
+- [x] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
   - Basis: https://chatgpt.com/c/687f93fd-1354-8001-acb8-734508969385
   - Kiwi API: https://github.com/lume/kiwi/blob/HEAD/docs/Kiwi.md
 
@@ -30,6 +30,9 @@ While rearranging tiles:
   - [ ] Setup group draggable (contribute to `_group_draggables`) if drag is enabled.
 - [x] `Tiles#addTile()`
 - [ ] `Tiles#removeGroup()`
+  - [ ] Do nothing if there's a tile or group being actively dragged.
+  - [ ] ...
+  - [ ] `._keep_groups_contiguous()`
 - [ ] `Tiles#removeTile()`
   - [ ] If tile is being dragged
     - [ ] Remove the button from the DOM
@@ -46,7 +49,7 @@ While rearranging tiles:
   - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
-  - [ ] Do nothing if there's a group being actively dragged.
+  - [ ] Do nothing if there's a group or tile being actively dragged.
   - [ ] ...
   - [ ] Call `._deferred_rearrange()`
   - [ ] Call `._deferred_state_update_signal()`

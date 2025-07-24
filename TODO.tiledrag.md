@@ -68,8 +68,9 @@
   - [ ] Remove the ghost tile from the layout
   - [ ] Recreate the Cassowary solver for the respective group
   - [ ] Put the tile in the new layout group
-  - [ ] Put the tile at the new group's tilesDiv DOM.
+  - [ ] Move the tile to the new group's tilesDiv DOM.
   - [ ] Set X/Y state
+  - [ ] Set the tile state's group field.
   - [ ] Suggest X/Y weakly for the layout tile
   - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
   - [ ] `.refreshNonOverlappingConstraints()` in the group
@@ -78,9 +79,21 @@
   - [ ] `._deferred_rearrange()`
   - [ ] `._deferred_state_update_signal()`
 - [ ] Else if grid snap resolves successfully to a blank area
-  - [ ] ...
+  - [ ] Let group = grid snap's target group
+  - [ ] If group is falsy
+    - [ ] group = anonymous auto-generated ID
+    - [ ] Create new group `group`
+  - [ ] Put the tile in the new layout group
+  - [ ] Put the tile at the new group's tilesDiv DOM.
+  - [ ] Set the tile state's group field.
+  - [ ] Set X/Y state
+  - [ ] Suggest X/Y weakly for the layout tile
+  - [ ] If the previous group is empty, remove it (from state/layout/DOM).
+  - [ ] Call `._keep_groups_contiguous()`
+  - [ ] `._deferred_rearrange()`
+  - [ ] `._deferred_state_update_signal()`
 - [ ] Else
-  - [ ] Put the tile at the DOM back in the group it was.
+  - [ ] Move the tile to the DOM back in the group it was.
   - [ ] Put the tile back at the initial respective layout group.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
