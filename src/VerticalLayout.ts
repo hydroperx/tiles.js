@@ -23,7 +23,7 @@ export class VerticalLayout extends Layout {
    */
   public override rearrange(): void {
     const column_y_em = new Map<number, number>();
-    let parent_w_em = this.$._inline_groups * this.$._group_width + (this.$._inline_groups - 1) * this.$._group_gap;
+    let parent_w_em = this.$._inline_groups*this.$._group_width + (this.$._inline_groups-1)*this.$._group_gap;
     let parent_h_em = 0;
     let max_rows_found = new Map<number, number>();
 

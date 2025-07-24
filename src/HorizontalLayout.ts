@@ -24,7 +24,7 @@ export class HorizontalLayout extends Layout {
   public override rearrange(): void {
     let x_em = 0;
     let parent_w_em = this.groups.length == 0 ? 0 : (this.groups.length - 1) * this.$._group_gap;
-    let parent_h_em = this.$._height;
+    let parent_h_em = this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
 
     // Rearrange group tiles and reposition groups
     for (const group of this.groups) {
@@ -66,19 +66,21 @@ export class HorizontalLayout extends Layout {
     accY += this.$._label_height;
     // skip gap between the label and tile divs.
     accY += this.$._tile_gap;
-    // resultY check 1
+    // offset-Y check 1
     if (offset.y + offset.h / 2 < accY) {
       return null;
     }
     const v_start_em = accY;
     for (; accY < full_h_em; resultY++) {
-      fixme();
+      if (offset.y + offset.h / 2 < accY) {
+        break;
+      }
       if (accY != v_start_em) {
         accY += this.$._tile_gap;
       }
       accY += this.$._small_size;
     }
-    if (offset.y + offset.h / 2 > accY) {
+    if (offset.y > accY) {
       return null;
     }
 
