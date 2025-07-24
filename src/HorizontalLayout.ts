@@ -1,7 +1,7 @@
 // Local imports
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
-import { Layout, LayoutGroup, LayoutTile } from "./Layout";
+import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
 
 /**
  * Horizontal layout.
@@ -36,5 +36,12 @@ export class HorizontalLayout extends Layout {
     // Set parent size
     this.$._container.style.width = parent_w_em + "em";
     this.$._container.style.height = parent_h_em + "em";
+  }
+
+  /**
+   * Snaps location to grid.
+   */
+  public override snapToGrid(rect: DOMRect): null | GridSnapResult {
+    fixme();
   }
 }

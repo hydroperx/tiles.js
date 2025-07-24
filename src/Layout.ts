@@ -31,7 +31,38 @@ export abstract class Layout {
    * Rearranges group tiles.
    */
   public abstract rearrange(): void;
+
+  /**
+   * Snaps location to grid.
+   */
+  public abstract snapToGrid(rect: DOMRect): null | GridSnapResult;
 }
+
+/**
+ * Grid snap result.
+ */
+export type GridSnapResult = {
+  /**
+   * Group ID.
+   *
+   * If none, requests anonymous group(s)
+   * (always one for horizontal containers).
+   */
+  group?: string,
+  /**
+   * If requesting anonymous group(s), how many,
+   * in a vertical container.
+   */
+  column?: number,
+  /**
+   * X coordinate in small tiles.
+   */
+  x: number,
+  /**
+   * Y coordinate in small tiles.
+   */
+  y: number,
+};
 
 /**
  * Group.

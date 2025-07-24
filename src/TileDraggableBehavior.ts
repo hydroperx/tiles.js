@@ -130,7 +130,7 @@ export class TileDraggableBehavior {
     );
 
     // Try snapping to grid
-    const grid_snap = this.$._layout.gridSnap();
+    const grid_snap = this.$._layout.snapToGrid(button.getBoundingClientRect());
 
     //
     fixme();
