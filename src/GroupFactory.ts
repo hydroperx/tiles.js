@@ -56,7 +56,6 @@ export class GroupFactory {
     // Group's label div
     const labelDiv = document.createElement("div");
     labelDiv.classList.add(this.$._class_names.groupLabel);
-    labelDiv.style.boxSizing = "border-box";
     labelDiv.style.height = this.$._label_height + "em";
     div.appendChild(labelDiv);
 
@@ -64,7 +63,6 @@ export class GroupFactory {
     const labelTextDiv = document.createElement("div");
     labelTextDiv.classList.add(this.$._class_names.groupLabelText);
     labelTextDiv.style.wordBreak = "keep-all";
-    labelTextDiv.style.boxSizing = "border-box";
     labelTextDiv.innerText = label;
     labelDiv.appendChild(labelTextDiv);
 

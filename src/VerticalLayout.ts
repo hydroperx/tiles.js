@@ -59,6 +59,9 @@ export class VerticalLayout extends Layout {
     const offset = getOffset(tile, this.$._container)!;
     OffsetUtils.divideOffsetBy(offset, this.$._em);
 
+    // Basics
+    const column_y = new Map<number, number>();
+
     fixme();
   }
 }

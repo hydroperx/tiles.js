@@ -69,7 +69,6 @@ export class TileFactory {
     button.style.position = "absolute";
     button.style.width = this.$._tile_em[size].w + "em";
     button.style.height = this.$._tile_em[size].h + "em";
-    button.style.boxSizing = "border-box";
     group_tiles_div.appendChild(button);
     this.$._buttons.set(params.id, button);
 
@@ -78,7 +77,6 @@ export class TileFactory {
     content_div.classList.add(this.$._class_names.tileContent);
     content_div.style.width = "100%";
     content_div.style.height = "100%";
-    content_div.style.boxSizing = "border-box";
     button.appendChild(content_div);
 
     // Contribute to overall state
