@@ -5,6 +5,7 @@ import Draggable from "@hydroperx/draggable";
 // Local imports
 import * as RandomUtils from "./utils/RandomUtils";
 import * as RectangleUtils from "./utils/RectangleUtils";
+import * as TranslateUtils from "./utils/TranslateUtils";
 import type { Tiles } from "./Tiles";
 import * as Attributes from "./Attributes";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
@@ -51,6 +52,23 @@ export class TileDraggableBehavior {
     // Basics
     const { id } = this;
     const button = this.$._buttons.get(id)!;
+
+    // Disable pointer interaction on whole parent
+    this.$._container.style.pointerEvents = "none";
+    // ... however allow it in that specific tile.
+    button.style.pointerEvents = "auto";
+
+    // Display tile over everything
+    button.style.zIndex = "999999999";
+
+    // While the tile is being dragged, it is moved out of the group div temporarily and
+    // appears a direct child of the Tiles container.
+    button.remove();
+    this.$._container.appendChild(button);
+
+    // Patch the initial draggable position.
+    const t = TranslateUtils.ownTranslate(button);
+    fixme();
 
     //
     fixme();

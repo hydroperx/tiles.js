@@ -1,9 +1,9 @@
 # Drag start
 
-- [ ] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
-- [ ] Set `.style.pointerEvents = "auto";` for the tile's button itself.
-- [ ] Set `.style.zIndex = "999999999";` for the tile's button.
-- [ ] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
+- [x] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
+- [x] Set `.style.pointerEvents = "auto";` for the tile's button itself.
+- [x] Set `.style.zIndex = "999999999";` for the tile's button.
+- [x] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
   - [ ] Patch the initial draggable position using `draggable.set(x, y)`
 - [ ] Remove the tile from the layout.
 - [ ] Cache current state (the "old state")
