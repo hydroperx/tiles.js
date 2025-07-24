@@ -2,6 +2,7 @@
 import getOffset from "getoffset";
 
 // Local imports
+import * as OffsetUtils from "./utils/OffsetUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
@@ -45,17 +46,11 @@ export class HorizontalLayout extends Layout {
    * Snaps location to grid.
    */
   public override snapToGrid(tile: HTMLButtonElement): null | GridSnapResult {
+    // Base offset
     const offset = getOffset(tile, this.$._container)!;
-    offset.x /= this.$._em;
-    offset.y /= this.$._em;
-    offset.left = offset.x;
-    offset.top = offset.y;
-    offset.width /= this.$._em;
-    offset.height /= this.$._em;
-    offset.w = offset.width;
-    offset.h = offset.height;
-    offset.bottom /= this.$._em;
-    offset.right /= this.$._em;
+    OffsetUtils.divideOffsetBy(offset, this.$._em);
+  
+    // Basics
     let accX = 0, accY = 0, resultX = 0, resultY = 0;
 
     // resultY

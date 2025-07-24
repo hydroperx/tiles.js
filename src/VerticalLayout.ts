@@ -2,6 +2,7 @@
 import getOffset from "getoffset";
 
 // Local imports
+import * as OffsetUtils from "./utils/OffsetUtils";
 import * as PaddingUtils from "./utils/PaddingUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
@@ -54,6 +55,10 @@ export class VerticalLayout extends Layout {
    * Snaps location to grid.
    */
   public override snapToGrid(tile: HTMLButtonElement): null | GridSnapResult {
+    // Base offset
+    const offset = getOffset(tile, this.$._container)!;
+    OffsetUtils.divideOffsetBy(offset, this.$._em);
+
     fixme();
   }
 }
