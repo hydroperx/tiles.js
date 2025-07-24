@@ -8,6 +8,7 @@ import * as RandomUtils from "./utils/RandomUtils";
 import * as RectangleUtils from "./utils/RectangleUtils";
 import * as TranslateUtils from "./utils/TranslateUtils";
 import type { Tiles } from "./Tiles";
+import type { State } from "./State";
 import * as Attributes from "./Attributes";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 
@@ -15,6 +16,11 @@ import { Layout, LayoutGroup, LayoutTile } from "./Layout";
  * Drag-n-drop behavior for tiles.
  */
 export class TileDraggableBehavior {
+  private _startX: number = 0;
+  private _startY: number = 0;
+  private _startLayoutIndex: number = 0;
+  private _startState: null | State = null;
+
   // Constructor
   public constructor(private $: Tiles, private id: string) {
     //
@@ -76,12 +82,10 @@ export class TileDraggableBehavior {
     const group_tiles_inner_left = group_tiles_offset.left + group_tiles_div.clientLeft;
     const group_tiles_inner_top = group_tiles_offset.top + group_tiles_div.clientTop;
     const tile_offset = getOffset(button, group_tiles_div)!;
-    this.$._tile_drag_start.set(button, {
-      x: group_tiles_inner_left + tile_offset.x,
-      y: group_tiles_inner_top + tile_offset.y,
-      layoutIndex: layout_index,
-      state: this.$._state.clone(),
-    });
+    this._startX = group_tiles_inner_left + tile_offset.x;
+    this._startY = group_tiles_inner_top + tile_offset.y;
+    this._startLayoutIndex = layout_index;
+    this._startState = this.$._state.clone();
 
     // While the tile is being dragged, it is moved out of the group div temporarily and
     // appears a direct child of the Tiles container.
@@ -119,11 +123,10 @@ export class TileDraggableBehavior {
     }
 
     // Patch the draggable position (due to container move).
-    const initial_pos = this.$._tile_drag_start.get(button)!;
     const current_pos = draggable.get();
     draggable.set(
-      initial_pos.x + current_pos.x, // x
-      initial_pos.y + current_pos.y  // y
+      this._startX + current_pos.x, // x
+      this._startY + current_pos.y  // y
     );
 
     //
