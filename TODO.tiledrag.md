@@ -3,8 +3,8 @@
 - [x] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
 - [x] Set `.style.pointerEvents = "auto";` for the tile's button itself.
 - [x] Set `.style.zIndex = "999999999";` for the tile's button.
+- [x] Save start drag position
 - [x] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
-  - [ ] Patch the initial draggable position using `draggable.set(x, y)`
 - [ ] Remove the tile from the layout.
 - [ ] Cache current state (the "old state")
 - [ ] Reset ghost tile caches
@@ -14,8 +14,9 @@
 
 # Drag move
 
-- [ ] If the tile is removed while dragging
-  - [ ] Return
+- [x] If the tile is removed while dragging
+  - [x] Exit
+- [x] Patch the draggable position using `draggable.set(x, y)`
 - [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
   - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
 - [ ] Grid snap
