@@ -48,16 +48,31 @@ export class TileDraggableBehavior {
 
   // Drag start
   private _dragStart(element: Element, x: number, y: number, event: Event): void {
+    // Basics
+    const { id } = this;
+    const button = this.$._buttons.get(id)!;
+
     //
+    fixme();
   }
 
   // Drag
   private _drag(element: Element, x: number, y: number, event: Event): void {
+    // Basics
+    const { id } = this;
+    const button = this.$._buttons.get(id)!;
+
     //
+    fixme();
   }
 
   // Drag end
   private _dragEnd(element: Element, x: number, y: number, event: Event): void {
+    // Basics
+    const { id } = this;
+    const button = this.$._buttons.get(id)!;
+
     //
+    fixme();
   }
 }

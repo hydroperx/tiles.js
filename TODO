@@ -43,6 +43,7 @@ While rearranging tiles:
   - [ ] Uninstall draggable behavior
   - [ ] Remove from state
   - [ ] Remove from layout
+  - [ ] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
   - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`

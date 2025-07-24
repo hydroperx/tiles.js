@@ -57,6 +57,7 @@
   - [ ] Uninstall draggable behavior
   - [ ] Remove from state
   - [ ] Remove from layout
+  - [ ] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
