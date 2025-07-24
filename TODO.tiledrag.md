@@ -1,12 +1,10 @@
-- [ ] Contribute to `_tile_draggables`
-- [ ] Use threshold for Draggable (`"1em"`)
-- [ ] Set the drag end handler mapping.
-
 # Drag start
 
 - [ ] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "auto";` for the tile's button itself.
+- [ ] Set `.style.zIndex = "999999999";` for the tile's button.
 - [ ] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
+  - [ ] Patch the initial draggable position using `draggable.set(x, y)`
 - [ ] Remove the tile from the layout.
 - [ ] Cache current state (the "old state")
 - [ ] Reset ghost tile caches
@@ -52,6 +50,7 @@
   - Return.
 - [ ] Set `.style.pointerEvents = "";` for the entire Tiles container.
 - [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
+- [ ] Set `.style.zIndex = "";` for the tile's button.
 - [ ] Set the `ATTR_DRAGGING` attribute to `"false"`.
 - [ ] If the tile has been removed from the DOM
   - [ ] Clear constraints from the specified tile.
@@ -71,6 +70,7 @@
   - [ ] Recreate the Cassowary solver for the respective group
   - [ ] Put the tile in the new layout group
   - [ ] Move the tile to the new group's tilesDiv DOM.
+  - [ ] Set `button.style.inset = "";`.
   - [ ] Set X/Y state
   - [ ] Set the tile state's group field.
   - [ ] Suggest X/Y weakly for the layout tile
@@ -87,6 +87,7 @@
     - [ ] Create new group `group`
   - [ ] Put the tile in the new layout group
   - [ ] Put the tile at the new group's tilesDiv DOM.
+  - [ ] Set `button.style.inset = "";`.
   - [ ] Set the tile state's group field.
   - [ ] Set X/Y state
   - [ ] Suggest X/Y weakly for the layout tile
@@ -97,6 +98,7 @@
 - [ ] Else
   - [ ] Move the tile to the DOM back in the group it was.
   - [ ] Put the tile back at the initial respective layout group.
+  - [ ] Set `button.style.inset = "";`.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
   - [ ] `.refreshNonOverlappingConstraints()`
