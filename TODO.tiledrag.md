@@ -86,6 +86,7 @@
 - [ ] Else if grid snap resolves successfully to a blank area
   - [ ] Let group = grid snap's target group
   - [ ] If group is falsy
+    - [ ] ... Create as many anonymous groups as necessary. (In a horizontal container, always one group; in a vertical container, it depends on which column the tile was dropped at.)
     - [ ] group = anonymous auto-generated ID
     - [ ] Create new group `group`
   - [ ] Put the tile in the new layout group
