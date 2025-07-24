@@ -3,6 +3,7 @@ import * as kiwi from "@lume/kiwi";
 import { gsap } from "gsap";
 
 // Local imports
+import * as Attributes from "./Attributes";
 import type { Tiles } from "./Tiles";
 
 /**
@@ -127,7 +128,7 @@ export class LayoutGroup {
           changed = true;
 
           // affect button
-          if (tile.button) {
+          if (tile.button && tile.button.getAttribute(Attributes.ATTR_DRAGGING) != "true") {
             if (tile.positioned) {
               if (tile.tween) {
                 tile.tween.kill();
