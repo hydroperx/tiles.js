@@ -66,7 +66,7 @@
   - [ ] Remove the ghost tile from the layout
   - [ ] Recreate the Cassowary solver for the respective group
   - [ ] Put the tile in the new layout group
-  - [ ] Put the tile at the DOM back, but in the new group.
+  - [ ] Put the tile at the new group's tilesDiv DOM.
   - [ ] Set X/Y state
   - [ ] Suggest X/Y weakly for the layout tile
   - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
