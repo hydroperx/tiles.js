@@ -115,7 +115,7 @@ export class HorizontalLayout extends Layout {
       return {
         group: undefined,
         column: undefined,
-        x: resultX,
+        x: 0,
         y: resultY,
       };
     }
