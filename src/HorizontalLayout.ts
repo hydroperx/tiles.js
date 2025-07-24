@@ -2,7 +2,6 @@
 import getOffset from "getoffset";
 
 // Local imports
-import * as PaddingUtils from "./utils/PaddingUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
@@ -67,12 +66,13 @@ export class HorizontalLayout extends Layout {
     // skip gap between the label and tile divs.
     accY += this.$._tile_gap;
     // offset-Y check 1
-    if (offset.y + offset.h / 2 < accY) {
+    const offset_middle_y = offset.y + offset.h / 2;
+    if (offset_middle_y < accY) {
       return null;
     }
     const v_start_em = accY;
     for (; accY < full_h_em; resultY++) {
-      if (offset.y + offset.h / 2 < accY) {
+      if (offset_middle_y + offset.h / 2 < accY) {
         break;
       }
       if (accY != v_start_em) {
@@ -86,7 +86,7 @@ export class HorizontalLayout extends Layout {
 
     // resultX
     for (const group of this.$._layout.groups) {
-      //
+      fixme();
     }
 
     fixme();
