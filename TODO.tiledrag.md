@@ -40,6 +40,7 @@
 
 - [ ] Remove it from the layout
 - [ ] Recreate the Cassowary solver for the respective group
+- [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
 - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
   - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
   - [ ] Use weak-suggestions for each tile's X/Y.
@@ -62,7 +63,14 @@
 - [ ] If grid snap resolves to an area in a blank group (e.g. after the last)
   - [ ] ...
 - [ ] Else if grid snap resolves correctly
-  - [ ] ...
+  - [ ] Remove the ghost tile from the layout
+  - [ ] Recreate the Cassowary solver for the respective group
+  - [ ] Put the tile in the new layout group
+  - [ ] Put the tile at the DOM back, but in the new group.
+  - [ ] Set X/Y state
+  - [ ] Suggest X/Y weakly for the layout tile
+  - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
+  - [ ] `.refreshNonOverlappingConstraints()` in the group
   - [ ] If the previous group is empty, remove it (from state/layout/DOM).
   - [ ] Call `._keep_groups_contiguous()`
   - [ ] `._deferred_rearrange()`

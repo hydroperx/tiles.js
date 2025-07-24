@@ -48,6 +48,9 @@ While rearranging tiles:
   - [ ] Do nothing if there's a group being actively dragged.
 - [ ] `Tiles#resizeTile()`
   - [ ] Do nothing if there's a tile being actively dragged.
+  - [ ] Update the layout tile's width and height.
+  - [ ] Update the tile state's size.
+  - [ ] Update `ATTR_SIZE`
   - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
   - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
