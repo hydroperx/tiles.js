@@ -22,7 +22,7 @@
   - [ ] Copy the logic for grid snapping from the previous version for determining at which group and X/Y a tile is dragging/dropping over. Cache the grid snap result.
   - [ ] If grid snap resolves successfully to an existing area
     - [ ] If ghost tile has already been created
-      - [ ] Require a X/Y change threshold (of 2 small tiles) to continue procedures from here on
+      - [ ] Require a X/Y change threshold (of 1 small tile) to continue procedures from here on
       - [ ] Execute the procedure below for *Reverting a ghost tile*
     - [ ] Insert a ghost tile without button at the layout
     - [ ] Suggest a strong-strength value for the X/Y of that ghost tile
