@@ -96,7 +96,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /** @hidden */
   public _tile_drag_end_handlers: WeakMap<HTMLButtonElement, (element: Element, x: number, y: number, event: Event) => void> = new WeakMap();
   /** @hidden */
-  public _tile_drag_start: WeakMap<HTMLButtonElement, { x: number, y: number }> = new WeakMap();
+  public _tile_drag_start: WeakMap<HTMLButtonElement, { x: number, y: number, layoutIndex: number, state: State }> = new WeakMap();
 
   /** @hidden */
   public _resize_observer: ResizeObserver | null = null;

@@ -62,10 +62,16 @@ export class TileDraggableBehavior {
     // Display tile over everything
     button.style.zIndex = "999999999";
 
+    // Find the corresponding state, layout group and its index
+    const state = this.$._state.tiles.get(id);
+    const layout_group = this.$._layout.groups.find(g => !!g.tiles.find(t => t.id == id))!;
+    const layout_tile = layout_group.tiles.find(t => t.id == id)!;
+    const layout_index = layout_group.tiles.indexOf(layout_tile);
+
     // Parent group-tiles-div
     const group_tiles_div = button.parentElement!;
 
-    // Save drag start (since container will move)
+    // Save drag start (since the container will change, save offset too)
     const group_tiles_offset = getOffset(group_tiles_div, this.$._container)!;
     const group_tiles_inner_left = group_tiles_offset.left + group_tiles_div.clientLeft;
     const group_tiles_inner_top = group_tiles_offset.top + group_tiles_div.clientTop;
@@ -73,12 +79,17 @@ export class TileDraggableBehavior {
     this.$._tile_drag_start.set(button, {
       x: group_tiles_inner_left + tile_offset.x,
       y: group_tiles_inner_top + tile_offset.y,
+      layoutIndex: layout_index,
+      state: this.$._state.clone(),
     });
 
     // While the tile is being dragged, it is moved out of the group div temporarily and
     // appears a direct child of the Tiles container.
     button.remove();
     this.$._container.appendChild(button);
+
+    // Remove the tile from the layout group.
+    layout_group.tiles.splice(layout_index, 1);
 
     //
     fixme();

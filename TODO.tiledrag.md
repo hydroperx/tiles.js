@@ -3,10 +3,9 @@
 - [x] Disable `.style.pointerEvents = "none";` for the entire Tiles container.
 - [x] Set `.style.pointerEvents = "auto";` for the tile's button itself.
 - [x] Set `.style.zIndex = "999999999";` for the tile's button.
-- [x] Save start drag position
+- [x] Save drag start (offset, old state and layoutIndex)
 - [x] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
-- [ ] Remove the tile from the layout.
-- [ ] Cache current state (the "old state")
+- [x] Remove the tile from the layout.
 - [ ] Reset ghost tile caches
 - [ ] Reset grid snap caches
 - [ ] Set the `ATTR_DRAGGING` attribute to `"true"`.
@@ -40,7 +39,7 @@
 
 - [ ] Remove it from the layout
 - [ ] Recreate the Cassowary solver for the respective group
-- [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
+- [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the layout group
 - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
   - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
   - [ ] Use weak-suggestions for each tile's X/Y.
@@ -75,8 +74,10 @@
   - [ ] Set `button.style.inset = "";`.
   - [ ] Set X/Y state
   - [ ] Set the tile state's group field.
-  - [ ] Suggest X/Y weakly for the layout tile
   - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
+  - [ ] For each other tile in the layout group
+    - [ ] Suggest X/Y weakly reflecting the current state.
+  - [ ] Suggest X/Y weakly for the layout tile
   - [ ] `.refreshNonOverlappingConstraints()` in the group
   - [ ] If the previous group is empty, remove it (from state/layout/DOM).
   - [ ] Call `._keep_groups_contiguous()`
@@ -99,10 +100,16 @@
   - [ ] `._deferred_state_update_signal()`
 - [ ] Else
   - [ ] Move the tile to the DOM back in the group it was.
-  - [ ] Put the tile back at the initial respective layout group.
+  - [ ] Put the tile back at the initial respective layout group (at the initial index it was (`drag_start.layoutIndex`)).
   - [ ] Set `button.style.inset = "";`.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
+  - [ ] Else
+    - [ ] Recreate the Cassowary solver for the respective group
+    - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
+    - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
+      - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
+      - [ ] Use weak-suggestions for each tile's X/Y.
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
 - [ ] Trigger Tiles drag end event
