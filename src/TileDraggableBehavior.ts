@@ -65,7 +65,7 @@ export class TileDraggableBehavior {
     // Parent group-tiles-div
     const group_tiles_div = button.parentElement!;
 
-    // Save drag start
+    // Save drag start (since container will move)
     const group_tiles_offset = getOffset(group_tiles_div, this.$._container)!;
     const group_tiles_inner_left = group_tiles_offset.left + group_tiles_div.clientLeft;
     const group_tiles_inner_top = group_tiles_offset.top + group_tiles_div.clientTop;
@@ -96,7 +96,7 @@ export class TileDraggableBehavior {
       return;
     }
 
-    // Patch the initial draggable position.
+    // Patch the draggable position (due to container move).
     const initial_pos = this.$._tile_drag_start.get(button)!;
     const current_pos = draggable.get();
     draggable.set(
