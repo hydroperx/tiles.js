@@ -91,8 +91,19 @@ export class TileDraggableBehavior {
     // Remove the tile from the layout group.
     layout_group.tiles.splice(layout_index, 1);
 
-    //
+    // Reset ghost tile caches
     fixme();
+
+    // Reset grid snap caches
+    fixme();
+
+    // Set the `ATTR_DRAGGING` attribute to `"true"`.
+    button.setAttribute(Attributes.ATTR_DRAGGING, "true");
+
+    // Trigger Tiles#dragstart event
+    this.$.dispatchEvent(new CustomEvent("dragstart", {
+      detail: { tile: button },
+    }));
   }
 
   // Drag

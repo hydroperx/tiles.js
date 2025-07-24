@@ -8,8 +8,8 @@
 - [x] Remove the tile from the layout.
 - [ ] Reset ghost tile caches
 - [ ] Reset grid snap caches
-- [ ] Set the `ATTR_DRAGGING` attribute to `"true"`.
-- [ ] Trigger Tiles drag start event
+- [x] Set the `ATTR_DRAGGING` attribute to `"true"`.
+- [x] Trigger Tiles drag start event
 
 # Drag move
 
