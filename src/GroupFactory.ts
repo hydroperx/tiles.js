@@ -117,6 +117,9 @@ export class GroupFactory {
     const layout_group = this.$._layout.groups.find(group => group.id == id)!;
     this.$._layout.groups.splice(this.$._layout.groups.indexOf(layout_group), 1);
 
+    // Remove from DOM
+    layout_group.div.remove();
+
     // Remove tiles efficiently
     const tiles_to_remove: string[] = [];
     for (const [tile, tile_state] of this.$._state.tiles) {

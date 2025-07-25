@@ -92,32 +92,23 @@ export class HorizontalLayout extends Layout {
       if (offset.x < group_horizontal_start - r) {
         return null;
       }
-      if (offset.x > group_horizontal_start + w + this.$._small_size) {
+      if (offset.x > group_horizontal_start + w + this.$._small_size / 2) {
         // move on to the next group
         accX += w + this.$._group_gap;
         continue;
       }
       for (resultX = 0; accX < endX; resultX++) {
         if (offset.x < accX + this.$._small_size/2) {
-          break;
+          return { group: resultGroup, x: resultX, y: resultY };
         }
         accX += this.$._small_size + this.$._tile_gap;
       }
       accX += w + this.$._group_gap;
     }
-    if (offset.x > accX) {
-      // Request anonymous group
-      return {
-        group: undefined,
-        x: 0,
-        y: resultY,
-      };
-    }
-
-    // Result
+    // Request anonymous group
     return {
-      group: resultGroup,
-      x: resultX,
+      group: undefined,
+      x: 0,
       y: resultY,
     };
   }
