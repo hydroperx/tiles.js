@@ -86,8 +86,10 @@ export class TileDraggableBehavior {
     const group_tiles_inner_left = group_tiles_offset.left + group_tiles_div.clientLeft;
     const group_tiles_inner_top = group_tiles_offset.top + group_tiles_div.clientTop;
     const tile_offset = getOffset(button, group_tiles_div)!;
-    this._startX = group_tiles_inner_left + tile_offset.x;
-    this._startY = group_tiles_inner_top + tile_offset.y;
+    // this._startX = group_tiles_inner_left + tile_offset.x;
+    // this._startY = group_tiles_inner_top + tile_offset.y;
+    this._startX = group_tiles_inner_left;
+    this._startY = group_tiles_inner_top;
     this._startLayoutIndex = layout_index;
     this._startState = this.$._state.clone();
 
