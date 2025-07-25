@@ -54,6 +54,9 @@ export class BaseLayout {
   addTile(id: string, x: number | null, y: number | null, width: number, height: number): boolean {
     const newTile = new Tile(x ?? 0, y ?? 0, width, height);
     if (x === null || y === null) {
+      if ((x === null && y !== null) || (x !== null && y === null)) {
+        throw new TypeError("If either x or y are null, then both must be null.");
+      }
       const best = this.findBestPosition(width, height);
       newTile.x = best.x;
       newTile.y = best.y;

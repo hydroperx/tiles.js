@@ -159,7 +159,7 @@ export class LayoutGroup {
           old_y = state.y;
         state.x = tile.x;
         state.y = tile.y;
-        if (!(old_x == state.x && old_y == state.y)) {
+        if (!(old_x == state.x && old_y == state.y) || !tile.positioned) {
           changed = true;
 
           // affect button

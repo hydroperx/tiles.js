@@ -130,7 +130,7 @@ export class TileFactory {
 
   // Removes a tile.
   public remove(id: string) {
-    fixme();
-    // throw new Error("removing not tiles implemented.");
+    // fixme();
+    throw new Error("removing not tiles implemented.");
   }
 }
