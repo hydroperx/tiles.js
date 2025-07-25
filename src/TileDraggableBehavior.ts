@@ -322,6 +322,12 @@ export class TileDraggableBehavior {
           this.$._deferred_state_update_signal();
         }
       }
+    // If the grid snap resolves successfully to a blank area
+    } else if (!!this._gridSnap) {
+      //
+      fixme();
+    // If grid snap failed
+    } else {
       fixme();
     }
     fixme();
