@@ -199,20 +199,23 @@ export class BaseLayout {
 
       for (const [otherId, otherTile] of this.tiles) {
         if (id === otherId || moved.has(otherId)) continue;
-        if (tile.intersects(otherTile)) {
+
+        const isIntersecting = tile.intersects(otherTile);
+        const isOutOfBounds =
+          otherTile.x < 0 ||
+          otherTile.y < 0 ||
+          (this.maxWidth !== undefined && otherTile.x + otherTile.width > this.maxWidth) ||
+          (this.maxHeight !== undefined && otherTile.y + otherTile.height > this.maxHeight);
+
+        if (isIntersecting || isOutOfBounds) {
+          const foundPos = this.findAvailablePositionFor(otherTile, otherId);
+          if (!foundPos) return false;
+
           const movedTile = otherTile.clone();
-          movedTile.y += tile.height;
-
-          if (
-            movedTile.x < 0 ||
-            movedTile.y < 0 ||
-            (this.maxWidth && movedTile.x + movedTile.width > this.maxWidth) ||
-            (this.maxHeight && movedTile.y + movedTile.height > this.maxHeight)
-          ) {
-            return false;
-          }
-
+          movedTile.x = foundPos.x;
+          movedTile.y = foundPos.y;
           this.tiles.set(otherId, movedTile);
+
           moved.add(otherId);
           toCheck.push(otherId);
         }
@@ -236,6 +239,26 @@ export class BaseLayout {
       if (this.maxHeight && y + height > this.maxHeight) break;
     }
     return { x: 0, y: 0 }; // fallback
+  }
+
+  // Method used in conflict resolution.
+  private findAvailablePositionFor(tile: BaseTile, excludeId: string): { x: number; y: number } | null {
+    const layoutWidth = this.maxWidth ?? Infinity;
+    const layoutHeight = this.maxHeight ?? Infinity;
+
+    for (let y = 0; y + tile.height <= layoutHeight; y++) {
+      for (let x = 0; x + tile.width <= layoutWidth; x++) {
+        const testTile = new BaseTile(x, y, tile.width, tile.height);
+        const overlaps = [...this.tiles.entries()].some(
+          ([id, other]) => id !== excludeId && testTile.intersects(other)
+        );
+        if (!overlaps) {
+          return { x, y };
+        }
+      }
+    }
+
+    return null;
   }
 
   // Returns a copy of the tile data.
