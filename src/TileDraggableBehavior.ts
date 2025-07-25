@@ -211,6 +211,49 @@ export class TileDraggableBehavior {
 
     // Remove dragging indicator
     button.removeAttribute(Attributes.ATTR_DRAGGING);
+    
+    // Basics
+    const tile_state = this.$._state.tiles.get(id)!;
+    const layout_group = this.$._layout.groups.find(group => group.id == tile_state.group)!;
+    const layout_tile = layout_group.tiles.find(tile => tile.id == id)!;
+
+    // If the tile has been removed from the DOM
+    if (!button.parentElement) {
+      // Clear constraints from the specified tile.
+      layout_tile.clearConstraints();
+
+      // Uninstall draggable behavior
+      this.uninstall();
+
+      // Remove from state
+      this.$._state.tiles.delete(id);
+
+      // Remove from layout
+      layout_group.tiles.splice(layout_group.tiles.indexOf(layout_tile), 1);
+
+      // Remove from `Tiles#_buttons`
+      this.$._buttons.delete(id);
+
+      // If there is a ghost tile, revert it.
+      if (this._ghostTile) this._revertGhostTile();
+
+      // Refresh non-overlapping constraints.
+      layout_group.refreshNonOverlappingConstraints();
+
+      // Rearrange
+      this.$._deferred_rearrange();
+
+      // Trigger Tiles#dragend event
+      this.$.dispatchEvent(new CustomEvent("dragend", {
+        detail: { tile: button },
+      }));
+
+      // State update signal
+      this.$._deferred_state_update_signal();
+
+      // Finish
+      return;
+    }
 
     //
     fixme();

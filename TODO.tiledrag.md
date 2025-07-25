@@ -53,20 +53,20 @@
 - [x] Set `.style.pointerEvents = "";` for the tile's button itself.
 - [x] Set `.style.zIndex = "";` for the tile's button.
 - [x] Remove the `ATTR_DRAGGING` attribute.
-- [ ] If the tile has been removed from the DOM
-  - [ ] Clear constraints from the specified tile.
-  - [ ] Uninstall draggable behavior
-  - [ ] Remove from state
-  - [ ] Remove from layout
-  - [ ] Remove from `$._buttons`
+- [x] If the tile has been removed from the DOM
+  - [x] Clear constraints from the specified tile.
+  - [x] Uninstall draggable behavior
+  - [x] Remove from state
+  - [x] Remove from layout
+  - [x] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
-  - [ ] If there is a ghost tile
-    - [ ] Execute the procedure above for *Reverting a ghost tile*
-  - [ ] `.refreshNonOverlappingConstraints()`
-  - [ ] `._deferred_rearrange()`
-  - [ ] Trigger Tiles drag end event
-  - [ ] `._deferred_state_update_signal()`
-  - [ ] Return
+  - [x] If there is a ghost tile
+    - [x] Execute the procedure above for *Reverting a ghost tile*
+  - [x] `.refreshNonOverlappingConstraints()`
+  - [x] `._deferred_rearrange()`
+  - [x] Trigger Tiles drag end event
+  - [x] `._deferred_state_update_signal()`
+  - [x] Return
 - [ ] If grid snap resolves successfully to an existing area
   - [ ] Remove the ghost tile from the layout
   - [ ] Recreate the Cassowary solver for the respective group
