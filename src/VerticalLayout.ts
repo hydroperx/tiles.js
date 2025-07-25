@@ -87,7 +87,7 @@ export class VerticalLayout extends Layout {
       }
       accX += this.$._group_gap;
     }
-    if (offset.x > accX) {
+    if (offset.x > accX + this.$._small_size) {
       return null;
     }
 

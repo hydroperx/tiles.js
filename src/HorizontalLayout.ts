@@ -92,7 +92,7 @@ export class HorizontalLayout extends Layout {
       if (offset.x < group_horizontal_start - r) {
         return null;
       }
-      if (offset.x > group_horizontal_start + w) {
+      if (offset.x > group_horizontal_start + w + this.$._small_size) {
         // move on to the next group
         accX += w + this.$._group_gap;
         continue;
