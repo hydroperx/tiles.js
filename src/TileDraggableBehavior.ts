@@ -375,7 +375,59 @@ export class TileDraggableBehavior {
     // If grid snap failed
     } else {
       // Move the tile to the DOM back in the group it was.
-      fixme();
+      button.remove();
+      old_layout_group.div
+        .getElementsByClassName(this.$._class_names.groupTiles)[0]
+        .appendChild(button);
+
+      const xVar = new kiwi.Variable();
+      const yVar = new kiwi.Variable();
+      const w = getWidth(tile_state.size);
+      const h = getHeight(tile_state.size);
+      const layout_tile = new LayoutTile(old_layout_group, id, button, xVar, yVar, w, h);
+      old_layout_group.solver.addEditVariable(xVar, kiwi.Strength.strong);
+      old_layout_group.solver.addEditVariable(yVar, kiwi.Strength.strong);
+      old_layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
+      old_layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
+
+      // Put the tile back at the initial respective layout group
+      // (at the initial index it was (`drag_start.layoutIndex`)).
+      old_layout_group.tiles.splice(this._startLayoutIndex, 0, layout_tile);
+
+      // Undo drag position
+      button.style.inset = "";
+
+      // If there is a ghost tile, revert it.
+      if (this._ghostTile) this._revertGhostTile();
+
+      // Recreate Cassowary solver
+      old_layout_group.solver = new kiwi.Solver();
+
+      // Update every tile to reflect the old state;
+      // also refresh min/max constraints.
+      for (const tile of old_layout_group.tiles) {
+        tile.refreshMinConstraints();
+        tile.refreshMaxConstraints();
+        old_layout_group.solver.addEditVariable(tile.x, kiwi.Strength.weak);
+        old_layout_group.solver.addEditVariable(tile.y, kiwi.Strength.weak);
+        const oldTileState = this._startState!.tiles.get(tile.id);
+        if (oldTileState) {
+          old_layout_group.solver.suggestValue(tile.x, oldTileState.x);
+          old_layout_group.solver.suggestValue(tile.y, oldTileState.y);
+        } else {
+          // Keep any new tiles as they are, reflecting the current state.
+          const s = this.$._state.tiles.get(tile.id);
+          old_layout_group.solver.suggestValue(tile.x, s?.x ?? 0);
+          old_layout_group.solver.suggestValue(tile.y, s?.y ?? 0);
+        }
+      }
+      // Refresh non-overlapping constraints
+      old_layout_group.refreshNonOverlappingConstraints();
+
+      // Rearrange
+      this.$._deferred_rearrange();
+      // State update signal
+      this.$._deferred_state_update_signal();
     }
 
     // Trigger Tiles#dragend event

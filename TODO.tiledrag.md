@@ -6,8 +6,8 @@
 - [x] Save drag start (offset, old state and layoutIndex)
 - [x] While the tile is being dragged, it is moved out of the group div temporarily and appears a direct child of the Tiles container.
 - [x] Remove the tile from the layout.
-- [ ] Reset ghost tile caches
-- [ ] Reset grid snap caches
+- [x] Reset ghost tile caches
+- [x] Reset grid snap caches
 - [x] Set the `ATTR_DRAGGING` attribute to `"true"`.
 - [x] Trigger Tiles drag start event
 
@@ -18,7 +18,7 @@
 - [x] Patch the draggable position using `draggable.set(x, y)`
 - [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
   - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
-- [ ] Grid snap
+- [x] Grid snap
   - [x] Copy the logic for grid snapping from the previous version for determining at which group and X/Y a tile is dragging/dropping over. Cache the grid snap result.
   - [x] If grid snap resolves successfully to an existing area
     - [x] If ghost tile has already been created
@@ -88,17 +88,16 @@
   - [x] If the previous group is empty, remove it (from state/layout/DOM).
   - [x] Else call `._deferred_rearrange()` and `._deferred_state_update_signal()`
 - [x] Else
-  - [ ] Move the tile to the DOM back in the group it was.
-  - [ ] Put the tile back at the initial respective layout group (at the initial index it was (`drag_start.layoutIndex`)).
-  - [ ] Set `button.style.inset = "";`.
-  - [ ] If there is a ghost tile
-    - [ ] Execute the procedure above for *Reverting a ghost tile*
-  - [ ] Recreate the Cassowary solver for the respective group
-  - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-    - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
-    - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()`
-    - [ ] Use weak-suggestions for each tile's X/Y.
-  - [ ] `.refreshNonOverlappingConstraints()`
-  - [ ] `._deferred_rearrange()`
-  - [ ] `._deferred_state_update_signal()`
-- [ ] Trigger Tiles drag end event
+  - [x] Move the tile to the DOM back in the group it was.
+  - [x] Put the tile back at the initial respective layout group (at the initial index it was (`drag_start.layoutIndex`)).
+  - [x] Set `button.style.inset = "";`.
+  - [x] If there is a ghost tile
+    - [x] Execute the procedure above for *Reverting a ghost tile*
+  - [x] Recreate the Cassowary solver for the respective group
+  - [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
+    - [x] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()`
+    - [x] Use weak-suggestions for each tile's X/Y.
+  - [x] `.refreshNonOverlappingConstraints()`
+  - [x] `._deferred_rearrange()`
+  - [x] `._deferred_state_update_signal()`
+- [x] Trigger Tiles drag end event
