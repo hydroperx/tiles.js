@@ -242,7 +242,6 @@ export class TileDraggableBehavior {
 
     // If grid snap resolves successfully to an existing area
     if (!!this._gridSnap && !!this._gridSnap!.group) {
-      // 
       // Remove the ghost tile from the layout
       this._ghostTile!.remove();
 

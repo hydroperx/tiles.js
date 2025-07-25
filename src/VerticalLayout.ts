@@ -76,12 +76,12 @@ export class VerticalLayout extends Layout {
     if (offset_center_x < 0) {
       return null;
     }
-    for (; accX < groupsWidth; column++) {
+    g: for (; accX < groupsWidth; column++) {
       const groupStartX = accX;
       const groupEndX = accX + groupWidth;
       for (resultX = 0; accX < groupEndX; resultX++) {
         if (offset.x < accX + this.$._small_size/2) {
-          break;
+          break g;
         }
         accX += this.$._small_size + this.$._tile_gap;
       }
