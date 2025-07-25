@@ -68,7 +68,7 @@ export class HorizontalLayout extends Layout {
     }
     const vertical_start = accY;
     for (; accY < fullHeight; resultY++) {
-      if (offset.y < accY - this.$._small_size/2) {
+      if (offset.y < accY + this.$._small_size/2) {
         break;
       }
       accY += this.$._small_size + this.$._tile_gap;

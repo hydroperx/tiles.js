@@ -78,7 +78,7 @@ export class VerticalLayout extends Layout {
       const groupStartX = accX;
       const groupEndX = accX + groupWidth;
       for (resultX = 0; accX < groupEndX; resultX++) {
-        if (offset.x < accX - this.$._small_size/2) {
+        if (offset.x < accX + this.$._small_size/2) {
           break;
         }
         accX += this.$._small_size + this.$._tile_gap;
@@ -100,7 +100,7 @@ export class VerticalLayout extends Layout {
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
       const groupEndY = groupStartY + h;
       for (; accY < groupEndY; resultY++) {
-        if (offset.y < accY - this.$._small_size/2) {
+        if (offset.y < accY + this.$._small_size/2) {
           return {
             group: group.id,
             x: resultX,
