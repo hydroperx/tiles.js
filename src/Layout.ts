@@ -53,7 +53,7 @@ export type GridSnapResult = {
    * If requesting anonymous group(s), how many,
    * in a vertical container.
    */
-  column?: number,
+  createGroups?: number,
   /**
    * X coordinate in small tiles.
    */

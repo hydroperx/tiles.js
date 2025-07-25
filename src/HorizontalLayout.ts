@@ -109,7 +109,7 @@ export class HorizontalLayout extends Layout {
       // Request anonymous group
       return {
         group: undefined,
-        column: undefined,
+        createGroups: undefined,
         x: 0,
         y: resultY,
       };
@@ -118,7 +118,7 @@ export class HorizontalLayout extends Layout {
     // Result
     return {
       group: resultGroup,
-      column: undefined,
+      createGroups: undefined,
       x: resultX,
       y: resultY,
     };
