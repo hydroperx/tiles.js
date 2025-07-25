@@ -52,6 +52,7 @@ export class HorizontalLayout extends Layout {
   
     // Basics
     let accX = 0, accY = 0, resultX = 0, resultY = 0;
+    const r = this.$._small_size/2;
 
     // resultY
     const tilesHeight = this.$._height*this.$._small_size + (this.$._height - 1)*this.$._tile_gap;
@@ -67,13 +68,10 @@ export class HorizontalLayout extends Layout {
     }
     const vertical_start = accY;
     for (; accY < fullHeight; resultY++) {
-      if (offset_middle_y < accY) {
+      if (offset.y < accY - this.$._small_size/2) {
         break;
       }
-      if (accY != vertical_start) {
-        accY += this.$._tile_gap;
-      }
-      accY += this.$._small_size;
+      accY += this.$._small_size + this.$._tile_gap;
     }
     if (offset.y > accY) {
       return null;
@@ -82,7 +80,7 @@ export class HorizontalLayout extends Layout {
     let resultGroup: undefined | string = undefined;
 
     // resultX
-    const offset_center_x = offset.x + offset.w / 2;
+    const offset_center_x = offset.x + offset.w/2;
     if (offset_center_x < 0) {
       return null;
     }
@@ -91,25 +89,26 @@ export class HorizontalLayout extends Layout {
       const endX = accX + w;
       const group_horizontal_start = accX;
       resultGroup = group.id;
+      if (offset.x < group_horizontal_start - r) {
+        return null;
+      }
+      if (offset.x > group_horizontal_start + w) {
+        // move on to the next group
+        accX += w + this.$._group_gap;
+        continue;
+      }
       for (resultX = 0; accX < endX; resultX++) {
-        if (offset_center_x < accX) {
+        if (offset.x < accX + this.$._small_size/2) {
           break;
         }
-        if (accX != group_horizontal_start) {
-          accX += this.$._tile_gap;
-        }
-        accX += this.$._small_size;
+        accX += this.$._small_size + this.$._tile_gap;
       }
-      if (accX != 0) {
-        accX += this.$._group_gap;
-      }
-      accX += w;
+      accX += w + this.$._group_gap;
     }
     if (offset.x > accX) {
       // Request anonymous group
       return {
         group: undefined,
-        createGroups: undefined,
         x: 0,
         y: resultY,
       };
@@ -118,7 +117,6 @@ export class HorizontalLayout extends Layout {
     // Result
     return {
       group: resultGroup,
-      createGroups: undefined,
       x: resultX,
       y: resultY,
     };

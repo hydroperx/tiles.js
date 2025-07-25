@@ -45,15 +45,9 @@ export type GridSnapResult = {
   /**
    * Group ID.
    *
-   * If none, requests anonymous group(s)
-   * (always one for horizontal containers).
+   * If none, requests an anonymous group.
    */
   group?: string,
-  /**
-   * If requesting anonymous group(s), how many,
-   * in a vertical container.
-   */
-  createGroups?: number,
   /**
    * X coordinate in small tiles.
    */

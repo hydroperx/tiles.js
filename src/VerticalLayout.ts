@@ -64,7 +64,7 @@ export class VerticalLayout extends Layout {
 
     // Basics
     let resultX = 0, resultY = 0, accX = 0;
-    const column_y = new Map<number, number>();
+    const columnY = new Map<number, number>();
     let column = 0;
 
     // resultX
@@ -78,23 +78,45 @@ export class VerticalLayout extends Layout {
       const groupStartX = accX;
       const groupEndX = accX + groupWidth;
       for (resultX = 0; accX < groupEndX; resultX++) {
-        if (offset_center_x < accX) {
+        if (offset.x < accX - this.$._small_size/2) {
           break;
         }
-        if (accX != groupStartX) {
-          accX += this.$._tile_gap;
-        }
-        accX += this.$._small_size;
+        accX += this.$._small_size + this.$._tile_gap;
       }
-      if (accX != 0) {
-        accX += this.$._group_gap;
-      }
-      accX += groupWidth;
+      accX += this.$._group_gap;
     }
     if (offset.x > accX) {
       return null;
     }
 
-    fixme();
+    // resultY
+    const offset_middle_y = offset.y + offset.h/2;
+    for (let i = 0; i < this.groups.length; i++) {
+      const group = this.groups[i];
+      const column = i % this.$._inline_groups;
+      const groupStartY = columnY.get(column) ?? 0;
+      let accY = groupStartY + this.$._label_height + this.$._tile_gap;
+      const groupInnerStartY = accY;
+      const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      const groupEndY = groupStartY + h;
+      for (; accY < groupEndY; resultY++) {
+        if (offset.y < accY - this.$._small_size/2) {
+          return {
+            group: group.id,
+            x: resultX,
+            y: resultY,
+          };
+        }
+        accY += this.$._small_size + this.$._tile_gap;
+      }
+      columnY.set(column, groupStartY + h + this.$._group_gap);
+    }
+
+    // Request an anonymous group
+    return {
+      group: undefined,
+      x: 0,
+      y: 0,
+    };
   }
 }
