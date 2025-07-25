@@ -61,7 +61,7 @@ export class HorizontalLayout extends Layout {
     // skip gap between the label and tile divs.
     accY += this.$._tile_gap;
     // offset-Y check 1
-    const offset_middle_y = offset.y + offset.h / 2;
+    const offset_middle_y = offset.y + offset.h/2;
     if (offset_middle_y < accY) {
       return null;
     }

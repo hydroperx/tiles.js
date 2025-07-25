@@ -388,7 +388,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     assert(this._dir == "vertical", "Tiles.inlineGroupsAvailable() can only be called on vertical layouts.");
     const unitMatch = width.match(/(px|em)$/i);
     assert(!!unitMatch, "Tiles.inlineGroupsAvailable() takes a width with a 'px' or 'em' unit.");
-    const unit = unitMatch[1];
+    const unit = unitMatch[1].toLowerCase();
     let w = parseFloat(width);
     // convert px to em
     if (unit == "px") {
@@ -397,9 +397,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     let r: number = 0;
     for (let acc: number = 0; acc < w; r++) {
       if (acc != 0) {
-        acc += this._tile_gap;
+        acc += this._group_gap;
       }
-      acc += this._group_width;
+      acc += this._group_width*this._small_size + (this._group_width-1)*this._group_gap;
     }
     return r;
   }
