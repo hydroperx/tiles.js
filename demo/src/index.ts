@@ -1,0 +1,72 @@
+import { Tiles } from "@hydroperx/tiles";
+
+const container = document.querySelector("#container")!;
+
+const tiles = new Tiles({
+  element: container,
+  direction: "horizontal",
+  classNames: {
+    group: "group",
+    groupLabel: "group-label",
+    groupLabelText: "group-label-text",
+    groupTiles: "group-tiles",
+    tile: "tile",
+    tileContent: "tile-content",
+  },
+  smallSize: 3.625,
+  tileGap: 0.6,
+  groupGap: 9,
+  labelHeight: 2,
+  height: 6,
+});
+
+tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
+  switch (tile.id) {
+    case "tile1": {
+      button.style.background = "red";
+      break;
+    }
+    case "tile2": {
+      button.style.background = "green";
+      break;
+    }
+    case "tile3": {
+      button.style.background = "blue";
+      break;
+    }
+  }
+});
+
+tiles.addGroup({
+  id: "group1",
+  label: "Group 1",
+});
+
+tiles.addTile({
+  id: "tile1",
+  group: "group1",
+  x: 0,
+  y: 0,
+  size: "large",
+});
+
+tiles.addTile({
+  id: "tile2",
+  group: "group1",
+  x: 0,
+  y: 4,
+  size: "wide",
+});
+
+tiles.addGroup({
+  id: "group2",
+  label: "Group 2",
+});
+
+tiles.addTile({
+  id: "tile3",
+  group: "group2",
+  x: 0,
+  y: 0,
+  size: "small",
+});

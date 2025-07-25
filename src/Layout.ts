@@ -108,7 +108,7 @@ export class LayoutGroup {
         const yConstraint = new kiwi.Constraint(a.y.plus(a.height), kiwi.Operator.Ge, b.y);
 
         this.solver.addConstraint(xConstraint);
-        this.solver.addConstraint(xConstraint);
+        this.solver.addConstraint(yConstraint);
 
         a.nonOverlappingConstraints.push(xConstraint, yConstraint);
       }

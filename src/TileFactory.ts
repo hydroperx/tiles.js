@@ -67,6 +67,7 @@ export class TileFactory {
     button.setAttribute(Attributes.ATTR_DRAGGING, "false");
     button.setAttribute(Attributes.ATTR_SIZE, size);
     button.style.position = "absolute";
+    button.style.boxSizing = "border-box";
     button.style.width = this.$._tile_em[size].w + "em";
     button.style.height = this.$._tile_em[size].h + "em";
     group_tiles_div.appendChild(button);
@@ -75,6 +76,7 @@ export class TileFactory {
     // Tile content div
     const content_div = document.createElement("div");
     content_div.classList.add(this.$._class_names.tileContent);
+    content_div.style.boxSizing = "border-box";
     content_div.style.width = "100%";
     content_div.style.height = "100%";
     button.appendChild(content_div);
@@ -128,6 +130,6 @@ export class TileFactory {
 
   // Removes a tile.
   public remove(id: string) {
-    fixme();
+    throw new Error("removing not tiles implemented.");
   }
 }
