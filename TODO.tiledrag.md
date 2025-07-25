@@ -19,39 +19,40 @@
 - [ ] In a horizontal container, if dragging tile far orthogonal axis, then switch to far view.
   - [ ] After that, if dragging the tile back to the center, switch back to near view and scroll smoothly to the closest group (look at the Tiles container's nearest horizontally-scrollable parent).
 - [ ] Grid snap
-  - [ ] Copy the logic for grid snapping from the previous version for determining at which group and X/Y a tile is dragging/dropping over. Cache the grid snap result.
-  - [ ] If grid snap resolves successfully to an existing area
-    - [ ] If ghost tile has already been created
-      - [ ] Require a X/Y change threshold (of 1 small tile) to continue procedures from here on
-      - [ ] Execute the procedure below for *Reverting a ghost tile*
-    - [ ] Insert a ghost tile without button at the layout
-    - [ ] Suggest a strong-strength value for the X/Y of that ghost tile
-    - [ ] `.refreshNonOverlappingConstraints()`
-    - [ ] `._deferred_rearrange()`
-  - [ ] Else
-    - [ ] If ghost tile has been created
-      - [ ] Execute the procedure below for *Reverting a ghost tile*
-      - [ ] `.refreshNonOverlappingConstraints()`
-      - [ ] `._deferred_rearrange()`
-- [ ] Trigger Tiles drag event (regardless of ghost X/Y threshold)
+  - [x] Copy the logic for grid snapping from the previous version for determining at which group and X/Y a tile is dragging/dropping over. Cache the grid snap result.
+  - [x] If grid snap resolves successfully to an existing area
+    - [x] If ghost tile has already been created
+      - [x] Require a X/Y change threshold (of 1 small tile) to continue procedures from here on
+      - [x] Execute the procedure below for *Reverting a ghost tile*
+    - [x] Insert a ghost tile without button at the layout
+    - [x] Suggest a strong-strength value for the X/Y of that ghost tile
+    - [x] `.refreshNonOverlappingConstraints()`
+    - [x] `._deferred_rearrange()`
+  - [x] Else
+    - [x] If ghost tile has been created
+      - [x] Execute the procedure below for *Reverting a ghost tile*
+      - [x] `.refreshNonOverlappingConstraints()`
+      - [x] `._deferred_rearrange()`
+- [x] Trigger Tiles drag event (regardless of ghost X/Y threshold)
 
 *Reverting a ghost tile*
 
-- [ ] Remove it from the layout
-- [ ] Recreate the Cassowary solver for the respective group
-- [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the layout group
-- [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-  - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
-  - [ ] Use weak-suggestions for each tile's X/Y.
+- [x] Remove it from the layout
+- [x] Recreate the Cassowary solver for the respective group
+- [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
+  - [x] `.refreshMinConstraints()` and `.refreshMaxConstraints()`
+  - [x] Use weak-suggestions for each tile's X/Y.
+- [x] `.refreshNonOverlappingConstraints()`
+- [x] Clear the ghost tile cache.
 
 # Drag end
 
-- [ ] If `ATTR_DRAGGING` is not `"true"`
+- [x] If `ATTR_DRAGGING` is not `"true"`
   - Return.
-- [ ] Set `.style.pointerEvents = "";` for the entire Tiles container.
-- [ ] Set `.style.pointerEvents = "";` for the tile's button itself.
-- [ ] Set `.style.zIndex = "";` for the tile's button.
-- [ ] Set the `ATTR_DRAGGING` attribute to `"false"`.
+- [x] Set `.style.pointerEvents = "";` for the entire Tiles container.
+- [x] Set `.style.pointerEvents = "";` for the tile's button itself.
+- [x] Set `.style.zIndex = "";` for the tile's button.
+- [x] Remove the `ATTR_DRAGGING` attribute.
 - [ ] If the tile has been removed from the DOM
   - [ ] Clear constraints from the specified tile.
   - [ ] Uninstall draggable behavior
@@ -104,12 +105,13 @@
   - [ ] Set `button.style.inset = "";`.
   - [ ] If there is a ghost tile
     - [ ] Execute the procedure above for *Reverting a ghost tile*
-  - [ ] Else
-    - [ ] Recreate the Cassowary solver for the respective group
-    - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
-    - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-      - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
-      - [ ] Use weak-suggestions for each tile's X/Y.
+  - [ ] Recreate the Cassowary solver for the respective group
+  - [ ] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
+    - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
+    - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()`
+    - [ ] Use weak-suggestions for each tile's X/Y.
+    - [ ] Update state X/Y
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
+  - [ ] `._deferred_state_update_signal()`
 - [ ] Trigger Tiles drag end event
