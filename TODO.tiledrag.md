@@ -36,7 +36,6 @@
 *Reverting a ghost tile*
 
 - [x] Remove it from the layout
-- [x] Recreate the Cassowary solver for the respective group
 - [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
   - [x] Use weak-suggestions for each tile's X/Y.
 - [x] Clear the ghost tile cache.
@@ -62,7 +61,6 @@
   - [x] Return
 - [x] If grid snap resolves successfully to an existing area
   - [x] Remove the ghost tile from the layout
-  - [x] Recreate the Cassowary solver for the respective group
   - [x] Put the tile in the new layout group
   - [x] Move the tile to the new group's tilesDiv DOM.
   - [x] Set `button.style.inset = "";`.
@@ -86,7 +84,6 @@
   - [x] Set `button.style.inset = "";`.
   - [x] If there is a ghost tile
     - [x] Execute the procedure above for *Reverting a ghost tile*
-  - [x] Recreate the Cassowary solver for the respective group
   - [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
     - [x] Use weak-suggestions for each tile's X/Y.
   - [x] `._deferred_rearrange()`

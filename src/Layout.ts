@@ -109,6 +109,13 @@ export class LayoutGroup {
   }
 
   /**
+   * Returns whether the group is empty or not.
+   */
+  public isEmpty(): boolean {
+    return this._tiles.size == 0;
+  }
+
+  /**
    * Layout size in small tiles unit (1x1).
    */
   public getLayoutSize(): { width: number; height: number } {
@@ -259,7 +266,7 @@ export class LayoutTile {
 
   /**
    * Removes the tile from the parent `LayoutGroup`.
-   * This method does not, however, remove the tiel
+   * This method does not, however, remove the tile
    * from the overall state.
    */
   public remove(): void {

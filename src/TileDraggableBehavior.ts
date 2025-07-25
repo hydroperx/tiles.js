@@ -1,4 +1,5 @@
 // Third-party imports
+import assert from "assert";
 import getRectangleOverlap from "rectangle-overlap";
 import Draggable from "@hydroperx/draggable";
 import getOffset from "getoffset";
@@ -167,6 +168,7 @@ export class TileDraggableBehavior {
         // If can't add ghost tile, cancel it.
         if (!this._ghostTile!.addTo(layout_group, this._gridSnap!.x, this._gridSnap!.y, w, h)) {
           this._ghostTile = null;
+          this._gridSnap = null;
         }
         this.$._deferred_rearrange();
       }
@@ -242,24 +244,22 @@ export class TileDraggableBehavior {
     if (!!this._gridSnap && !!this._gridSnap!.group) {
       // 
       // Remove the ghost tile from the layout
-      this._ghostTile!.$.tiles.splice(this._ghostTile!.$.tiles.indexOf(this._ghostTile!));
+      this._ghostTile!.remove();
 
       // New layout group
       const layout_group = this.$._layout.groups.find(group => group.id == this._gridSnap!.group)!;
 
-      // Recreate the Cassowary solver for the respective group
-      layout_group.solver = new kiwi.Solver();
-
       // Create LayoutTile
-      const xVar = new kiwi.Variable();
-      const yVar = new kiwi.Variable();
       const size = tile_state.size;
       const w = getWidth(size);
       const h = getHeight(size);
-      const layout_tile = new LayoutTile(layout_group, id, button, xVar, yVar, w, h);
+      const layout_tile = new LayoutTile(id, button);
 
       // Put the tile in the snap-match layout group
-      layout_group.tiles.push(layout_tile);
+      assert(
+        layout_tile.addTo(layout_group, this._gridSnap!.x, this._gridSnap!.y, w, h),
+        "Grid snapping failure."
+      );
 
       // Move the tile to the snap-match group's tilesDiv DOM.
       button.remove();
@@ -274,26 +274,17 @@ export class TileDraggableBehavior {
       tile_state.group = this._gridSnap!.group;
 
       // Iterate tiles
-      for (const tile_2 of layout_group.tiles) {
+      for (const tile_2 of layout_group.getTiles()) {
         // For any other tile
         if (layout_tile != tile_2) {
-          // Suggest X/Y weakly reflecting the current state.
+          // Move X/Y reflecting the current state.
           const tile_state = this.$._state.tiles.get(tile_2.id)!;
-          layout_group.solver.addEditVariable(tile_2.x, kiwi.Strength.weak);
-          layout_group.solver.addEditVariable(tile_2.y, kiwi.Strength.weak);
-          layout_group.solver.suggestValue(tile_2.x, tile_state.x);
-          layout_group.solver.suggestValue(tile_2.y, tile_state.y);
+          tile_2.move(tile_state.x, tile_state.y);
         }
       }
 
-      // Suggest X/Y weakly for the layout tile
-      layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
-      layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
-      layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
-      layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
-
       // If the previous group is empty, remove it.
-      if (old_layout_group.tiles.length == 0) {
+      if (old_layout_group.isEmpty()) {
         this.$.removeGroup(old_layout_group.id);
       // Rearrange/state update
       } else {
@@ -310,15 +301,16 @@ export class TileDraggableBehavior {
       const layout_group = this.$._layout.groups.find(groupA => groupA.id == group)!;
 
       // Create LayoutTile
-      const xVar = new kiwi.Variable();
-      const yVar = new kiwi.Variable();
       const size = tile_state.size;
       const w = getWidth(size);
       const h = getHeight(size);
-      const layout_tile = new LayoutTile(layout_group, id, button, xVar, yVar, w, h);
+      const layout_tile = new LayoutTile(id, button);
 
       // Put the tile in the new layout group
-      layout_group.tiles.push(layout_tile);
+      assert(
+        layout_tile.addTo(layout_group, this._gridSnap!.x,this._gridSnap!.y, w, h),
+        "Grid-snapping failed."
+      );
 
       // Move the tile to the new group's tilesDiv DOM.
       button.remove();
@@ -332,14 +324,8 @@ export class TileDraggableBehavior {
       // Set the tile state's group field.
       tile_state.group = group;
 
-      // Suggest X/Y weakly for the layout tile
-      layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
-      layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
-      layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
-      layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
-
       // If the previous group is empty, remove it.
-      if (old_layout_group.tiles.length == 0) {
+      if (old_layout_group.isEmpty()) {
         this.$.removeGroup(old_layout_group.id);
       // Rearrange/state update
       } else {
@@ -354,17 +340,16 @@ export class TileDraggableBehavior {
         .getElementsByClassName(this.$._class_names.groupTiles)[0]
         .appendChild(button);
 
-      const xVar = new kiwi.Variable();
-      const yVar = new kiwi.Variable();
       const w = getWidth(tile_state.size);
       const h = getHeight(tile_state.size);
-      const layout_tile = new LayoutTile(old_layout_group, id, button, xVar, yVar, w, h);
-      old_layout_group.solver.addEditVariable(xVar, kiwi.Strength.strong);
-      old_layout_group.solver.addEditVariable(yVar, kiwi.Strength.strong);
+      const layout_tile = new LayoutTile(id, button);
+      const old_tile_state = this._startState!.tiles.get(id)!;
 
-      // Put the tile back at the initial respective layout group
-      // (at the initial index it was (`drag_start.layoutIndex`)).
-      old_layout_group.tiles.splice(this._startLayoutIndex, 0, layout_tile);
+      // Put the tile back at the initial respective layout group.
+      // If it fails, insert it at the last position then.
+      if (!layout_tile.addTo(old_layout_group, old_tile_state.x, old_tile_state.y, w, h)) {
+        layout_tile.addTo(old_layout_group, null, null, w, h);
+      }
 
       // Undo drag position
       button.style.inset = "";
@@ -372,22 +357,15 @@ export class TileDraggableBehavior {
       // If there is a ghost tile, revert it.
       if (this._ghostTile) this._revertGhostTile();
 
-      // Recreate Cassowary solver
-      old_layout_group.solver = new kiwi.Solver();
-
       // Update every tile to reflect the old state.
-      for (const tile of old_layout_group.tiles) {
-        old_layout_group.solver.addEditVariable(tile.x, kiwi.Strength.weak);
-        old_layout_group.solver.addEditVariable(tile.y, kiwi.Strength.weak);
+      for (const tile of old_layout_group.getTiles()) {
         const oldTileState = this._startState!.tiles.get(tile.id);
         if (oldTileState) {
-          old_layout_group.solver.suggestValue(tile.x, oldTileState.x);
-          old_layout_group.solver.suggestValue(tile.y, oldTileState.y);
+          tile.move(oldTileState.x, oldTileState.y);
         } else {
           // Keep any new tiles as they are, reflecting the current state.
           const s = this.$._state.tiles.get(tile.id);
-          old_layout_group.solver.suggestValue(tile.x, s?.x ?? 0);
-          old_layout_group.solver.suggestValue(tile.y, s?.y ?? 0);
+          tile.move(s?.x ?? 0, s?.y ?? 0);
         }
       }
 
@@ -405,24 +383,18 @@ export class TileDraggableBehavior {
 
   // Reverts the ghost tile created automatically from grid snapping.
   private _revertGhostTile(): void {
-    const layout_group = this._ghostTile!.$;
+    const layout_group = this._ghostTile!.$!;
     // Remove it from the layout
-    layout_group.tiles.splice(layout_group.tiles.indexOf(this._ghostTile!), 1);
-    // Recreate the Cassowary solver for the respective group
-    layout_group.solver = new kiwi.Solver();
+    this._ghostTile!.remove();
     // Update every tile to reflect the old state.
-    for (const tile of layout_group.tiles) {
-      layout_group.solver.addEditVariable(tile.x, kiwi.Strength.weak);
-      layout_group.solver.addEditVariable(tile.y, kiwi.Strength.weak);
+    for (const tile of layout_group.getTiles()) {
       const oldTileState = this._startState!.tiles.get(tile.id);
       if (oldTileState) {
-        layout_group.solver.suggestValue(tile.x, oldTileState.x);
-        layout_group.solver.suggestValue(tile.y, oldTileState.y);
+        tile.move(oldTileState.x, oldTileState.y);
       } else {
         // Keep any new tiles as they are, reflecting the current state.
         const s = this.$._state.tiles.get(tile.id);
-        layout_group.solver.suggestValue(tile.x, s?.x ?? 0);
-        layout_group.solver.suggestValue(tile.y, s?.y ?? 0);
+        tile.move(s?.x ?? 0, s?.y ?? 0);
       }
     }
 

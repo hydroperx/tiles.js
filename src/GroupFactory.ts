@@ -75,7 +75,11 @@ export class GroupFactory {
     div.appendChild(tilesDiv);
 
     // Layout group
-    const layout_group = new LayoutGroup(this.$._layout, id, div);
+    const layout_group = new LayoutGroup(
+      this.$._layout, id, div,
+      this.$._dir == "vertical" ? this.$._group_width : undefined,
+      this.$._dir == "horizontal" ? this.$._height : undefined
+    );
     this.$._layout.groups.push(layout_group);
     this.$._deferred_rearrange();
 
