@@ -146,7 +146,7 @@ export class TileDraggableBehavior {
     this._gridSnap = this.$._layout.snapToGrid(button);
 
     // If grid snap resolves successfully to an existing area
-    if (this._gridSnap!.group) {
+    if (!!this._gridSnap && this._gridSnap!.group) {
       let thresholdMet = true;
 
       // If ghost tile has already been created
@@ -387,8 +387,6 @@ export class TileDraggableBehavior {
       const layout_tile = new LayoutTile(old_layout_group, id, button, xVar, yVar, w, h);
       old_layout_group.solver.addEditVariable(xVar, kiwi.Strength.strong);
       old_layout_group.solver.addEditVariable(yVar, kiwi.Strength.strong);
-      old_layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
-      old_layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
 
       // Put the tile back at the initial respective layout group
       // (at the initial index it was (`drag_start.layoutIndex`)).
