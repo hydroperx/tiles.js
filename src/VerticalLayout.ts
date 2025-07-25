@@ -40,7 +40,7 @@ export class VerticalLayout extends Layout {
       const column = i % this.$._inline_groups;
       const left = (column * this.$._group_width + column * this.$._group_gap) + "em";
       const top = column_y.get(column)! + "em";
-      group.div.style.transform = `translateX(${left}) translateY(${top})`;
+      group.div.style.transform = `translateX(${left}em) translateY(${top}em)`;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
       parent_h += h;
       column_y.set(column, h + this.$._group_gap);

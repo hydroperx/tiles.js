@@ -74,7 +74,7 @@ export class TileDraggableBehavior {
 
     // Find the corresponding state, layout group and its index
     const state = this.$._state.tiles.get(id);
-    const layout_group = this.$._layout.groups.find(g => !!g.tiles.find(t => t.id == id))!;
+    const layout_group = this.$._layout.groups.find(g => g.tiles.some(t => t.id == id))!;
     const layout_tile = layout_group.tiles.find(t => t.id == id)!;
     const layout_index = layout_group.tiles.indexOf(layout_tile);
 

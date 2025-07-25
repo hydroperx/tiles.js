@@ -31,7 +31,7 @@ export class HorizontalLayout extends Layout {
       group.rearrange();
 
       // Reposition group
-      group.div.style.transform = `translateX(${x_em}) translateY(0)`;
+      group.div.style.transform = `translateX(${x_em}em) translateY(0)`;
       const width_em = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
       parent_w_em += width_em;
       x_em += width_em + this.$._group_gap;

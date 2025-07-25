@@ -204,7 +204,7 @@ export class LayoutGroup {
     const group_tiles_div = this.div.getElementsByClassName(this.$.$._class_names.groupTiles)[0] as HTMLElement;
     let min_w = 0;
     if (this.$.$._dir == "horizontal") {
-      min_w = 18;
+      min_w = 10;
     }
     group_tiles_div.style.width = Math.max(min_w, tiles_width_em) + "em";
     group_tiles_div.style.height = tiles_height_em + "em";
