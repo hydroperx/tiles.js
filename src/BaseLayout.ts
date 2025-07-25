@@ -1,19 +1,24 @@
-export type BaseTile = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-class Tile implements BaseTile {
-  constructor(
+/**
+ * A tile in the `BaseLayout` class.
+ */
+export class BaseTile {
+  /**
+   * @param x X coordinate in small tiles unit (1x1).
+   * @param y Y coordinate in small tiles unit (1x1).
+   * @param width Width in small tiles unit (1x1).
+   * @param height Height in small tiles unit (1x1).
+   */
+  public constructor(
     public x: number,
     public y: number,
     public width: number,
     public height: number
   ) {}
 
-  intersects(other: Tile): boolean {
+  /**
+   * Checks whetehr two tiles intersect.
+   */
+  public intersects(other: BaseTile): boolean {
     return !(
       this.x + this.width <= other.x ||
       this.x >= other.x + other.width ||
@@ -22,26 +27,61 @@ class Tile implements BaseTile {
     );
   }
 
-  clone(): Tile {
-    return new Tile(this.x, this.y, this.width, this.height);
+  /**
+   * Clones tile data.
+   */
+  public clone(): BaseTile {
+    return new BaseTile(this.x, this.y, this.width, this.height);
   }
 }
 
+/**
+ * A layout mimmicking the Windows 8 or 10's live tile layout.
+ *
+ * Tiles have a minimum position of (0, 0), and the maximum
+ * position is either infinite, or:
+ * 
+ * - If `width` is given in the constructor, maximum X = `width`.
+ * - If `height` is given in the constructor, maximum Y = `height`.
+ */
 export class BaseLayout {
-  public tiles: Map<string, Tile> = new Map();
+  /**
+   * Tile data.
+   */
+  public tiles: Map<string, BaseTile> = new Map();
+
+  /**
+   * Maximum width.
+   */
   private maxWidth?: number;
+
+  /**
+   * Maximum height.
+   */
   private maxHeight?: number;
 
-  constructor({ width, height }: { width?: number; height?: number }) {
+  /**
+   * Constructor.
+   * 
+   * - A `width` may be specified to limit how far tiles can go horizontally.
+   * - A `height` may be specified to limit how far tiles can go vertically.
+   */
+  public constructor({ width, height }: { width?: number; height?: number }) {
     this.maxWidth = width;
     this.maxHeight = height;
   }
 
-  hasTile(id: string): boolean {
+  /**
+   * Returns whether a specific tile exists.
+   */
+  public hasTile(id: string): boolean {
     return this.tiles.has(id);
   }
 
-  getLayoutSize(): { width: number; height: number } {
+  /**
+   * Returns the size of the layout in small tile units (1x1).
+   */
+  public getLayoutSize(): { width: number; height: number } {
     let maxX = 0;
     let maxY = 0;
     for (const tile of this.tiles.values()) {
@@ -51,8 +91,19 @@ export class BaseLayout {
     return { width: maxX, height: maxY };
   }
 
-  addTile(id: string, x: number | null, y: number | null, width: number, height: number): boolean {
-    const newTile = new Tile(x ?? 0, y ?? 0, width, height);
+  /**
+   * Attempts to add a tile, shifting any overlapping tiles as needed.
+   *
+   * If `x` and `y` are given as `null`, then this method always succeeds,
+   * as the tile will be added into the best last position.
+   * 
+   * @param x X coordinate in small tiles unit (1x1), or `null`.
+   * @param y Y coordinate in small tiles unit (1x1), or `null`.
+   * @throws A TypeError if either x or y are null, but not both are null.
+   * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
+   */
+  public addTile(id: string, x: number | null, y: number | null, width: number, height: number): boolean {
+    const newTile = new BaseTile(x ?? 0, y ?? 0, width, height);
     if (x === null || y === null) {
       if ((x === null && y !== null) || (x !== null && y === null)) {
         throw new TypeError("If either x or y are null, then both must be null.");
@@ -71,7 +122,14 @@ export class BaseLayout {
     return false;
   }
 
-  moveTile(id: string, x: number, y: number): boolean {
+  /**
+   * Attempts to move a tile, shifting overlapping tiles as needed.
+   *
+   * @param x X coordinate in small tiles unit (1x1).
+   * @param y Y coordinate in small tiles unit (1x1).
+   * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
+   */
+  public moveTile(id: string, x: number, y: number): boolean {
     const tile = this.tiles.get(id);
     if (!tile) return false;
 
@@ -85,7 +143,12 @@ export class BaseLayout {
     return false;
   }
 
-  resizeTile(id: string, width: number, height: number): boolean {
+  /**
+   * Attempts to resize a tile, shifting overlapping tiles as needed.
+   *
+   * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
+   */
+  public resizeTile(id: string, width: number, height: number): boolean {
     const tile = this.tiles.get(id);
     if (!tile) return false;
 
@@ -99,22 +162,33 @@ export class BaseLayout {
     return false;
   }
 
-  removeTile(id: string): void {
+  /**
+   * Removes a tile, pushing any bottom-located neighbours at fitting horizontal line
+   * towards the removed tile.
+   */
+  public removeTile(id: string): void {
     const removed = this.tiles.get(id);
     if (!removed) return;
     this.tiles.delete(id);
 
+    // Push horizontally-fitting bottom neighbours.
     for (const [tid, tile] of this.tiles) {
-      if (tile.y > removed.y) {
+      if (tile.y > removed.y && tile.x >= removed.x && tile.x + tile.width <= removed.x + removed.width) {
         tile.y = Math.max(0, tile.y - removed.height);
       }
     }
   }
 
-  clear(): void {
+  /**
+   * Clears everything.
+   */
+  public clear(): void {
     this.tiles.clear();
   }
 
+  // Resolve overlapping tiles of a target tile by shifting them
+  // somewhere else, and ensures the target tile is within
+  // bounds.
   private resolveConflicts(targetId: string): boolean {
     const toCheck = [targetId];
     const moved = new Set<string>();
@@ -148,11 +222,12 @@ export class BaseLayout {
     return true;
   }
 
+  // Finds a best last position.
   private findBestPosition(width: number, height: number): { x: number; y: number } {
     let y = 0;
     while (true) {
       for (let x = 0; !this.maxWidth || x + width <= this.maxWidth; x++) {
-        const testTile = new Tile(x, y, width, height);
+        const testTile = new BaseTile(x, y, width, height);
         if (![...this.tiles.values()].some(t => t.intersects(testTile))) {
           return { x, y };
         }
@@ -163,15 +238,15 @@ export class BaseLayout {
     return { x: 0, y: 0 }; // fallback
   }
 
-  private snapshot(): Map<string, Tile> {
+  // Returns a copy of the tile data.
+  private snapshot(): Map<string, BaseTile> {
     return new Map(
       [...this.tiles.entries()].map(([id, tile]) => [id, tile.clone()])
     );
   }
 
-  private restoreSnapshot(snapshot: Map<string, Tile>): void {
+  // Restore tile data.
+  private restoreSnapshot(snapshot: Map<string, BaseTile>): void {
     this.tiles = new Map(snapshot);
   }
 }
-
-export default BaseLayout;
