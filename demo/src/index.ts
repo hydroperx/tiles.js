@@ -4,7 +4,7 @@ const container = document.querySelector("#container")!;
 
 const tiles = new Tiles({
   element: container,
-  direction: "horizontal",
+  direction: "vertical",
   classNames: {
     group: "group",
     groupLabel: "group-label",
@@ -15,7 +15,7 @@ const tiles = new Tiles({
   },
   smallSize: 3.625,
   tileGap: 0.6,
-  groupGap: 9,
+  groupGap: 3,
   labelHeight: 2,
   height: 6,
 });
@@ -45,16 +45,12 @@ tiles.addGroup({
 tiles.addTile({
   id: "tile1",
   group: "group1",
-  x: 0,
-  y: 0,
   size: "large",
 });
 
 tiles.addTile({
   id: "tile2",
   group: "group1",
-  x: 0,
-  y: 4,
   size: "wide",
 });
 
@@ -66,7 +62,5 @@ tiles.addGroup({
 tiles.addTile({
   id: "tile3",
   group: "group2",
-  x: 0,
-  y: 0,
   size: "small",
 });
