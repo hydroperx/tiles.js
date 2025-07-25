@@ -1,6 +1,5 @@
 // third-party imports
 import assert from "assert";
-import * as kiwi from "@lume/kiwi";
 
 // local imports
 import {
@@ -15,6 +14,7 @@ import { TileDraggableBehavior } from "./TileDraggableBehavior";
 import type { Tiles, AddTileParams } from "./Tiles";
 import * as Attributes from "./Attributes";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
+import { BaseLayout } from "./BaseLayout";
 
 /**
  * Tile factory.
@@ -26,7 +26,7 @@ export class TileFactory {
   }
 
   // Adds a tile.
-  public add(params: AddTileParams) {
+  public add(params: AddTileParams): boolean {
     // First assertions
     if (params.group) {
       assert(this.$._state.groups.has(params.group), `Group ${params.group} does not exist.`);
@@ -55,12 +55,6 @@ export class TileFactory {
     // Size
     const size = params.size ?? "medium";
 
-    // Group div
-    const group_div = Array.from(this.$._container.getElementsByClassName(this.$._class_names.group))
-      .find(div => div.getAttribute(Attributes.ATTR_ID) == group)! as HTMLDivElement;
-    const group_tiles_div = group_div.getElementsByClassName(this.$._class_names.groupTiles)[0];
-
-    // Button
     const button = document.createElement("button");
     button.classList.add(this.$._class_names.tile);
     button.setAttribute(Attributes.ATTR_ID, params.id);
@@ -70,6 +64,29 @@ export class TileFactory {
     button.style.boxSizing = "border-box";
     button.style.width = this.$._tile_em[size].w + "em";
     button.style.height = this.$._tile_em[size].h + "em";
+
+    // Contribute to layout
+    const layout_group = this.$._layout.groups.find(g => g.id == group)!;
+    const layout_tile = new LayoutTile(
+      params.id, // tile ID
+      button
+    );
+    if (!layout_tile.addTo(
+      layout_group, // LayoutGroup
+      params.x ?? null,
+      params.y ?? null,
+      getWidth(size), // width
+      getHeight(size) // height
+    )) {
+      return false;
+    }
+
+    // Group div
+    const group_div = Array.from(this.$._container.getElementsByClassName(this.$._class_names.group))
+      .find(div => div.getAttribute(Attributes.ATTR_ID) == group)! as HTMLDivElement;
+    const group_tiles_div = group_div.getElementsByClassName(this.$._class_names.groupTiles)[0];
+
+    // Contribute button
     group_tiles_div.appendChild(button);
     this.$._buttons.set(params.id, button);
 
@@ -89,26 +106,6 @@ export class TileFactory {
       group,
     });
 
-    // Contribute to layout
-    const layout_group = this.$._layout.groups.find(g => g.id == group)!;
-    const x_var = new kiwi.Variable();
-    const y_var = new kiwi.Variable();
-    const layout_tile = new LayoutTile(
-      layout_group, // LayoutGroup
-      params.id, // tile ID
-      button,
-      x_var,
-      y_var,
-      getWidth(size), // width
-      getHeight(size) // height
-    );
-    layout_group.tiles.push(layout_tile);
-    layout_group.solver.addEditVariable(x_var, kiwi.Strength.weak);
-    layout_group.solver.addEditVariable(y_var, kiwi.Strength.weak);
-    layout_group.solver.suggestValue(x_var, params.x ?? 0);
-    layout_group.solver.suggestValue(y_var, params.y ?? 0);
-    layout_group.refreshNonOverlappingConstraints();
-
     // Install Draggable behavior
     if (this.$._drag_enabled) {
       new TileDraggableBehavior(this.$, params.id).install();
@@ -126,10 +123,14 @@ export class TileFactory {
         detail: { tile: layout_tile, button, contentDiv: content_div },
       }),
     );
+
+    // Result
+    return true;
   }
 
   // Removes a tile.
   public remove(id: string) {
-    throw new Error("removing not tiles implemented.");
+    fixme();
+    // throw new Error("removing not tiles implemented.");
   }
 }

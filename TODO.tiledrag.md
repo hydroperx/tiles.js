@@ -26,12 +26,10 @@
       - [x] Execute the procedure below for *Reverting a ghost tile*
     - [x] Insert a ghost tile without button at the layout
     - [x] Suggest a strong-strength value for the X/Y of that ghost tile
-    - [x] `.refreshNonOverlappingConstraints()`
     - [x] `._deferred_rearrange()`
   - [x] Else
     - [x] If ghost tile has been created
       - [x] Execute the procedure below for *Reverting a ghost tile*
-      - [x] `.refreshNonOverlappingConstraints()`
       - [x] `._deferred_rearrange()`
 - [x] Trigger Tiles drag event (regardless of ghost X/Y threshold)
 
@@ -40,9 +38,7 @@
 - [x] Remove it from the layout
 - [x] Recreate the Cassowary solver for the respective group
 - [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-  - [x] `.refreshMinConstraints()` and `.refreshMaxConstraints()`
   - [x] Use weak-suggestions for each tile's X/Y.
-- [x] `.refreshNonOverlappingConstraints()`
 - [x] Clear the ghost tile cache.
 
 # Drag end
@@ -60,7 +56,6 @@
   - [ ] If checked, trigger selection change event.
   - [x] If there is a ghost tile
     - [x] Execute the procedure above for *Reverting a ghost tile*
-  - [x] `.refreshNonOverlappingConstraints()`
   - [x] `._deferred_rearrange()`
   - [x] Trigger Tiles drag end event
   - [x] `._deferred_state_update_signal()`
@@ -72,11 +67,9 @@
   - [x] Move the tile to the new group's tilesDiv DOM.
   - [x] Set `button.style.inset = "";`.
   - [x] Set the tile state's group field.
-  - [x] `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile
   - [x] For each other tile in the layout group
     - [x] Suggest X/Y weakly reflecting the current state.
   - [x] Suggest X/Y weakly for the layout tile
-  - [x] `.refreshNonOverlappingConstraints()` in the group
 - [x] Else if grid snap resolves successfully to a blank area
   - [x] Let group = anonymous auto-generated ID
   - [x] Create new group `group`
@@ -95,9 +88,7 @@
     - [x] Execute the procedure above for *Reverting a ghost tile*
   - [x] Recreate the Cassowary solver for the respective group
   - [x] Update every tile to reflect the old state, keeping any other new tiles as they are (e.g. reflecting the current state).
-    - [x] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()`
     - [x] Use weak-suggestions for each tile's X/Y.
-  - [x] `.refreshNonOverlappingConstraints()`
   - [x] `._deferred_rearrange()`
   - [x] `._deferred_state_update_signal()`
 - [x] Trigger Tiles drag end event

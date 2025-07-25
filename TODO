@@ -1,7 +1,4 @@
 - [ ] Challenges: https://softwareengineering.stackexchange.com/q/458507/462552
-- [x] Consider using a Cassowary constrant solver: https://www.npmjs.com/package/@lume/kiwi
-  - Basis: https://chatgpt.com/c/687f93fd-1354-8001-acb8-734508969385
-  - Kiwi API: https://github.com/lume/kiwi/blob/HEAD/docs/Kiwi.md
 
 # Arrow navigation
 
@@ -43,14 +40,12 @@ While rearranging tiles:
     - [ ] Trigger drag end with a fake parameter
     - [ ] Return
   - [ ] Remove the button from the DOM
-  - [ ] Clear constraints from the specified tile.
   - [ ] Uninstall draggable behavior
   - [ ] Remove from state
   - [ ] Remove from layout
   - [ ] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
   - [ ] *Maybe later when I am more energetic*: Pull nearby-following tiles.
-  - [ ] Call `refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
   - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#renameGroup()`
@@ -64,8 +59,6 @@ While rearranging tiles:
   - [ ] Update the layout tile's width and height.
   - [ ] Update the tile state's size.
   - [ ] Update `ATTR_SIZE`
-  - [ ] Call `.refreshMaxConstraints()` for the specified tile after resizing it.
-  - [ ] Call `.refreshNonOverlappingConstraints()` for the respective group.
   - [ ] Call `._deferred_rearrange()`
   - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#moveTile()`

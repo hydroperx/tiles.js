@@ -1,10 +1,10 @@
 // Third-party imports
-import * as kiwi from "@lume/kiwi";
 import { gsap } from "gsap";
 
 // Local imports
 import * as Attributes from "./Attributes";
 import type { Tiles } from "./Tiles";
+import { BaseLayout } from "./BaseLayout";
 
 /**
  * Layout.
@@ -64,13 +64,15 @@ export type GridSnapResult = {
 export class LayoutGroup {
   /**
    * Unordered tiles.
+   * @hidden
    */
-  public readonly tiles: LayoutTile[] = [];
+  public readonly _tiles: Map<string, LayoutTile> = new Map();
 
   /**
-   * Cassowary constrant solver for tiles.
+   * A structure with fine-grained control over tiles.
+   * @hidden
    */
-  public solver: kiwi.Solver = new kiwi.Solver();
+  public _layout: BaseLayout;
 
   /**
    * Constructor.
@@ -79,49 +81,44 @@ export class LayoutGroup {
     public $: Layout,
     public id: string,
     public div: HTMLDivElement,
-  ) {}
+    width: undefined | number,
+    height: undefined | number
+  ) {
+    this._layout = new BaseLayout({ width, height });
+  }
 
   /**
-   * Refreshes Cassowary non-overlapping constraints.
+   * Returns an immutable unordered list of the contained tiles.
    */
-  public refreshNonOverlappingConstraints() {
-    const l = this.tiles.length;
-    for (const t of this.tiles) {
-      for (const c of t.nonOverlappingConstraints) {
-        if (this.solver.hasConstraint(c)) {
-          this.solver.removeConstraint(c);
-        }
-      }
-      t.nonOverlappingConstraints.length = 0;
-    }
-    for (let i = 0; i < l; i++) {
-      const a = this.tiles[i];
-      for (let j = 0; j < l; j++) {
-        const b = this.tiles[j];
+  public getTiles(): LayoutTile[] {
+    return Array.from(this._tiles.values());
+  }
 
-        // Skip identity
-        if (a === b) continue;
+  /**
+   * Returns a specific tile.
+   */
+  public getTile(id: string): null | LayoutTile {
+    return this._tiles.get(id) ?? null;
+  }
 
-        // a.x + a.width >= b.x
-        const xConstraint = new kiwi.Constraint(a.x.plus(a.width), kiwi.Operator.Ge, b.x);
-        // a.y + a.height >= b.y
-        const yConstraint = new kiwi.Constraint(a.y.plus(a.height), kiwi.Operator.Ge, b.y);
+  /**
+   * Returns whether a tile exists in this group.
+   */
+  public hasTile(id: string): boolean {
+    return this._tiles.has(id);
+  }
 
-        this.solver.addConstraint(xConstraint);
-        this.solver.addConstraint(yConstraint);
-
-        a.nonOverlappingConstraints.push(xConstraint, yConstraint);
-      }
-    }
+  /**
+   * Layout size in small tiles unit (1x1).
+   */
+  public getLayoutSize(): { width: number; height: number } {
+    return this._layout.getLayoutSize();
   }
 
   /**
    * Rearranges group tiles and resizes the group's tiles div.
    */
   public rearrange(): void {
-    // Update Cassowary variables
-    this.solver.updateVariables();
-
     // Reposition tiles (update the group's width/height EM together)
     let changed = false;
     let
@@ -137,9 +134,9 @@ export class LayoutGroup {
         (this.$.$._height-1)*this.$.$._tile_gap;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
-    for (const tile of this.tiles) {
-      const x_em = tile.x.value() * this.$.$._small_size + tile.x.value() * this.$.$._tile_gap;
-      const y_em = tile.y.value() * this.$.$._small_size + tile.y.value() * this.$.$._tile_gap;
+    for (const [, tile] of this._tiles) {
+      const x_em = tile.x * this.$.$._small_size + tile.x * this.$.$._tile_gap;
+      const y_em = tile.y * this.$.$._small_size + tile.y * this.$.$._tile_gap;
 
       const w_em = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
       const h_em = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
@@ -153,8 +150,8 @@ export class LayoutGroup {
         const
           old_x = state.x,
           old_y = state.y;
-        state.x = tile.x.value();
-        state.y = tile.y.value();
+        state.x = tile.x;
+        state.y = tile.y;
         if (!(old_x == state.x && old_y == state.y)) {
           changed = true;
 
@@ -221,23 +218,6 @@ export class LayoutGroup {
  */
 export class LayoutTile {
   /**
-   * Minimum X/Y constraints.
-   */
-  public minConstraints: kiwi.Constraint[] = [];
-  /**
-   * Maximum X constraint.
-   */
-  public maxXConstraint: null | kiwi.Constraint = null;
-  /**
-   * Maximum Y constraint.
-   */
-  public maxYConstraint: null | kiwi.Constraint = null;
-  /**
-   * Non-overlapping constraint.
-   */
-  public nonOverlappingConstraints: kiwi.Constraint[] = [];
-
-  /**
    * Cached tween.
    */
   public tween: null | gsap.core.Tween = null;
@@ -248,117 +228,84 @@ export class LayoutTile {
   public positioned: boolean = false;
 
   /**
+   * Parent layout group.
+   */
+  public $: null | LayoutGroup = null;
+
+  /**
    * Cosntructor.
    * @param button If `null` indicates this is a placeholder tile.
-   * @param x X variable in small tiles.
-   * @param y Y variable in small tiles.
-   * @param width Width variable in small tiles.
-   * @param height Height variable in small tiles.
    */
   public constructor(
-    public $: LayoutGroup,
     public readonly id: string,
-    public button: null | HTMLButtonElement,
-    public readonly x: kiwi.Variable,
-    public readonly y: kiwi.Variable,
-    public width: number,
-    public height: number
+    public button: null | HTMLButtonElement
   ) {
-    // Refresh min/max constraints
-    this.refreshMinConstraints();
-    this.refreshMaxConstraints();
   }
 
   /**
-   * All present Cassowary constraints.
+   * Attempts to contributes the tile to the layout.
+   * If `x` and `y` are both given as `null`, then the
+   * method is guaranteed to always succeed, contributing
+   * the tile to the best last position.
    */
-  public get constraints(): kiwi.Constraint[] {
-    return [
-      ...this.minConstraints,
-      ...this.nonOverlappingConstraints,
-      ...(this.maxXConstraint ? [this.maxXConstraint!] : []),
-      ...(this.maxYConstraint ? [this.maxYConstraint!] : [])
-    ];
+  public addTo($: LayoutGroup, x: null | number, y: null | number, width: number, height: number): boolean {
+    if ($._layout.addTile(this.id, x, y, width, height)) {
+      $._tiles.set(this.id, this);
+      this.$ = $;
+      return true;
+    }
+    return false;
   }
 
   /**
-   * Clears constraints.
+   * Removes the tile from the parent `LayoutGroup`.
+   * This method does not, however, remove the tiel
+   * from the overall state.
    */
-  public clearConstraints(): void {
-    for (const c of this.constraints) {
-      if (this.$.solver.hasConstraint(c)) {
-        this.$.solver.removeConstraint(c);
-      }
-    }
-    this.minConstraints.length = 0;
-    this.nonOverlappingConstraints.length = 0;
-    this.maxXConstraint = null;
-    this.maxYConstraint = null;
+  public remove(): void {
+    this.$!._layout.removeTile(this.id);
+    this.$!._tiles.delete(this.id);
   }
 
   /**
-   * Refreshes minimum-X/Y constraints.
+   * X coordinate in small tiles.
    */
-  public refreshMinConstraints(): void {
-    for (const c of this.minConstraints) {
-      if (this.$.solver.hasConstraint(c)) {
-        this.$.solver.removeConstraint(c);
-      }
-    }
-    this.minConstraints.length = 0;
-    const minXConstraint = new kiwi.Constraint(this.x, kiwi.Operator.Ge, 0);
-    const minYConstraint = new kiwi.Constraint(this.y, kiwi.Operator.Ge, 0);
-    this.$.solver.addConstraint(minXConstraint);
-    this.$.solver.addConstraint(minYConstraint);
-    this.minConstraints.push(
-      minXConstraint,
-      minYConstraint,
-    );
+  public get x(): number {
+    return this.$!._layout.tiles.get(this.id)!.x;
   }
 
   /**
-   * Refreshes maximum-X/Y constraints.
+   * Y coordinate in small tiles.
    */
-  public refreshMaxConstraints(): void {
-    if (this.maxXConstraint) {
-      if (this.$.solver.hasConstraint(this.maxXConstraint!)) {
-        this.$.solver.removeConstraint(this.maxXConstraint!);
-      }
-      this.maxXConstraint = null;
-    }
-    if (this.maxYConstraint) {
-      if (this.$.solver.hasConstraint(this.maxYConstraint!)) {
-        this.$.solver.removeConstraint(this.maxYConstraint!);
-      }
-      this.maxYConstraint = null;
-    }
-    // maximum X/Y constraint
-    if (this.$.$.$._dir == "horizontal") {
-      this.refreshMaxYConstraint();
-    } else {
-      this.refreshMaxXConstraint();
-    }
+  public get y(): number {
+    return this.$!._layout.tiles.get(this.id)!.y;
   }
 
   /**
-   * Refreshes maximum-X constraint.
+   * Width in small tiles.
    */
-  public refreshMaxXConstraint(): void {
-    if (this.maxXConstraint && this.$.solver.hasConstraint(this.maxXConstraint!)) {
-      this.$.solver.removeConstraint(this.maxXConstraint!);
-    }
-    this.maxXConstraint = new kiwi.Constraint(this.x.plus(this.width), kiwi.Operator.Le, this.$.$.$._group_width - 1);
-    this.$.solver.addConstraint(this.maxXConstraint!);
+  public get width(): number {
+    return this.$!._layout.tiles.get(this.id)!.width;
   }
 
   /**
-   * Refreshes maximum-Y constraint.
+   * Height in small tiles.
    */
-  public refreshMaxYConstraint(): void {
-    if (this.maxYConstraint && this.$.solver.hasConstraint(this.maxYConstraint!)) {
-      this.$.solver.removeConstraint(this.maxYConstraint!);
-    }
-    this.maxYConstraint = new kiwi.Constraint(this.y.plus(this.height), kiwi.Operator.Le, this.$.$.$._height - 1);
-    this.$.solver.addConstraint(this.maxYConstraint!);
+  public get height(): number {
+    return this.$!._layout.tiles.get(this.id)!.height;
+  }
+
+  /**
+   * Moves position.
+   */
+  public move(x: number, y: number): boolean {
+    return this.$!._layout.moveTile(this.id, x, y);
+  }
+
+  /**
+   * Resizes tile.
+   */
+  public resize(id: string, width: number, height: number): boolean {
+    return this.$!._layout.resizeTile(this.id, width, height);
   }
 }

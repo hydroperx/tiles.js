@@ -347,9 +347,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    * Adds a tile.
    * @throws If tile ID is duplicate.
    * @throws If group is specified and does not exist.
+   * @returns `true` if successfully added tile; `false` otherwise.
+   * It can fail depending on the `x` and `y` parameters.
    */
-  addTile(params: AddTileParams) {
-    new TileFactory(this).add(params);
+  addTile(params: AddTileParams): boolean {
+    return new TileFactory(this).add(params);
   }
 
   /**

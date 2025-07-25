@@ -2,7 +2,6 @@
 import getRectangleOverlap from "rectangle-overlap";
 import Draggable from "@hydroperx/draggable";
 import getOffset from "getoffset";
-import * as kiwi from "@lume/kiwi";
 
 // Local imports
 import { TileSize, getWidth, getHeight } from "./enum/TileSize";
@@ -74,9 +73,8 @@ export class TileDraggableBehavior {
 
     // Find the corresponding state, layout group and its index
     const state = this.$._state.tiles.get(id);
-    const layout_group = this.$._layout.groups.find(g => g.tiles.some(t => t.id == id))!;
-    const layout_tile = layout_group.tiles.find(t => t.id == id)!;
-    const layout_index = layout_group.tiles.indexOf(layout_tile);
+    const layout_group = this.$._layout.groups.find(g => g.hasTile(id))!;
+    const layout_tile = layout_group.getTile(id)!;
 
     // Parent group-tiles-div
     const group_tiles_div = button.parentElement!;
@@ -90,7 +88,6 @@ export class TileDraggableBehavior {
     // this._startY = group_tiles_inner_top + tile_offset.y;
     this._startX = group_tiles_inner_left;
     this._startY = group_tiles_inner_top;
-    this._startLayoutIndex = layout_index;
     this._startState = this.$._state.clone();
 
     // While the tile is being dragged, it is moved out of the group div temporarily and
@@ -99,13 +96,7 @@ export class TileDraggableBehavior {
     this.$._container.appendChild(button);
 
     // Remove the tile from the layout group.
-    layout_group.tiles.splice(layout_index, 1);
-
-    // Refresh non-overlapping constraints
-    layout_group.refreshNonOverlappingConstraints();
-
-    // Clear tile layout constraints
-    layout_tile.clearConstraints();
+    layout_tile.remove();
 
     // Reset ghost tile caches
     this._ghostTile = null;
@@ -169,25 +160,19 @@ export class TileDraggableBehavior {
       if (thresholdMet) {
         // Insert a ghost tile without button at the layout
         const layout_group = this.$._layout.groups.find(g => g.id == this._gridSnap!.group)!;
-        const xVar = new kiwi.Variable();
-        const yVar = new kiwi.Variable();
         const size = button.getAttribute(Attributes.ATTR_SIZE) as TileSize;
         const w = getWidth(size);
         const h = getHeight(size);
-        this._ghostTile = new LayoutTile(layout_group, "__anonymous$" + RandomUtils.hexLarge(), null, xVar, yVar, w, h);
-        layout_group.tiles.push(this._ghostTile!);
-        layout_group.solver.addEditVariable(xVar, kiwi.Strength.strong);
-        layout_group.solver.addEditVariable(yVar, kiwi.Strength.strong);
-        layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
-        layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
-        layout_group.refreshNonOverlappingConstraints();
+        this._ghostTile = new LayoutTile("__anonymous$" + RandomUtils.hexLarge(), null);
+        // If can't add ghost tile, cancel it.
+        if (!this._ghostTile!.addTo(layout_group, this._gridSnap!.x, this._gridSnap!.y, w, h)) {
+          this._ghostTile = null;
+        }
         this.$._deferred_rearrange();
       }
     // Otherwise if a ghost tile has been created
     } else if (this._ghostTile) {
-      const layout_group = this._ghostTile!.$;
       this._revertGhostTile();
-      layout_group.refreshNonOverlappingConstraints();
       this.$._deferred_rearrange();
     }
 
@@ -237,9 +222,6 @@ export class TileDraggableBehavior {
 
       // If there is a ghost tile, revert it.
       if (this._ghostTile) this._revertGhostTile();
-
-      // Refresh non-overlapping constraints.
-      old_layout_group.refreshNonOverlappingConstraints();
 
       // Rearrange
       this.$._deferred_rearrange();
@@ -293,10 +275,6 @@ export class TileDraggableBehavior {
 
       // Iterate tiles
       for (const tile_2 of layout_group.tiles) {
-        // Refresh min/max
-        tile_2.refreshMinConstraints();
-        tile_2.refreshMaxConstraints();
-
         // For any other tile
         if (layout_tile != tile_2) {
           // Suggest X/Y weakly reflecting the current state.
@@ -313,9 +291,6 @@ export class TileDraggableBehavior {
       layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
       layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
       layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
-
-      // Refresh non-overlapping constraints
-      layout_group.refreshNonOverlappingConstraints();
 
       // If the previous group is empty, remove it.
       if (old_layout_group.tiles.length == 0) {
@@ -363,9 +338,6 @@ export class TileDraggableBehavior {
       layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
       layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
 
-      // Refresh non-overlapping constraints
-      layout_group.refreshNonOverlappingConstraints();
-
       // If the previous group is empty, remove it.
       if (old_layout_group.tiles.length == 0) {
         this.$.removeGroup(old_layout_group.id);
@@ -403,11 +375,8 @@ export class TileDraggableBehavior {
       // Recreate Cassowary solver
       old_layout_group.solver = new kiwi.Solver();
 
-      // Update every tile to reflect the old state;
-      // also refresh min/max constraints.
+      // Update every tile to reflect the old state.
       for (const tile of old_layout_group.tiles) {
-        tile.refreshMinConstraints();
-        tile.refreshMaxConstraints();
         old_layout_group.solver.addEditVariable(tile.x, kiwi.Strength.weak);
         old_layout_group.solver.addEditVariable(tile.y, kiwi.Strength.weak);
         const oldTileState = this._startState!.tiles.get(tile.id);
@@ -421,8 +390,6 @@ export class TileDraggableBehavior {
           old_layout_group.solver.suggestValue(tile.y, s?.y ?? 0);
         }
       }
-      // Refresh non-overlapping constraints
-      old_layout_group.refreshNonOverlappingConstraints();
 
       // Rearrange
       this.$._deferred_rearrange();
@@ -443,11 +410,8 @@ export class TileDraggableBehavior {
     layout_group.tiles.splice(layout_group.tiles.indexOf(this._ghostTile!), 1);
     // Recreate the Cassowary solver for the respective group
     layout_group.solver = new kiwi.Solver();
-    // Update every tile to reflect the old state;
-    // also refresh min/max constraints.
+    // Update every tile to reflect the old state.
     for (const tile of layout_group.tiles) {
-      tile.refreshMinConstraints();
-      tile.refreshMaxConstraints();
       layout_group.solver.addEditVariable(tile.x, kiwi.Strength.weak);
       layout_group.solver.addEditVariable(tile.y, kiwi.Strength.weak);
       const oldTileState = this._startState!.tiles.get(tile.id);
@@ -461,8 +425,6 @@ export class TileDraggableBehavior {
         layout_group.solver.suggestValue(tile.y, s?.y ?? 0);
       }
     }
-    // Refresh non-overlapping constraints
-    layout_group.refreshNonOverlappingConstraints();
 
     // Clear cache
     this._ghostTile = null;
