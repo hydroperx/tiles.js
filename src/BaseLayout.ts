@@ -220,6 +220,18 @@ export class BaseLayout {
           toCheck.push(otherId);
         }
       }
+
+      const isOutOfBounds =
+        tile.x < 0 ||
+        tile.y < 0 ||
+        (this.maxWidth !== undefined && tile.x + tile.width > this.maxWidth) ||
+        (this.maxHeight !== undefined && tile.y + tile.height > this.maxHeight);
+      if (isOutOfBounds) {
+        const foundPos = this.findAvailablePositionFor(tile, id);
+        if (!foundPos) return false;
+        tile.x = foundPos.x;
+        tile.y = foundPos.y;
+      }
     }
 
     return true;
