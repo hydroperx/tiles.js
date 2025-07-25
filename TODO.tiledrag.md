@@ -77,22 +77,17 @@
     - [x] Suggest X/Y weakly reflecting the current state.
   - [x] Suggest X/Y weakly for the layout tile
   - [x] `.refreshNonOverlappingConstraints()` in the group
-- [ ] Else if grid snap resolves successfully to a blank area
-  - [ ] Let group = grid snap's target group
-  - [ ] If group is falsy
-    - [ ] group = anonymous auto-generated ID
-    - [ ] Create new group `group`
-  - [ ] Put the tile in the new layout group
-  - [ ] Put the tile at the new group's tilesDiv DOM.
-  - [ ] Set `button.style.inset = "";`.
-  - [ ] Set the tile state's group field.
-  - [ ] Set X/Y state
-  - [ ] Suggest X/Y weakly for the layout tile
-  - [ ] If the previous group is empty, remove it (from state/layout/DOM).
-  - [ ] Call `._keep_groups_contiguous()`
-  - [ ] `._deferred_rearrange()`
-  - [ ] `._deferred_state_update_signal()`
-- [ ] Else
+- [x] Else if grid snap resolves successfully to a blank area
+  - [x] Let group = anonymous auto-generated ID
+  - [x] Create new group `group`
+  - [x] Put the tile in the new layout group
+  - [x] Put the tile at the new group's tilesDiv DOM.
+  - [x] Set `button.style.inset = "";`.
+  - [x] Set the tile state's group field.
+  - [x] Suggest X/Y weakly for the layout tile
+  - [x] If the previous group is empty, remove it (from state/layout/DOM).
+  - [x] Else call `._deferred_rearrange()` and `._deferred_state_update_signal()`
+- [x] Else
   - [ ] Move the tile to the DOM back in the group it was.
   - [ ] Put the tile back at the initial respective layout group (at the initial index it was (`drag_start.layoutIndex`)).
   - [ ] Set `button.style.inset = "";`.
@@ -103,7 +98,6 @@
     - [ ] If the tile to restore has no DOM button, ignore it completely from the procedure.
     - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()`
     - [ ] Use weak-suggestions for each tile's X/Y.
-    - [ ] Update state X/Y
   - [ ] `.refreshNonOverlappingConstraints()`
   - [ ] `._deferred_rearrange()`
   - [ ] `._deferred_state_update_signal()`

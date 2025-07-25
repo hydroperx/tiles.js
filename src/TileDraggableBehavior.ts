@@ -274,10 +274,11 @@ export class TileDraggableBehavior {
       const h = getHeight(size);
       const layout_tile = new LayoutTile(layout_group, id, button, xVar, yVar, w, h);
 
-      // Put the tile in the new layout group
+      // Put the tile in the snap-match layout group
       layout_group.tiles.push(layout_tile);
 
-      // Move the tile to the new group's tilesDiv DOM.
+      // Move the tile to the snap-match group's tilesDiv DOM.
+      button.remove();
       layout_group.div
         .getElementsByClassName(this.$._class_names.groupTiles)[0]
         .appendChild(button);
@@ -324,13 +325,63 @@ export class TileDraggableBehavior {
       }
     // If the grid snap resolves successfully to a blank area
     } else if (!!this._gridSnap) {
-      //
-      fixme();
+      // Let group = anonymous auto-generated ID
+      const group = "__anonymous$" + RandomUtils.hexLarge();
+      // Create new group
+      this.$.addGroup({ id: group });
+      // Find layout group
+      const layout_group = this.$._layout.groups.find(groupA => groupA.id == group)!;
+
+      // Create LayoutTile
+      const xVar = new kiwi.Variable();
+      const yVar = new kiwi.Variable();
+      const size = tile_state.size;
+      const w = getWidth(size);
+      const h = getHeight(size);
+      const layout_tile = new LayoutTile(layout_group, id, button, xVar, yVar, w, h);
+
+      // Put the tile in the new layout group
+      layout_group.tiles.push(layout_tile);
+
+      // Move the tile to the new group's tilesDiv DOM.
+      button.remove();
+      layout_group.div
+        .getElementsByClassName(this.$._class_names.groupTiles)[0]
+        .appendChild(button);
+
+      // Undo drag position
+      button.style.inset = "";
+
+      // Set the tile state's group field.
+      tile_state.group = group;
+
+      // Suggest X/Y weakly for the layout tile
+      layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
+      layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
+      layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
+      layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
+
+      // Refresh non-overlapping constraints
+      layout_group.refreshNonOverlappingConstraints();
+
+      // If the previous group is empty, remove it.
+      if (old_layout_group.tiles.length == 0) {
+        this.$.removeGroup(old_layout_group.id);
+      // Rearrange/state update
+      } else {
+        this.$._deferred_rearrange();
+        this.$._deferred_state_update_signal();
+      }
     // If grid snap failed
     } else {
+      // Move the tile to the DOM back in the group it was.
       fixme();
     }
-    fixme();
+
+    // Trigger Tiles#dragend event
+    this.$.dispatchEvent(new CustomEvent("dragend", {
+      detail: { tile: button },
+    }));
   }
 
   // Reverts the ghost tile created automatically from grid snapping.
