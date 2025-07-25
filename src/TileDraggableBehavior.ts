@@ -304,24 +304,24 @@ export class TileDraggableBehavior {
           layout_group.solver.suggestValue(tile_2.x, tile_state.x);
           layout_group.solver.suggestValue(tile_2.y, tile_state.y);
         }
+      }
 
-        // Suggest X/Y weakly for the layout tile
-        layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
-        layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
-        layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
-        layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
+      // Suggest X/Y weakly for the layout tile
+      layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
+      layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
+      layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
+      layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
 
-        // Refresh non-overlapping constraints
-        layout_group.refreshNonOverlappingConstraints();
+      // Refresh non-overlapping constraints
+      layout_group.refreshNonOverlappingConstraints();
 
-        // If the previous group is empty, remove it.
-        if (old_layout_group.tiles.length == 0) {
-          this.$.removeGroup(old_layout_group.id);
-        // Rearrange/state update
-        } else {
-          this.$._deferred_rearrange();
-          this.$._deferred_state_update_signal();
-        }
+      // If the previous group is empty, remove it.
+      if (old_layout_group.tiles.length == 0) {
+        this.$.removeGroup(old_layout_group.id);
+      // Rearrange/state update
+      } else {
+        this.$._deferred_rearrange();
+        this.$._deferred_state_update_signal();
       }
     // If the grid snap resolves successfully to a blank area
     } else if (!!this._gridSnap) {
