@@ -17,7 +17,7 @@ Group element tag:
 
 Group element attribute:
 
-- `data-id`: the group ID.
+- `Tiles.ATTR_ID`: the group ID.
 
 Group element attribute:
 

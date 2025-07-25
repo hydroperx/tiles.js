@@ -13,6 +13,7 @@ import * as RectangleUtils from "./utils/RectangleUtils";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 import type { Tiles, AddGroupParams } from "./Tiles";
 import * as Attributes from "./Attributes";
+import { TileDraggableBehavior } from "./TileDraggableBehavior";
 
 /**
  * Group factory.
@@ -91,6 +92,48 @@ export class GroupFactory {
 
   // Removes a group.
   public remove(id: string) {
-    fixme();
+    // Do nothing if dragging a tile.
+    const tiles_dragging = Array.from(this.$._container.getElementsByClassName(this.$._class_names.tile))
+      .some(button => button.getAttribute(Attributes.ATTR_DRAGGING) == "true");
+    if (tiles_dragging) {
+      return;
+    }
+
+    // Do nothing if dragging a group.
+    const groups_dragging = Array.from(this.$._container.getElementsByClassName(this.$._class_names.group))
+      .some(div => div.getAttribute(Attributes.ATTR_DRAGGING) == "true");
+    if (groups_dragging) {
+      return;
+    }
+
+    // Delete from state
+    this.$._state.groups.delete(id);
+
+    // Delete from layout
+    const layout_group = this.$._layout.groups.find(group => group.id == id)!;
+    this.$._layout.groups.splice(this.$._layout.groups.indexOf(layout_group), 1);
+
+    // Remove tiles efficiently
+    const tiles_to_remove: string[] = [];
+    for (const [tile, tile_state] of this.$._state.tiles) {
+      if (tile_state.group == id) {
+        tiles_to_remove.push(tile);
+      }
+    }
+    for (const tile of tiles_to_remove) {
+      this.$._state.tiles.delete(tile);
+      if (this.$._drag_enabled) {
+        new TileDraggableBehavior(this.$, tile).uninstall();
+      }
+      this.$._buttons.get(tile)?.remove();
+      this.$._buttons.delete(tile);
+    }
+
+    // Keep groups contiguous
+    this.$._keep_groups_contiguous();
+    // Rearrange
+    this.$._deferred_rearrange();
+    // State update signal
+    this.$._deferred_state_update_signal();
   }
 }

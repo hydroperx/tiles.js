@@ -30,17 +30,19 @@ While rearranging tiles:
   - [ ] Setup group draggable (contribute to `_group_draggables`) if drag is enabled.
 - [x] `Tiles#addTile()`
 - [ ] `Tiles#removeGroup()`
-  - [ ] Do nothing if there's a tile or group being actively dragged.
-  - [ ] ...
-  - [ ] Call `._keep_groups_contiguous()`
-  - [ ] Call `._deferred_rearrange()`
-  - [ ] Call `._deferred_state_update_signal()`
+  - [x] Do nothing if there's a tile or group being actively dragged.
+  - [ ] Destroy draggable if any
+  - [ ] If a tile is checked, trigger selection change event.
+  - [x] Call `._keep_groups_contiguous()`
+  - [x] Call `._deferred_rearrange()`
+  - [x] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#removeTile()`
   - [ ] If tile is being dragged
     - [ ] Remove the button from the DOM
     - [ ] Nullify the LayoutTile's `button`
     - [ ] Trigger drag end with a fake parameter
     - [ ] Return
+  - [ ] Remove the button from the DOM
   - [ ] Clear constraints from the specified tile.
   - [ ] Uninstall draggable behavior
   - [ ] Remove from state
