@@ -208,7 +208,17 @@ export class BaseLayout {
           (this.maxHeight !== undefined && otherTile.y + otherTile.height > this.maxHeight);
 
         if (isIntersecting || isOutOfBounds) {
-          const foundPos = this.findAvailablePositionFor(otherTile, otherId);
+          let foundPos = this.findAvailableNearbyPosition(
+            otherTile,
+            otherId,
+            otherTile.x,
+            otherTile.y
+          );
+
+          if (!foundPos) {
+            foundPos = this.findAvailablePositionFor(otherTile, otherId);
+          }
+
           if (!foundPos) return false;
 
           const movedTile = otherTile.clone();
@@ -226,8 +236,12 @@ export class BaseLayout {
         tile.y < 0 ||
         (this.maxWidth !== undefined && tile.x + tile.width > this.maxWidth) ||
         (this.maxHeight !== undefined && tile.y + tile.height > this.maxHeight);
+
       if (isOutOfBounds) {
-        const foundPos = this.findAvailablePositionFor(tile, id);
+        let foundPos = this.findAvailableNearbyPosition(tile, id, tile.x, tile.y);
+        if (!foundPos) {
+          foundPos = this.findAvailablePositionFor(tile, id);
+        }
         if (!foundPos) return false;
         tile.x = foundPos.x;
         tile.y = foundPos.y;
@@ -251,6 +265,40 @@ export class BaseLayout {
       if (this.maxHeight && y + height > this.maxHeight) break;
     }
     return { x: 0, y: 0 }; // fallback
+  }
+
+  // Method used in conflict resolution.
+  private findAvailableNearbyPosition(
+    tile: BaseTile,
+    excludeId: string,
+    originX: number,
+    originY: number,
+    maxRadius: number = 10
+  ): { x: number; y: number } | null {
+    const layoutWidth = this.maxWidth ?? Infinity;
+    const layoutHeight = this.maxHeight ?? Infinity;
+
+    for (let radius = 0; radius <= maxRadius; radius++) {
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          if (Math.abs(dx) + Math.abs(dy) !== radius) continue;
+
+          const x = originX + dx;
+          const y = originY + dy;
+
+          if (x < 0 || y < 0 || x + tile.width > layoutWidth || y + tile.height > layoutHeight) continue;
+
+          const testTile = new BaseTile(x, y, tile.width, tile.height);
+          const overlaps = [...this.tiles.entries()].some(
+            ([id, other]) => id !== excludeId && testTile.intersects(other)
+          );
+
+          if (!overlaps) return { x, y };
+        }
+      }
+    }
+
+    return null;
   }
 
   // Method used in conflict resolution.
