@@ -32,7 +32,9 @@ While rearranging tiles:
 - [ ] `Tiles#removeGroup()`
   - [ ] Do nothing if there's a tile or group being actively dragged.
   - [ ] ...
-  - [ ] `._keep_groups_contiguous()`
+  - [ ] Call `._keep_groups_contiguous()`
+  - [ ] Call `._deferred_rearrange()`
+  - [ ] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#removeTile()`
   - [ ] If tile is being dragged
     - [ ] Remove the button from the DOM

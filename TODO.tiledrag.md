@@ -54,10 +54,8 @@
 - [x] Set `.style.zIndex = "";` for the tile's button.
 - [x] Remove the `ATTR_DRAGGING` attribute.
 - [x] If the tile has been removed from the DOM
-  - [x] Clear constraints from the specified tile.
   - [x] Uninstall draggable behavior
   - [x] Remove from state
-  - [x] Remove from layout
   - [x] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
   - [x] If there is a ghost tile
@@ -67,23 +65,18 @@
   - [x] Trigger Tiles drag end event
   - [x] `._deferred_state_update_signal()`
   - [x] Return
-- [ ] If grid snap resolves successfully to an existing area
-  - [ ] Remove the ghost tile from the layout
-  - [ ] Recreate the Cassowary solver for the respective group
-  - [ ] Put the tile in the new layout group
-  - [ ] Move the tile to the new group's tilesDiv DOM.
-  - [ ] Set `button.style.inset = "";`.
-  - [ ] Set X/Y state
-  - [ ] Set the tile state's group field.
-  - [ ] Call `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile in the group
-  - [ ] For each other tile in the layout group
-    - [ ] Suggest X/Y weakly reflecting the current state.
-  - [ ] Suggest X/Y weakly for the layout tile
-  - [ ] `.refreshNonOverlappingConstraints()` in the group
-  - [ ] If the previous group is empty, remove it (from state/layout/DOM).
-  - [ ] Call `._keep_groups_contiguous()`
-  - [ ] `._deferred_rearrange()`
-  - [ ] `._deferred_state_update_signal()`
+- [x] If grid snap resolves successfully to an existing area
+  - [x] Remove the ghost tile from the layout
+  - [x] Recreate the Cassowary solver for the respective group
+  - [x] Put the tile in the new layout group
+  - [x] Move the tile to the new group's tilesDiv DOM.
+  - [x] Set `button.style.inset = "";`.
+  - [x] Set the tile state's group field.
+  - [x] `.refreshMinConstraints()` and `.refreshMaxConstraints()` for every tile
+  - [x] For each other tile in the layout group
+    - [x] Suggest X/Y weakly reflecting the current state.
+  - [x] Suggest X/Y weakly for the layout tile
+  - [x] `.refreshNonOverlappingConstraints()` in the group
 - [ ] Else if grid snap resolves successfully to a blank area
   - [ ] Let group = grid snap's target group
   - [ ] If group is falsy

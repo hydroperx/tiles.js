@@ -99,6 +99,12 @@ export class TileDraggableBehavior {
     // Remove the tile from the layout group.
     layout_group.tiles.splice(layout_index, 1);
 
+    // Refresh non-overlapping constraints
+    layout_group.refreshNonOverlappingConstraints();
+
+    // Clear tile layout constraints
+    layout_tile.clearConstraints();
+
     // Reset ghost tile caches
     this._ghostTile = null;
 
@@ -214,22 +220,15 @@ export class TileDraggableBehavior {
     
     // Basics
     const tile_state = this.$._state.tiles.get(id)!;
-    const layout_group = this.$._layout.groups.find(group => group.id == tile_state.group)!;
-    const layout_tile = layout_group.tiles.find(tile => tile.id == id)!;
+    const old_layout_group = this.$._layout.groups.find(group => group.id == tile_state.group)!;
 
     // If the tile has been removed from the DOM
     if (!button.parentElement) {
-      // Clear constraints from the specified tile.
-      layout_tile.clearConstraints();
-
       // Uninstall draggable behavior
       this.uninstall();
 
       // Remove from state
       this.$._state.tiles.delete(id);
-
-      // Remove from layout
-      layout_group.tiles.splice(layout_group.tiles.indexOf(layout_tile), 1);
 
       // Remove from `Tiles#_buttons`
       this.$._buttons.delete(id);
@@ -238,7 +237,7 @@ export class TileDraggableBehavior {
       if (this._ghostTile) this._revertGhostTile();
 
       // Refresh non-overlapping constraints.
-      layout_group.refreshNonOverlappingConstraints();
+      old_layout_group.refreshNonOverlappingConstraints();
 
       // Rearrange
       this.$._deferred_rearrange();
@@ -255,7 +254,76 @@ export class TileDraggableBehavior {
       return;
     }
 
-    //
+    // If grid snap resolves successfully to an existing area
+    if (!!this._gridSnap && !!this._gridSnap!.group) {
+      // 
+      // Remove the ghost tile from the layout
+      this._ghostTile!.$.tiles.splice(this._ghostTile!.$.tiles.indexOf(this._ghostTile!));
+
+      // New layout group
+      const layout_group = this.$._layout.groups.find(group => group.id == this._gridSnap!.group)!;
+
+      // Recreate the Cassowary solver for the respective group
+      layout_group.solver = new kiwi.Solver();
+
+      // Create LayoutTile
+      const xVar = new kiwi.Variable();
+      const yVar = new kiwi.Variable();
+      const size = tile_state.size;
+      const w = getWidth(size);
+      const h = getHeight(size);
+      const layout_tile = new LayoutTile(layout_group, id, button, xVar, yVar, w, h);
+
+      // Put the tile in the new layout group
+      layout_group.tiles.push(layout_tile);
+
+      // Move the tile to the new group's tilesDiv DOM.
+      layout_group.div
+        .getElementsByClassName(this.$._class_names.groupTiles)[0]
+        .appendChild(button);
+      
+      // Undo drag position
+      button.style.inset = "";
+
+      // Set the tile state's group field.
+      tile_state.group = this._gridSnap!.group;
+
+      // Iterate tiles
+      for (const tile_2 of layout_group.tiles) {
+        // Refresh min/max
+        tile_2.refreshMinConstraints();
+        tile_2.refreshMaxConstraints();
+
+        // For any other tile
+        if (layout_tile != tile_2) {
+          // Suggest X/Y weakly reflecting the current state.
+          const tile_state = this.$._state.tiles.get(tile_2.id)!;
+          layout_group.solver.addEditVariable(tile_2.x, kiwi.Strength.weak);
+          layout_group.solver.addEditVariable(tile_2.y, kiwi.Strength.weak);
+          layout_group.solver.suggestValue(tile_2.x, tile_state.x);
+          layout_group.solver.suggestValue(tile_2.y, tile_state.y);
+        }
+
+        // Suggest X/Y weakly for the layout tile
+        layout_group.solver.addEditVariable(xVar, kiwi.Strength.weak);
+        layout_group.solver.addEditVariable(yVar, kiwi.Strength.weak);
+        layout_group.solver.suggestValue(xVar, this._gridSnap!.x);
+        layout_group.solver.suggestValue(yVar, this._gridSnap!.y);
+
+        // Refresh non-overlapping constraints
+        layout_group.refreshNonOverlappingConstraints();
+
+        // If the previous group is empty, remove it.
+        if (old_layout_group.tiles.length == 0) {
+          this.$.removeGroup(old_layout_group.id);
+        // Rearrange/state update
+        } else {
+          this.$._deferred_rearrange();
+          this.$._deferred_state_update_signal();
+        }
+      }
+      fixme();
+    }
     fixme();
   }
 
