@@ -77,7 +77,6 @@ While rearranging tiles:
 # Zoom
 
 - [ ] Near view and far view modes. Vertical container is always in near view.
-- [ ] Allow to zoom in/out switching between near/far view in a horizontal container, either through <kbd>Ctrl + Plus</kbd>, <kbd>Ctrl + Minus</kbd> or pinch gesture.
 - [ ] When in far view, user is not allowed to interact with tiles, but rather with groups, allowing to drag-n-drop groups.
 
 # Representation

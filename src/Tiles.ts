@@ -274,6 +274,9 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       this._dir == "horizontal"
         ? new HorizontalLayout(this)
         : new VerticalLayout(this);
+
+    // Rearrange
+    this._layout.rearrange();
   }
 
   /**
