@@ -86,40 +86,52 @@ export class GroupDraggableBehavior {
   private _drag(element: Element, x: number, y: number, event: Event): void {
     // Basics
     const { id } = this;
-    const group = this.$._layout.groups.find(g => g.id === id);
+    const arr = this.$._layout.groups;
+    const group = arr.find(g => g.id === id);
     if (!group) return;
     const div = group.div!;
     // Move group visually
     div.style.zIndex = "999999999";
 
-    // Find closest group to swap with
-    let closestIdx = -1;
+    // Remove any previous ghost group before calculations
+    if (this._ghostGroup) {
+      const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
+      if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
+    }
+
+    // Find best candidate group to swap with using rectangle overlap, fallback to center distance
+    let bestIdx = -1;
+    let bestArea = 0;
     let minDist = Infinity;
     const rect = div.getBoundingClientRect();
-    for (let i = 0; i < this.$._layout.groups.length; i++) {
-      if (this.$._layout.groups[i].id === id) continue;
-      const otherDiv = this.$._layout.groups[i].div;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].id === id || arr[i].id === this._ghostGroup) continue;
+      const otherDiv = arr[i].div;
       if (!otherDiv) continue;
       const otherRect = otherDiv.getBoundingClientRect();
-      // Use center distance
+      const overlap = getRectangleOverlap(rect, otherRect);
+      if (overlap && overlap.area > bestArea) {
+        bestArea = overlap.area;
+        bestIdx = i;
+      }
+      // Track closest by center distance for fallback
       const dx = (rect.left + rect.width/2) - (otherRect.left + otherRect.width/2);
       const dy = (rect.top + rect.height/2) - (otherRect.top + otherRect.height/2);
       const dist = Math.sqrt(dx*dx + dy*dy);
       if (dist < minDist) {
         minDist = dist;
-        closestIdx = i;
+        if (bestArea === 0) bestIdx = i;
       }
     }
-    // Always show ghost group if dragged group is not at intended index
-    if (closestIdx !== -1) {
-      const arr = this.$._layout.groups;
+
+    if (bestIdx !== -1) {
       const draggedIdx = arr.findIndex(g => g.id === id);
-      const closest_group = arr[closestIdx];
-      // Intended ghost index based on mouse position relative to closest group center
-      let newClosestIdx = arr.indexOf(closest_group);
+      const best_group = arr[bestIdx];
+      // Intended ghost index based on mouse position relative to best group center
+      let newBestIdx = arr.indexOf(best_group);
       let insertAfter = false;
-      if (closest_group.div) {
-        const otherRect = closest_group.div.getBoundingClientRect();
+      if (best_group.div) {
+        const otherRect = best_group.div.getBoundingClientRect();
         // Detect vertical layout by class name or type
         const isVertical = this.$._dir == "vertical";
         if (isVertical) {
@@ -130,28 +142,22 @@ export class GroupDraggableBehavior {
           insertAfter = (rect.left + rect.width/2) > (otherRect.left + otherRect.width/2);
         }
       }
-      let intendedIdx = insertAfter ? newClosestIdx + 1 : newClosestIdx;
-      // Only show ghost group if dragged group is not at intended index
+      let intendedIdx = insertAfter ? newBestIdx + 1 : newBestIdx;
+      // If dragged group is already at intended index, do nothing
       if (draggedIdx === intendedIdx) {
-        // Remove ghost group if present
-        const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
-        if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
+        this._ghostGroup = null;
         return;
       }
-      // If ghost group is already at intended position, do nothing
-      const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
-      if (ghostIdx === intendedIdx) return;
-      // Remove any previous ghost group
-      if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
-      // Create ghost group if needed
-      if (!this._ghostGroup || ghostIdx === -1) {
+      // Create ghost group id if needed
+      if (!this._ghostGroup) {
         this._ghostGroup = "__anonymous$" + RandomUtils.hexLarge();
       }
+      // Insert ghost group at intended index
       const layoutGhostGroup = new LayoutGroup(this.$._layout, this._ghostGroup!, null, undefined, undefined);
       arr.splice(intendedIdx, 0, layoutGhostGroup);
-      // Update state of closest group
+      // Update state of best group
       this.$._state.groups.get(id)!.index = intendedIdx;
-      this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
+      this.$._state.groups.get(best_group.id)!.index = arr.indexOf(best_group);
       this.$._keep_groups_contiguous();
       this.$._deferred_rearrange();
       this.$._deferred_state_update_signal();
