@@ -1,5 +1,9 @@
 # @hydroperx/tiles
 
+<p align="center">
+  <a href="./docs/globals.md"><img src="https://img.shields.io/badge/TypeScript%20API%20Documentation-gray"></a>
+</p>
+
 Base layout implementation for Windows 8 like live tiles in HTML5.
 
 ## Documentation
@@ -87,6 +91,12 @@ const tiles = new Tiles({
     groupGap: 9,
     // Group label height, in cascading "rem units".
     labelHeight: 3.5,
+    // Work to do before removing a group from the DOM.
+    // This is typically used for tweening the group view.
+    groupRemovalWork: async (div) => {},
+    // Work to do before removing a tile from the DOM.
+    // This is typically used for tweening the tile view.
+    tileRemovalWork: async (button) => {},
 });
 
 // Disposal

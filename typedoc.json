@@ -1,0 +1,9 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "outputs": [
+        {
+            "name": "markdown",
+            "path": "./docs"
+        }
+    ]
+}

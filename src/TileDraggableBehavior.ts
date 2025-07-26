@@ -242,8 +242,17 @@ export class TileDraggableBehavior {
     const tile_state = this.$._state.tiles.get(id)!;
     const old_layout_group = this.$._layout.groups.find(group => group.id == tile_state.group)!;
 
-    // If the tile has been removed from the DOM
-    if (!button.parentElement) {
+    // If the tile is about to be removed
+    if (button.getAttribute(Attributes.ATTR_REMOVING) == "true") {
+      // Remove tile from the DOM
+      if (this.$._tile_removal_work) {
+        this.$._tile_removal_work(button).then(() => {
+          button.remove();
+        });
+      } else {
+        button.remove();
+      }
+
       // Uninstall draggable behavior
       this.uninstall();
 

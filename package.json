@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
+    "doc": "npx typedoc --plugin typedoc-plugin-markdown",
     "prepublishOnly": "npm run build"
   },
   "exports": {
@@ -31,6 +32,8 @@
     "@types/assert": "^1.5.11",
     "@types/extend": "^3.0.4",
     "@types/jquery": "^3.5.32",
+    "typedoc": "^0.28.7",
+    "typedoc-plugin-markdown": "^4.7.1",
     "typescript": "~5.6.2"
   },
   "repository": {

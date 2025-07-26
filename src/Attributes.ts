@@ -17,3 +17,9 @@ export const ATTR_DRAGGING = "data-dragging";
  * Attribute name used for indicating that a tile is checked.
  */
 export const ATTR_CHECKED = "data-checked";
+
+/**
+ * Attribute name used for indicating that a tile
+ * is about to be removed from the DOM.
+ */
+export const ATTR_REMOVING = "data-removing";

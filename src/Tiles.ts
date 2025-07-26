@@ -101,6 +101,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   /** @hidden */
   public _resize_observer: ResizeObserver | null = null;
 
+  /** @hidden */
+  public _tile_removal_work: undefined | ((button: HTMLButtonElement) => Promise<void>);
+  /** @hidden */
+  public _group_removal_work: undefined | ((div: HTMLDivElement) => Promise<void>);
+
   /**
    * Tile sizes in the cascading `em` unit.
    * @hidden
@@ -195,9 +200,15 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
      */
     labelHeight: number,
     /**
-     * Transition function(s) to contribute to tiles.
+     * Work to do before removing a group from the DOM.
+     * This is typically used for tweening the group view.
      */
-    tileTransition?: string;
+    groupRemovalWork?: (div: HTMLDivElement) => Promise<void>;
+    /**
+     * Work to do before removing a tile from the DOM.
+     * This is typically used for tweening the tile view.
+     */
+    tileRemovalWork?: (button: HTMLButtonElement) => Promise<void>;
   }) {
     super();
 
@@ -225,6 +236,10 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._tile_em.wide.h = this._tile_em.medium.w;
     this._tile_em.large.w = this._tile_em.wide.w;
     this._tile_em.large.h = this._tile_em.wide.w;
+
+    // Removal works
+    this._tile_removal_work = params.tileRemovalWork;
+    this._group_removal_work = params.groupRemovalWork;
 
     // dragEnabled
     this._drag_enabled = params.dragEnabled ?? true;
