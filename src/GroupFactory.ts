@@ -115,20 +115,21 @@ export class GroupFactory {
     this.$._state.groups.delete(id);
 
     // Delete from layout
-    const layout_group = this.$._layout.groups.find(group => group.id == id)!;
-    this.$._layout.groups.splice(this.$._layout.groups.indexOf(layout_group), 1);
+    const layout_group = this.$._layout.groups.find(group => group.id == id);
+    assert(!!layout_group, "Group '"+id+"' not found.");
+    this.$._layout.groups.splice(this.$._layout.groups.indexOf(layout_group!), 1);
 
     // Discard draggable
-    this.$._group_draggables.get(layout_group.div)?.destroy();
-    this.$._group_draggables.delete(layout_group.div);
+    this.$._group_draggables.get(layout_group!.div)?.destroy();
+    this.$._group_draggables.delete(layout_group!.div);
 
     // Remove from DOM
     if (this.$._group_removal_work) {
-      this.$._group_removal_work(layout_group.div).then(() => {
-        layout_group.div.remove();
+      this.$._group_removal_work(layout_group!.div).then(() => {
+        layout_group!.div.remove();
       });
     } else {
-      layout_group.div.remove();
+      layout_group!.div.remove();
     }
 
     // Remove tiles efficiently

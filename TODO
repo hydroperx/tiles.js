@@ -34,23 +34,21 @@ While rearranging tiles:
   - [x] Call `._keep_groups_contiguous()`
   - [x] Call `._deferred_rearrange()`
   - [x] Call `._deferred_state_update_signal()`
-- [ ] `Tiles#removeTile()`
-  - [ ] Set the `ATTR_REMOVING` attribute to `"true"`
-  - [ ] If tile is being dragged
-    - [ ] Remove the button from the DOM
-    - [ ] Nullify the LayoutTile's `button`
-    - [ ] Trigger drag end with a fake parameter
-    - [ ] Return
-  - [ ] Remove the button from the DOM
-    - [ ] Wait tile removal work before removing from DOM
-  - [ ] Uninstall draggable behavior
-  - [ ] Remove from state
-  - [ ] Remove from layout
-  - [ ] Remove from `$._buttons`
+- [x] `Tiles#removeTile()`
+  - [x] Set the `ATTR_REMOVING` attribute to `"true"`
+  - [x] If tile is being dragged
+    - [x] Nullify the LayoutTile's `button`
+    - [x] Trigger drag end with a fake parameter
+    - [x] Return
+  - [x] Remove the button from the DOM
+    - [x] Wait tile removal work before removing from DOM
+  - [x] Uninstall draggable behavior
+  - [x] Remove from state
+  - [x] Remove from layout
+  - [x] Remove from `$._buttons`
   - [ ] If checked, trigger selection change event.
-  - [ ] *Maybe later when I am more energetic*: Pull nearby-following tiles.
-  - [ ] Call `._deferred_rearrange()`
-  - [ ] Call `._deferred_state_update_signal()`
+  - [x] Call `._deferred_rearrange()`
+  - [x] Call `._deferred_state_update_signal()`
 - [ ] `Tiles#renameGroup()`
 - [ ] `Tiles#moveGroup()`
   - [ ] Do nothing if there's a group or tile being actively dragged.

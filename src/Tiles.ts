@@ -353,6 +353,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /**
    * Removes a group.
+   * @throws If the group does not exist.
    */
   removeGroup(id: string) {
     new GroupFactory(this).remove(id);
@@ -371,6 +372,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /**
    * Removes a tile.
+   * @throws If the tile does not exist.
    */
   removeTile(id: string) {
     new TileFactory(this).remove(id);

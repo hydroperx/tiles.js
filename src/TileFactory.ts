@@ -132,7 +132,55 @@ export class TileFactory {
 
   // Removes a tile.
   public remove(id: string) {
-    // fixme();
-    throw new Error("removing tiles not implemented.");
+    // Button
+    const button = this.$._buttons.get(id);
+    assert(!!button, "Tile '"+id+"' not found.");
+
+    // Set ATTR_REMOVING to true
+    button.setAttribute(Attributes.ATTR_REMOVING, "true");
+
+    // Disable pointer events
+    button.style.pointerEvents = "none";
+
+    // If the tile is being dragged, cancel the drag.
+    if (button.getAttribute(Attributes.ATTR_DRAGGING) == "true") {
+      // Nullify the LayoutTile's `button`
+      const layout_tile = this.$._layout.groups.find(group => group.hasTile(id))?.getTile(id);
+      if (layout_tile) layout_tile.button = null;
+
+      // Trigger drag end with a fake parameter
+      this.$._tile_drag_end_handlers.get(button)!(button, 0, 0, new Event("noevent"));
+
+      // Exit
+      return;
+    }
+
+    // Remove tile from the DOM
+    if (this.$._tile_removal_work) {
+      this.$._tile_removal_work(button).then(() => {
+        button.remove();
+      });
+    } else {
+      button.remove();
+    }
+
+    // Uninstall draggable behavior
+    new TileDraggableBehavior(this.$, id).uninstall();
+
+    // Remove from state
+    this.$._state.tiles.delete(id);
+
+    // Remove from layout
+    this.$._layout.groups.find(group => group.hasTile(id))
+      ?.getTile(id)?.remove();
+
+    // Remove from `Tiles#_buttons`
+    this.$._buttons.delete(id);
+
+    // Rearrange
+    this.$._deferred_rearrange();
+
+    // State update signal
+    this.$._deferred_state_update_signal();
   }
 }
