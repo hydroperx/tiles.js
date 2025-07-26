@@ -326,10 +326,12 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    * Destroys the `Tiles` instance, disposing
    * of any observers and removing the container from the DOM.
    */
-  destroy() {
+  destroy(removeFromDOM: boolean = true) {
     this._em_observer.cleanup();
     this._resize_observer?.disconnect();
-    this._container.remove();
+    if (removeFromDOM) {
+      this._container.remove();
+    }
 
     // Discard draggables
     for (const [, draggable] of this._group_draggables) {

@@ -6,7 +6,7 @@
 
 # Class: Tiles
 
-Defined in: [src/Tiles.ts:25](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L25)
+Defined in: [src/Tiles.ts:25](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L25)
 
 Tiles layout.
 
@@ -20,7 +20,7 @@ Tiles layout.
 
 > **new Tiles**(`params`): `Tiles`
 
-Defined in: [src/Tiles.ts:120](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L120)
+Defined in: [src/Tiles.ts:120](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L120)
 
 #### Parameters
 
@@ -195,7 +195,7 @@ This is typically used for tweening the tile view.
 
 > `readonly` `static` **ATTR\_CHECKED**: `"data-checked"` = `Attributes.ATTR_CHECKED`
 
-Defined in: [src/Tiles.ts:41](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L41)
+Defined in: [src/Tiles.ts:41](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L41)
 
 Attribute name used for indicating that a tile is checked.
 
@@ -205,7 +205,7 @@ Attribute name used for indicating that a tile is checked.
 
 > `readonly` `static` **ATTR\_DRAGGING**: `"data-dragging"` = `Attributes.ATTR_DRAGGING`
 
-Defined in: [src/Tiles.ts:37](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L37)
+Defined in: [src/Tiles.ts:37](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L37)
 
 Attribute name used for indicating that a tile is actively in drag.
 
@@ -215,7 +215,7 @@ Attribute name used for indicating that a tile is actively in drag.
 
 > `readonly` `static` **ATTR\_ID**: `"data-id"` = `Attributes.ATTR_ID`
 
-Defined in: [src/Tiles.ts:29](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L29)
+Defined in: [src/Tiles.ts:29](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L29)
 
 Attribute name used for identifying a tile's ID.
 
@@ -225,7 +225,7 @@ Attribute name used for identifying a tile's ID.
 
 > `readonly` `static` **ATTR\_SIZE**: `"data-size"` = `Attributes.ATTR_SIZE`
 
-Defined in: [src/Tiles.ts:33](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L33)
+Defined in: [src/Tiles.ts:33](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L33)
 
 Attribute name used for indicating a tile's size.
 
@@ -237,7 +237,7 @@ Attribute name used for indicating a tile's size.
 
 > **get** **inlineGroups**(): `number`
 
-Defined in: [src/Tiles.ts:582](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L582)
+Defined in: [src/Tiles.ts:585](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L585)
 
 Indicates the number of inline groups in a vertical layout.
 
@@ -253,7 +253,7 @@ If not in a vertical layout.
 
 > **set** **inlineGroups**(`val`): `void`
 
-Defined in: [src/Tiles.ts:585](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L585)
+Defined in: [src/Tiles.ts:588](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L588)
 
 ##### Parameters
 
@@ -273,7 +273,7 @@ Defined in: [src/Tiles.ts:585](https://github.com/hydroperx/tiles.js/blob/6f7ee0
 
 > **get** **state**(): [`State`](State.md)
 
-Defined in: [src/Tiles.ts:285](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L285)
+Defined in: [src/Tiles.ts:285](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L285)
 
 The overall tiles state.
 
@@ -385,7 +385,7 @@ The event listener is appended to target's event listener list and is not append
 
 > **addGroup**(`params`): `void`
 
-Defined in: [src/Tiles.ts:353](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L353)
+Defined in: [src/Tiles.ts:356](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L356)
 
 Adds a group to the end and returns its `div` element.
 
@@ -409,7 +409,7 @@ If group ID is duplicate.
 
 > **addTile**(`params`): `boolean`
 
-Defined in: [src/Tiles.ts:377](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L377)
+Defined in: [src/Tiles.ts:380](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L380)
 
 Attempts to add a tile.
 
@@ -447,7 +447,7 @@ If either of `x` and `y` are `null`, but not both.
 
 > **checkedTiles**(): `string`[]
 
-Defined in: [src/Tiles.ts:485](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L485)
+Defined in: [src/Tiles.ts:488](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L488)
 
 Returns which tiles are checked.
 
@@ -461,7 +461,7 @@ Returns which tiles are checked.
 
 > **clear**(): `void`
 
-Defined in: [src/Tiles.ts:292](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L292)
+Defined in: [src/Tiles.ts:292](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L292)
 
 Clears everything.
 
@@ -473,12 +473,18 @@ Clears everything.
 
 ### destroy()
 
-> **destroy**(): `void`
+> **destroy**(`removeFromDOM`): `void`
 
-Defined in: [src/Tiles.ts:328](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L328)
+Defined in: [src/Tiles.ts:329](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L329)
 
 Destroys the `Tiles` instance, disposing
 of any observers and removing the container from the DOM.
+
+#### Parameters
+
+##### removeFromDOM
+
+`boolean` = `true`
 
 #### Returns
 
@@ -516,7 +522,7 @@ Dispatches a synthetic event event to target and returns true if either event's 
 
 > **getChecked**(`tile`): `boolean`
 
-Defined in: [src/Tiles.ts:498](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L498)
+Defined in: [src/Tiles.ts:501](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L501)
 
 Returns whether a tile is checked or not.
 
@@ -536,7 +542,7 @@ Returns whether a tile is checked or not.
 
 > **inlineGroupsAvailable**(`width`): `number`
 
-Defined in: [src/Tiles.ts:557](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L557)
+Defined in: [src/Tiles.ts:560](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L560)
 
 Returns the number of inline groups available for
 the given width (either in `px` or `em`).
@@ -562,7 +568,7 @@ If not in a vertical layout.
 
 > **moveTile**(`id`, `x`, `y`): `boolean`
 
-Defined in: [src/Tiles.ts:454](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L454)
+Defined in: [src/Tiles.ts:457](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L457)
 
 Attempts to move a tile.
 
@@ -596,7 +602,7 @@ Y coordinate in small tiles unit (1x1).
 
 > **off**\<`K`\>(`type`, `listenerFn`, `options?`): `void`
 
-Defined in: [src/Tiles.ts:544](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L544)
+Defined in: [src/Tiles.ts:547](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L547)
 
 Shorthand to `removeEventListener()`.
 
@@ -628,7 +634,7 @@ Shorthand to `removeEventListener()`.
 
 > **off**(`type`, `listenerFn`, `options?`): `void`
 
-Defined in: [src/Tiles.ts:545](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L545)
+Defined in: [src/Tiles.ts:548](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L548)
 
 Shorthand to `removeEventListener()`.
 
@@ -658,7 +664,7 @@ Shorthand to `removeEventListener()`.
 
 > **on**\<`K`\>(`type`, `listenerFn`, `options?`): `void`
 
-Defined in: [src/Tiles.ts:535](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L535)
+Defined in: [src/Tiles.ts:538](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L538)
 
 Shorthand to `addEventListener()`.
 
@@ -690,7 +696,7 @@ Shorthand to `addEventListener()`.
 
 > **on**(`type`, `listenerFn`, `options?`): `void`
 
-Defined in: [src/Tiles.ts:536](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L536)
+Defined in: [src/Tiles.ts:539](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L539)
 
 Shorthand to `addEventListener()`.
 
@@ -792,7 +798,7 @@ Removes the event listener in target's event listener list with the same type, c
 
 > **removeGroup**(`id`): `void`
 
-Defined in: [src/Tiles.ts:361](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L361)
+Defined in: [src/Tiles.ts:364](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L364)
 
 Removes a group.
 
@@ -816,7 +822,7 @@ If the group does not exist.
 
 > **removeTile**(`id`): `void`
 
-Defined in: [src/Tiles.ts:385](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L385)
+Defined in: [src/Tiles.ts:388](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L388)
 
 Removes a tile.
 
@@ -840,7 +846,7 @@ If the tile does not exist.
 
 > **renameGroup**(`id`, `label`): `void`
 
-Defined in: [src/Tiles.ts:392](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L392)
+Defined in: [src/Tiles.ts:395](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L395)
 
 Renames a group.
 
@@ -864,7 +870,7 @@ Renames a group.
 
 > **resizeTile**(`id`, `size`): `boolean`
 
-Defined in: [src/Tiles.ts:414](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L414)
+Defined in: [src/Tiles.ts:417](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L417)
 
 Attempts to resize a tile.
 
@@ -888,7 +894,7 @@ Attempts to resize a tile.
 
 > **setChecked**(`tile`, `value`): `void`
 
-Defined in: [src/Tiles.ts:507](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L507)
+Defined in: [src/Tiles.ts:510](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L510)
 
 Sets whether a tile is checked or not.
 
@@ -912,7 +918,7 @@ Sets whether a tile is checked or not.
 
 > **toggleChecked**(`tile`): `void`
 
-Defined in: [src/Tiles.ts:528](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Tiles.ts#L528)
+Defined in: [src/Tiles.ts:531](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L531)
 
 Toggles whether a tile is checked or not.
 

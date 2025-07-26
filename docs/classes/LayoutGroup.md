@@ -6,7 +6,7 @@
 
 # Class: LayoutGroup
 
-Defined in: [src/Layout.ts:64](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L64)
+Defined in: [src/Layout.ts:64](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L64)
 
 Group.
 
@@ -16,7 +16,7 @@ Group.
 
 > **new LayoutGroup**(`$`, `id`, `div`, `width`, `height`): `LayoutGroup`
 
-Defined in: [src/Layout.ts:80](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L80)
+Defined in: [src/Layout.ts:80](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L80)
 
 Constructor.
 
@@ -52,7 +52,7 @@ Constructor.
 
 > **$**: [`Layout`](Layout.md)
 
-Defined in: [src/Layout.ts:81](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L81)
+Defined in: [src/Layout.ts:81](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L81)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [src/Layout.ts:81](https://github.com/hydroperx/tiles.js/blob/6f7ee0
 
 > **div**: `null` \| `HTMLDivElement`
 
-Defined in: [src/Layout.ts:83](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L83)
+Defined in: [src/Layout.ts:83](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L83)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [src/Layout.ts:83](https://github.com/hydroperx/tiles.js/blob/6f7ee0
 
 > **id**: `string`
 
-Defined in: [src/Layout.ts:82](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L82)
+Defined in: [src/Layout.ts:82](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L82)
 
 ## Methods
 
@@ -76,7 +76,7 @@ Defined in: [src/Layout.ts:82](https://github.com/hydroperx/tiles.js/blob/6f7ee0
 
 > **getLayoutSize**(): `object`
 
-Defined in: [src/Layout.ts:121](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L121)
+Defined in: [src/Layout.ts:121](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L121)
 
 Layout size in small tiles unit (1x1).
 
@@ -98,7 +98,7 @@ Layout size in small tiles unit (1x1).
 
 > **getTile**(`id`): `null` \| [`LayoutTile`](LayoutTile.md)
 
-Defined in: [src/Layout.ts:100](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L100)
+Defined in: [src/Layout.ts:100](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L100)
 
 Returns a specific tile.
 
@@ -118,7 +118,7 @@ Returns a specific tile.
 
 > **getTiles**(): [`LayoutTile`](LayoutTile.md)[]
 
-Defined in: [src/Layout.ts:93](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L93)
+Defined in: [src/Layout.ts:93](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L93)
 
 Returns an immutable unordered list of the contained tiles.
 
@@ -132,7 +132,7 @@ Returns an immutable unordered list of the contained tiles.
 
 > **hasTile**(`id`): `boolean`
 
-Defined in: [src/Layout.ts:107](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L107)
+Defined in: [src/Layout.ts:107](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L107)
 
 Returns whether a tile exists in this group.
 
@@ -152,7 +152,7 @@ Returns whether a tile exists in this group.
 
 > **isEmpty**(): `boolean`
 
-Defined in: [src/Layout.ts:114](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L114)
+Defined in: [src/Layout.ts:114](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L114)
 
 Returns whether the group is empty or not.
 
@@ -166,7 +166,7 @@ Returns whether the group is empty or not.
 
 > **rearrange**(): `void`
 
-Defined in: [src/Layout.ts:128](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/Layout.ts#L128)
+Defined in: [src/Layout.ts:128](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Layout.ts#L128)
 
 Rearranges group tiles and resizes the group's tiles div.
 

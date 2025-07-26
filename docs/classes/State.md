@@ -6,7 +6,7 @@
 
 # Class: State
 
-Defined in: [src/State.ts:7](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L7)
+Defined in: [src/State.ts:7](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L7)
 
 The state of a `Tiles` component, containing positions and labels.
 
@@ -26,7 +26,7 @@ The state of a `Tiles` component, containing positions and labels.
 
 > **groups**: `Map`\<`string`, \{ `index`: `number`; `label`: `string`; \}\>
 
-Defined in: [src/State.ts:8](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L8)
+Defined in: [src/State.ts:8](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L8)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [src/State.ts:8](https://github.com/hydroperx/tiles.js/blob/6f7ee085
 
 > **tiles**: `Map`\<`string`, \{ `group`: `string`; `size`: [`TileSize`](../type-aliases/TileSize.md); `x`: `number`; `y`: `number`; \}\>
 
-Defined in: [src/State.ts:9](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L9)
+Defined in: [src/State.ts:9](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L9)
 
 ## Methods
 
@@ -42,7 +42,7 @@ Defined in: [src/State.ts:9](https://github.com/hydroperx/tiles.js/blob/6f7ee085
 
 > **clear**(): `void`
 
-Defined in: [src/State.ts:64](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L64)
+Defined in: [src/State.ts:64](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L64)
 
 #### Returns
 
@@ -54,7 +54,7 @@ Defined in: [src/State.ts:64](https://github.com/hydroperx/tiles.js/blob/6f7ee08
 
 > **clone**(): `State`
 
-Defined in: [src/State.ts:86](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L86)
+Defined in: [src/State.ts:86](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L86)
 
 #### Returns
 
@@ -66,7 +66,7 @@ Defined in: [src/State.ts:86](https://github.com/hydroperx/tiles.js/blob/6f7ee08
 
 > **groupExists**(`id`): `boolean`
 
-Defined in: [src/State.ts:92](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L92)
+Defined in: [src/State.ts:92](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L92)
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: [src/State.ts:92](https://github.com/hydroperx/tiles.js/blob/6f7ee08
 
 > **set**(`state`): `void`
 
-Defined in: [src/State.ts:69](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L69)
+Defined in: [src/State.ts:69](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L69)
 
 #### Parameters
 
@@ -102,7 +102,7 @@ Defined in: [src/State.ts:69](https://github.com/hydroperx/tiles.js/blob/6f7ee08
 
 > **tileExists**(`id`): `boolean`
 
-Defined in: [src/State.ts:96](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L96)
+Defined in: [src/State.ts:96](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L96)
 
 #### Parameters
 
@@ -120,7 +120,7 @@ Defined in: [src/State.ts:96](https://github.com/hydroperx/tiles.js/blob/6f7ee08
 
 > **toJSON**(): `any`
 
-Defined in: [src/State.ts:41](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L41)
+Defined in: [src/State.ts:41](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L41)
 
 Returns a plain object (**not** a string).
 
@@ -134,7 +134,7 @@ Returns a plain object (**not** a string).
 
 > `static` **fromJSON**(`object`): `State`
 
-Defined in: [src/State.ts:16](https://github.com/hydroperx/tiles.js/blob/6f7ee08513ccd02bdcfad3a542e4d910ec6e8908/src/State.ts#L16)
+Defined in: [src/State.ts:16](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/State.ts#L16)
 
 Constructs `State` from JSON. The `object` argument
 may be a JSON serialized string or a plain object.
