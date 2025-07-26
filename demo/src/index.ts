@@ -20,7 +20,13 @@ const tiles = new Tiles({
   height: 6,
 });
 
-tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
+tiles.on("click", ({ detail: { tile } }) => {
+  if (tile == "tile1") {
+    alert("red!");
+  }
+});
+
+tiles.on("addedtile", ({ detail: { tile, button, contentDiv } }) => {
   switch (tile.id) {
     case "tile1": {
       button.style.background = "red";

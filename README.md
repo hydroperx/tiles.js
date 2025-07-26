@@ -110,7 +110,7 @@ tiles.destroy();
 Dispatched when a new group is added. Event is given a `CustomEvent<{ group: Group, div: HTMLDivElement, labelDiv: HTMLDivElement, labelTextDiv: HTMLDivElement, tilesDiv: HTMLDivElement }>` object. This is also dispatched when automatic groups are created (such as when a tile is dropped far away in no existing group).
 
 ```ts
-tiles.addEventListener("addedgroup", ({ detail: { group, div, labelDiv, labelTextDiv, tilesDiv } }) => {
+tiles.on("addedgroup", ({ detail: { group, div, labelDiv, labelTextDiv, tilesDiv } }) => {
     //
 });
 ```
@@ -120,7 +120,7 @@ tiles.addEventListener("addedgroup", ({ detail: { group, div, labelDiv, labelTex
 Dispatched when a new tile is added. Event is given a `CustomEvent<{ tile: Tile, button: HTMLButtonElement, contentDiv: HTMLDivElement }>` object.
 
 ```ts
-tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
+tiles.on("addedtile", ({ detail: { tile, button, contentDiv } }) => {
     //
 });
 ```
@@ -130,7 +130,7 @@ tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) =
 Dispatched whenever the state is updated. Event is given a `CustomEvent<State>` object.
 
 ```ts
-tiles.addEventListener("stateupdate", ({ detail: state }) => {
+tiles.on("stateupdate", ({ detail: state }) => {
     //
 });
 ```
@@ -140,7 +140,7 @@ tiles.addEventListener("stateupdate", ({ detail: state }) => {
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("dragstart", ({ detail: { tile } }) => {
+tiles.on("dragstart", ({ detail: { tile } }) => {
     //
 });
 ```
@@ -150,7 +150,7 @@ tiles.addEventListener("dragstart", ({ detail: { tile } }) => {
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("drag", ({ detail: { tile } }) => {
+tiles.on("drag", ({ detail: { tile } }) => {
     //
 });
 ```
@@ -160,7 +160,7 @@ tiles.addEventListener("drag", ({ detail: { tile } }) => {
 Event is given a `CustomEvent<{ tile: HTMLButtonElement }>` object.
 
 ```ts
-tiles.addEventListener("dragend", ({ detail: { tile } }) => {
+tiles.on("dragend", ({ detail: { tile } }) => {
     //
 });
 ```
@@ -170,7 +170,7 @@ tiles.addEventListener("dragend", ({ detail: { tile } }) => {
 Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
 
 ```ts
-tiles.addEventListener("groupdragstart", ({ detail: { group } }) => {
+tiles.on("groupdragstart", ({ detail: { group } }) => {
     //
 });
 ```
@@ -180,7 +180,7 @@ tiles.addEventListener("groupdragstart", ({ detail: { group } }) => {
 Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
 
 ```ts
-tiles.addEventListener("groupdrag", ({ detail: { group } }) => {
+tiles.on("groupdrag", ({ detail: { group } }) => {
     //
 });
 ```
@@ -190,7 +190,7 @@ tiles.addEventListener("groupdrag", ({ detail: { group } }) => {
 Event is given a `CustomEvent<{ group: HTMLDivElement }>` object.
 
 ```ts
-tiles.addEventListener("groupdragend", ({ detail: { group } }) => {
+tiles.on("groupdragend", ({ detail: { group } }) => {
     //
 });
 ```
@@ -200,7 +200,17 @@ tiles.addEventListener("groupdragend", ({ detail: { group } }) => {
 Event is given a `CustomEvent<{ tiles: string[] }>` object.
 
 ```ts
-tiles.addEventListener("selectionchange", ({ detail: { tiles } }) => {
+tiles.on("selectionchange", ({ detail: { tiles } }) => {
+    //
+});
+```
+
+#### click
+
+Event is given a `CustomEvent<{ tile: string }>` object.
+
+```ts
+tiles.on("click", ({ detail: { tile } }) => {
     //
 });
 ```

@@ -262,6 +262,22 @@ export class TileDraggableBehavior {
       // Remove from `Tiles#_buttons`
       this.$._buttons.delete(id);
 
+      // If checked, trigger selection change event.
+      if (button.getAttribute(Attributes.ATTR_CHECKED)) {
+        const all_buttons = [
+          ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+        ].map(btn => [
+          btn.getAttribute(Attributes.ATTR_ID),
+          btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
+        ]);
+        // Emit selectionchange event
+        this.$.dispatchEvent(new CustomEvent("selectionchange", {
+          detail: {
+            tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+          }
+        }));
+      }
+
       // If there is a ghost tile, revert it.
       if (this._ghostTile) this._revertGhostTile();
 

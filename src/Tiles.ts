@@ -601,6 +601,7 @@ export type TilesEventMap = {
   groupdrag: CustomEvent<{ group: HTMLDivElement }>;
   groupdragend: CustomEvent<{ group: HTMLDivElement }>;
   selectionchange: CustomEvent<{ tiles: string[] }>;
+  click: CustomEvent<{ tile: string }>;
 };
 
 /**

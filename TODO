@@ -23,7 +23,7 @@ While rearranging tiles:
   - [x] Do nothing if there's a tile or group being actively dragged.
   - [x] Destroy draggable if any
   - [x] Wait user work before removing from DOM
-  - [ ] If a tile from that group is checked, trigger selection change event.
+  - [x] If a tile from that group is checked, trigger selection change event.
   - [x] Call `._keep_groups_contiguous()`
   - [x] Call `._deferred_rearrange()`
   - [x] Call `._deferred_state_update_signal()`
@@ -39,7 +39,7 @@ While rearranging tiles:
   - [x] Remove from state
   - [x] Remove from layout
   - [x] Remove from `$._buttons`
-  - [ ] If checked, trigger selection change event.
+  - [x] If checked, trigger selection change event.
   - [x] Call `._deferred_rearrange()`
   - [x] Call `._deferred_state_update_signal()`
 - [x] `Tiles#renameGroup()`

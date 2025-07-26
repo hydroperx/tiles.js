@@ -55,6 +55,7 @@ export class TileFactory {
     // Size
     const size = params.size ?? "medium";
 
+    // button
     const button = document.createElement("button");
     button.classList.add(this.$._class_names.tile);
     button.setAttribute(Attributes.ATTR_ID, params.id);
@@ -65,6 +66,148 @@ export class TileFactory {
     button.style.boxSizing = "border-box";
     button.style.width = this.$._tile_em[size].w + "em";
     button.style.height = this.$._tile_em[size].h + "em";
+
+    // Event handlers for selection/checking
+    if (this.$._selection_enabled) {
+      // Variables
+      let
+        contextTimeout = -1,
+        contextTimestamp = -1,
+        justHeldLong = false,
+        touchDragging = false,
+        cursorDragging = false;
+
+      // mouse down
+      button.addEventListener("mousedown", (e) => {
+        cursorDragging = false;
+        contextTimeout = window.setTimeout(() => {
+          // do not start check toggle if dragging tile
+          if (button.getAttribute(Attributes.ATTR_DRAGGING) == "true") return;
+
+          // holding long on a tile will check it
+          toggle_check();
+          justHeldLong = true;
+          contextTimestamp = Date.now();
+        }, 600);
+      });
+      // mouse move
+      button.addEventListener("mousemove", e => {
+        cursorDragging = button.getAttribute(Attributes.ATTR_DRAGGING) == "true";
+      });
+      // mouse up
+      button.addEventListener("mouseup", (e) => {
+        if (contextTimeout !== -1)
+          window.clearTimeout(contextTimeout), (contextTimeout = -1);
+      });
+      // mouse out
+      button.addEventListener("mouseout", (e) => {
+        if (contextTimeout !== -1)
+          window.clearTimeout(contextTimeout), (contextTimeout = -1);
+        if (justHeldLong) {
+          justHeldLong = false;
+          return;
+        }
+      });
+      // click
+      button.addEventListener("click", (e) => {
+        if (justHeldLong) {
+          justHeldLong = false;
+          return;
+        }
+        if (cursorDragging) {
+          cursorDragging = false;
+          return;
+        }
+        click(e);
+      });
+
+      // touch start
+      button.addEventListener("touchstart", (e) => {
+        touchDragging = false;
+        contextTimeout = window.setTimeout(() => {
+          // do not simulate context menu if dragging tile
+          if (button.getAttribute(Attributes.ATTR_DRAGGING) == "true") return;
+
+          // holding long on a tile will check it
+          // (simulated context menu)
+          toggle_check();
+          justHeldLong = true;
+          contextTimestamp = Date.now();
+        }, 600);
+      });
+      // touch move
+      button.addEventListener("touchmove", (e) => {
+        touchDragging = button.getAttribute(Attributes.ATTR_DRAGGING) == "true";
+      });
+      // touch end
+      button.addEventListener("touchend", (e) => {
+        if (contextTimeout !== -1)
+          window.clearTimeout(contextTimeout), (contextTimeout = -1);
+        if (justHeldLong) {
+          justHeldLong = false;
+          return;
+        }
+        if (touchDragging) {
+          touchDragging = false;
+          return;
+        }
+        if (contextTimestamp === -1 || contextTimestamp < Date.now() - 100) {
+          click(e);
+        }
+      });
+      // touch cancel
+      button.addEventListener("touchcancel", (e) => {
+        if (contextTimeout !== -1)
+          window.clearTimeout(contextTimeout), (contextTimeout = -1);
+        touchDragging = false;
+        if (justHeldLong) {
+          justHeldLong = false;
+          return;
+        }
+      });
+
+      // click
+      const click = (e: Event) => {
+        if (contextTimeout !== -1)
+          window.clearTimeout(contextTimeout), (contextTimeout = -1);
+        // a click in a tile
+        if (contextTimestamp === -1 || contextTimestamp < Date.now() - 100) {
+          // during selection mode a click is a check toggle
+          const selection_mode = [
+            ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+          ].some(btn => btn.getAttribute(Attributes.ATTR_CHECKED) === "true");
+          if (selection_mode)
+            toggle_check();
+          else {
+            // click
+            this.$.dispatchEvent(new CustomEvent("click", {
+              detail: {
+                tile: params.id,
+              }
+            }));
+          }
+
+          contextTimestamp = -1;
+        }
+      }
+
+      // Toggle selection/checked-state of a tile.
+      const toggle_check = (): void => {
+        button.setAttribute(Attributes.ATTR_CHECKED, (button.getAttribute(Attributes.ATTR_CHECKED) != "true").toString());
+        const all_buttons = [
+          ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+        ].map(btn => [
+          btn.getAttribute(Attributes.ATTR_ID),
+          btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
+        ]);
+        // Emit selectionchange event
+        this.$.dispatchEvent(new CustomEvent("selectionchange", {
+          detail: {
+            tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+          }
+        }));
+      };
+    }
 
     // Contribute to layout
     const layout_group = this.$._layout.groups.find(g => g.id == group)!;
@@ -176,6 +319,22 @@ export class TileFactory {
 
     // Remove from `Tiles#_buttons`
     this.$._buttons.delete(id);
+
+    // If checked, trigger selection change event.
+    if (button.getAttribute(Attributes.ATTR_CHECKED)) {
+      const all_buttons = [
+        ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+      ].map(btn => [
+        btn.getAttribute(Attributes.ATTR_ID),
+        btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
+      ]);
+      // Emit selectionchange event
+      this.$.dispatchEvent(new CustomEvent("selectionchange", {
+        detail: {
+          tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+        }
+      }));
+    }
 
     // Rearrange
     this.$._deferred_rearrange();

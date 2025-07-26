@@ -132,6 +132,24 @@ export class GroupFactory {
       layout_group!.div.remove();
     }
 
+    // If any tile is checked, trigger selection change event.
+    const any_checked = [...layout_group.div.getElementsByClassName(this.$._class_names.tile)]
+      .some(button => button.getAttribute(Attributes.ATTR_CHECKED) == "true");
+    if (any_checked) {
+      const all_buttons = [
+        ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+      ].map(btn => [
+        btn.getAttribute(Attributes.ATTR_ID),
+        btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
+      ]);
+      // Emit selectionchange event
+      this.$.dispatchEvent(new CustomEvent("selectionchange", {
+        detail: {
+          tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+        }
+      }));
+    }
+
     // Remove tiles efficiently
     const tiles_to_remove: string[] = [];
     for (const [tile, tile_state] of this.$._state.tiles) {

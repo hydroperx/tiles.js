@@ -52,7 +52,7 @@
   - [x] Uninstall draggable behavior
   - [x] Remove from state
   - [x] Remove from `$._buttons`
-  - [ ] If checked, trigger selection change event.
+  - [x] If checked, trigger selection change event.
   - [x] If there is a ghost tile
     - [x] Execute the procedure above for *Reverting a ghost tile*
   - [x] `._deferred_rearrange()`
