@@ -361,8 +361,13 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
   /**
    * Adds a tile.
+   *
+   * If both `x` and `y` are null, this method always succeeds,
+   * adding the tile to the best position available.
+   *
    * @throws If tile ID is duplicate.
    * @throws If group is specified and does not exist.
+   * @throws If either of `x` and `y` are `null`, but not both.
    * @returns `true` if successfully added tile; `false` otherwise.
    * It can fail depending on the `x` and `y` parameters.
    */
