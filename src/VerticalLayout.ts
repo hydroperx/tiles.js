@@ -65,44 +65,61 @@ export class VerticalLayout extends Layout {
     OffsetUtils.divideOffsetBy(offset, this.$._em);
 
     // Basics
-    let resultX = 0, resultY = 0, accX = 0;
+    let resultX = 0, resultY = 0;
     const columnY = new Map<number, number>();
-    let column = 0;
 
-    // resultX
+    // resultX: Find group and tile index
     const groupWidth = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
-    const groupsWidth = this.$._inline_groups*groupWidth + (this.$._inline_groups-1)*this.$._group_gap;
-    const offset_center_x = offset.x + offset.w/2;
-    if (offset_center_x < 0) {
+    if (offset.x < -this.$._small_size * 2) {
       return null;
     }
-    g: for (; accX < groupsWidth; column++) {
-      const groupStartX = accX;
-      const groupEndX = accX + groupWidth;
-      for (resultX = 0; accX < groupEndX; resultX++) {
-        if (offset.x < accX + this.$._small_size/2) {
-          break g;
-        }
-        accX += this.$._small_size + this.$._tile_gap;
+    let groupIdx = -1;
+    let groupColumn = -1;
+    let groupStartX = 0;
+    for (let col = 0; col < this.$._inline_groups; col++) {
+      const startX = col * groupWidth + col * this.$._group_gap;
+      const endX = startX + groupWidth;
+      if (offset.x >= startX - this.$._small_size/2 && offset.x < endX + this.$._small_size/2) {
+        groupColumn = col;
+        groupStartX = startX;
+        break;
       }
-      accX += this.$._group_gap;
     }
-    if (offset.x > accX + this.$._small_size) {
+    if (groupColumn === -1) {
       return null;
     }
-
+    // Find groupIdx in this.groups for this column
+    for (let i = 0, col = 0; i < this.groups.length; i++, col = i % this.$._inline_groups) {
+      if (col === groupColumn) {
+        groupIdx = i;
+        break;
+      }
+    }
+    // Find tile index within group
+    let tileX = 0;
+    let tileStartX = groupStartX;
+    for (; tileX < this.$._group_width; tileX++) {
+      if (offset.x < tileStartX + this.$._small_size/2) {
+        break;
+      }
+      tileStartX += this.$._small_size + this.$._tile_gap;
+    }
+    resultX = tileX;
     // resultY
-    const offset_middle_y = offset.y + offset.h/2;
+    let foundY = false;
     for (let i = 0; i < this.groups.length; i++) {
       const group = this.groups[i];
       const column = i % this.$._inline_groups;
+      if (column !== groupColumn) continue;
       const groupStartY = columnY.get(column) ?? 0;
       let accY = groupStartY + this.$._label_height + this.$._tile_gap;
-      const groupInnerStartY = accY;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
       const groupEndY = groupStartY + h;
-      for (; accY < groupEndY; resultY++) {
+      let tileY = 0;
+      for (; accY < groupEndY; tileY++) {
         if (offset.y < accY + this.$._small_size/2) {
+          resultY = tileY;
+          foundY = true;
           return {
             group: group.id,
             x: resultX,
@@ -113,7 +130,6 @@ export class VerticalLayout extends Layout {
       }
       columnY.set(column, groupStartY + h + this.$._group_gap);
     }
-
     // Request an anonymous group
     return {
       group: undefined,
