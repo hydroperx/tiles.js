@@ -97,6 +97,7 @@ export class TileFactory {
     content_div.style.boxSizing = "border-box";
     content_div.style.width = "100%";
     content_div.style.height = "100%";
+    content_div.style.overflow = "hidden";
     button.appendChild(content_div);
 
     // Contribute to overall state
@@ -132,6 +133,6 @@ export class TileFactory {
   // Removes a tile.
   public remove(id: string) {
     // fixme();
-    throw new Error("removing not tiles implemented.");
+    throw new Error("removing tiles not implemented.");
   }
 }
