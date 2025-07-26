@@ -50,23 +50,17 @@ While rearranging tiles:
   - [x] Call `._deferred_rearrange()`
   - [x] Call `._deferred_state_update_signal()`
 - [x] `Tiles#renameGroup()`
-- [ ] `Tiles#moveGroup()`
-  - [ ] Do nothing if there's a group or tile being actively dragged.
-  - [ ] ...
-  - [ ] Call `._deferred_rearrange()`
-  - [ ] Call `._deferred_state_update_signal()`
-- [ ] `Tiles#resizeTile()`
-  - [ ] Do nothing if there's a tile being actively dragged.
-  - [ ] Update the layout tile's width and height.
-  - [ ] Update the tile state's size.
-  - [ ] Update `ATTR_SIZE`
-  - [ ] Call `._deferred_rearrange()`
-  - [ ] Call `._deferred_state_update_signal()`
-- [ ] `Tiles#moveTile()`
-  - [ ] Do nothing if there's a tile being actively dragged.
-  - [ ] ...
-  - [ ] Call `._deferred_rearrange()`
-  - [ ] Call `._deferred_state_update_signal()`
+- [x] `Tiles#resizeTile()`
+  - [x] Fail if there's a tile being actively dragged.
+  - [x] Call `layout_tile.resize()`
+  - [x] Update the tile state's size.
+  - [x] Update `ATTR_SIZE`
+  - [x] Call `._deferred_rearrange()`
+  - [x] Call `._deferred_state_update_signal()`
+- [x] `Tiles#moveTile()`
+  - [x] Do nothing if there's a tile being actively dragged.
+  - [x] ...
+  - [x] Call `._deferred_rearrange()`
 
 # Tile selection
 

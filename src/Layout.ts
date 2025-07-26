@@ -316,7 +316,7 @@ export class LayoutTile {
   /**
    * Resizes tile.
    */
-  public resize(id: string, width: number, height: number): boolean {
+  public resize(width: number, height: number): boolean {
     return this.$!._layout.resizeTile(this.id, width, height);
   }
 }

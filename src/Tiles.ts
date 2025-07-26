@@ -360,7 +360,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /**
-   * Adds a tile.
+   * Attempts to add a tile.
    *
    * If both `x` and `y` are null, this method always succeeds,
    * adding the tile to the best position available.
@@ -401,6 +401,77 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     // State update signal
     this._deferred_state_update_signal();
+  }
+
+  /**
+   * Attempts to resize a tile.
+   */
+  resizeTile(id: string, size: TileSize): boolean {
+    // Fail if currently dragging a tile.
+    const tiles_dragging = Array.from(this._container.getElementsByClassName(this._class_names.tile))
+      .some(button => button.getAttribute(Attributes.ATTR_DRAGGING) == "true");
+    if (tiles_dragging) {
+      return false;
+    }
+
+    // Layout tile
+    const layout_group = this._layout.groups.find(group => group.hasTile(id));
+    assert(!!layout_group, "Tile '"+id+"' not found.");
+    const layout_tile = layout_group!.getTile(id)!;
+
+    // Attempt resize
+    if (!layout_tile.resize(getWidth(size), getHeight(size))) {
+      return false;
+    }
+
+    // Update state
+    const tile_state = this._state.tiles.get(id);
+    assert(!!tile_state, "Tile '"+id+"' not found.");
+    tile_state.size = size;
+
+    // Update size attribute
+    layout_tile.button?.setAttribute(Attributes.ATTR_SIZE, size);
+
+    // Rearrange
+    this._deferred_rearrange();
+
+    // State update signal
+    this._deferred_state_update_signal();
+
+    return true;
+  }
+
+  /**
+   * Attempts to move a tile.
+   * @param x X coordinate in small tiles unit (1x1).
+   * @param y Y coordinate in small tiles unit (1x1).
+   */
+  moveTile(id: string, x: number, y: number): boolean {
+    // Fail if currently dragging a tile.
+    const tiles_dragging = Array.from(this._container.getElementsByClassName(this._class_names.tile))
+      .some(button => button.getAttribute(Attributes.ATTR_DRAGGING) == "true");
+    if (tiles_dragging) {
+      return false;
+    }
+
+    // Layout tile
+    const layout_group = this._layout.groups.find(group => group.hasTile(id));
+    assert(!!layout_group, "Tile '"+id+"' not found.");
+    const layout_tile = layout_group!.getTile(id)!;
+
+    // Attempt resize
+    if (!layout_tile.move(x, y)) {
+      return false;
+    }
+
+    // Update state
+    const tile_state = this._state.tiles.get(id);
+    assert(!!tile_state, "Tile '"+id+"' not found.");
+
+    // Rearrange
+    this._deferred_rearrange();
+
+    return true;
   }
 
   /**
