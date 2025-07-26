@@ -174,10 +174,15 @@ export class TileDraggableBehavior {
           this._gridSnap = null;
         }
         this.$._deferred_rearrange();
+      } else {
+        this.$._deferred_rearrange();
       }
     // Otherwise if a ghost tile has been created
     } else if (this._ghostTile) {
       this._revertGhostTile();
+      this.$._deferred_rearrange();
+    // Or just rearrange.
+    } else {
       this.$._deferred_rearrange();
     }
 

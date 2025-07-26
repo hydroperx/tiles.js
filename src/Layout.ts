@@ -160,32 +160,34 @@ export class LayoutGroup {
           old_y = state.y;
         state.x = tile.x;
         state.y = tile.y;
-        if (!(old_x == state.x && old_y == state.y) || !tile.positioned) {
-          changed = true;
 
-          // affect button
-          if (tile.button && tile.button.getAttribute(Attributes.ATTR_DRAGGING) != "true") {
-            if (tile.positioned) {
-              if (tile.tween) {
-                tile.tween.kill();
-              }
-              if (old_x != state.x && old_y != state.y) {
-                // change only Y
-                tile.button!.style.transform = `translateX(${x_em}em) translateY(-1000em)`;
-                to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
-              } else {
-                // change either only X or only Y
-                tile.tween = gsap.to(tile.button!, {
-                  x: x_em + "em",
-                  y: y_em + "em",
-                  duration: 0.18
-                });
-              }
-            // first position
-            } else {
-              tile.button!.style.transform = `translateX(${x_em}em) translateY(${y_em}em)`;
-              tile.positioned = true;
+        // state change
+        if (!(old_x == state.x && old_y == state.y)) {
+          changed = true;
+        }
+
+        // affect button
+        if (tile.button && tile.button.getAttribute(Attributes.ATTR_DRAGGING) != "true") {
+          if (tile.positioned) {
+            if (tile.tween) {
+              tile.tween.kill();
             }
+            if (old_x != state.x && old_y != state.y) {
+              // change only Y
+              tile.button!.style.transform = `translateX(${x_em}em) translateY(-1000em)`;
+              to_tween_y_late.push({ tile, button: tile.button!, hEM: h_em, yEM: y_em });
+            } else {
+              // change either only X or only Y
+              tile.tween = gsap.to(tile.button!, {
+                x: x_em + "em",
+                y: y_em + "em",
+                duration: 0.18
+              });
+            }
+          // first position
+          } else {
+            tile.button!.style.transform = `translateX(${x_em}em) translateY(${y_em}em)`;
+            tile.positioned = true;
           }
         }
       }
