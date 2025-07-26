@@ -45,7 +45,7 @@ export class VerticalLayout extends Layout {
       group.div.style.transform = `translateX(${left}em) translateY(${top}em)`;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
       parent_h = Math.max(parent_h, top + h);
-      column_y.set(column, h + this.$._group_gap);
+      column_y.set(column, top + h + this.$._group_gap);
       max_rows_found.set(column, (max_rows_found.get(column) ?? 0) + 1);
     }
 
