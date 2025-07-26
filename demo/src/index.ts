@@ -18,6 +18,7 @@ const tiles = new Tiles({
   groupGap: 3,
   labelHeight: 2,
   height: 6,
+  inlineGroups: 3,
 });
 
 tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
