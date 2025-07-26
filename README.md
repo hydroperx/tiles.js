@@ -62,41 +62,59 @@ Tile size:
 ```ts
 import { Tiles } from "@hydroperx/tiles";
 
-// Create a Tiles layout.
+const container = document.querySelector("#container")!;
+
+// Create layout
 const tiles = new Tiles({
-    // Container.
-    element,
-    // The direction of the tile container.
-    direction: "horizontal",
-    // Custom class names.
-    classNames: {
-        // Groups.
-        group: "group",
-        // Group labels.
-        groupLabel: "group-label",
-        // Group label text.
-        groupLabelText: "group-label-text",
-        // Group tiles.
-        groupTiles: "group-tiles",
-        // Tile buttons.
-        tile: "tile",
-        // Tile content.
-        tileContent: "tile-content",
-    },
-    // The size of small tiles, in cascading "rem" units.
-    smallSize: 3.625,
-    // Gap between tiles, in cascading "rem" units.
-    tileGap: 0.6,
-    // Gap between groups, in cascading "rem" units.
-    groupGap: 9,
-    // Group label height, in cascading "rem units".
-    labelHeight: 3.5,
-    // Work to do before removing a group from the DOM.
-    // This is typically used for tweening the group view (e.g. the scale).
-    groupRemovalWork: async (div) => {},
-    // Work to do before removing a tile from the DOM.
-    // This is typically used for tweening the tile view (e.g. the scale).
-    tileRemovalWork: async (button) => {},
+  element: container,
+  direction: "horizontal",
+  classNames: {
+    group: "group",
+    groupLabel: "group-label",
+    groupLabelText: "group-label-text",
+    groupTiles: "group-tiles",
+    tile: "tile",
+    tileContent: "tile-content",
+  },
+  smallSize: 3.625,
+  tileGap: 0.6,
+  groupGap: 3,
+  labelHeight: 2,
+  height: 6,
+});
+
+// Handle click in a tile
+tiles.on("click", ({ detail: { tile } }) => {
+  if (tile == "purple1") {
+    alert("one!");
+  }
+});
+
+// Handle tile addition
+tiles.on("addedtile", ({ detail: { tile, button, contentDiv } }) => {
+  if (tile.id.startsWith("purple")) {
+    button.style.background = "purple";
+  }
+});
+
+// Group 1
+tiles.addGroup({
+  id: "group1",
+  label: "Group 1",
+});
+
+// Tile 1
+tiles.addTile({
+  id: "purple1",
+  group: "group1",
+  size: "large",
+});
+
+// Tile 2
+tiles.addTile({
+  id: "purple2",
+  group: "group1",
+  size: "wide",
 });
 
 // Disposal
