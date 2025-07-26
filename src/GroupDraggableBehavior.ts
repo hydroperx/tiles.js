@@ -19,6 +19,7 @@ import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
  */
 export class GroupDraggableBehavior {
   private _startIndices: null | { group: string, index: number }[] = null;
+  private _lastBestGroup: string = "";
   private _ghostGroup: null | string = null;
 
   // Constructor
@@ -93,16 +94,9 @@ export class GroupDraggableBehavior {
     // Move group visually
     div.style.zIndex = "999999999";
 
-    // Remove any previous ghost group before calculations
-    if (this._ghostGroup) {
-      const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
-      if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
-    }
-
     // Find best candidate group to swap with using rectangle overlap, fallback to center distance
     let bestIdx = -1;
     let bestArea = 0;
-    let minDist = Infinity;
     const rect = div.getBoundingClientRect();
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].id === id || arr[i].id === this._ghostGroup) continue;
@@ -114,14 +108,6 @@ export class GroupDraggableBehavior {
         bestArea = overlap.area;
         bestIdx = i;
       }
-      // Track closest by center distance for fallback
-      const dx = (rect.left + rect.width/2) - (otherRect.left + otherRect.width/2);
-      const dy = (rect.top + rect.height/2) - (otherRect.top + otherRect.height/2);
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < minDist) {
-        minDist = dist;
-        if (bestArea === 0) bestIdx = i;
-      }
     }
 
     if (bestIdx !== -1) {
@@ -129,24 +115,21 @@ export class GroupDraggableBehavior {
       const best_group = arr[bestIdx];
       // Intended ghost index based on mouse position relative to best group center
       let newBestIdx = arr.indexOf(best_group);
-      let insertAfter = false;
-      if (best_group.div) {
-        const otherRect = best_group.div.getBoundingClientRect();
-        // Detect vertical layout by class name or type
-        const isVertical = this.$._dir == "vertical";
-        if (isVertical) {
-          // Vertical: use y
-          insertAfter = (rect.top + rect.height/2) > (otherRect.top + otherRect.height/2);
-        } else {
-          // Horizontal: use x
-          insertAfter = (rect.left + rect.width/2) > (otherRect.left + otherRect.width/2);
-        }
-      }
-      let intendedIdx = insertAfter ? newBestIdx + 1 : newBestIdx;
+      let intendedIdx = newBestIdx + (draggedIdx > newBestIdx ? 0 : 1);
       // If dragged group is already at intended index, do nothing
-      if (draggedIdx === intendedIdx) {
-        this._ghostGroup = null;
+      if (draggedIdx === intendedIdx || this._lastBestGroup == best_group.id) {
+        // Trigger Tiles#groupdrag event
+        this.$.dispatchEvent(new CustomEvent("groupdrag", {
+          detail: { group: div },
+        }));
+
         return;
+      }
+      this._lastBestGroup = best_group.id;
+      // Remove previous ghost group
+      if (this._ghostGroup) {
+        const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
+        if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
       }
       // Create ghost group id if needed
       if (!this._ghostGroup) {
@@ -162,6 +145,7 @@ export class GroupDraggableBehavior {
       this.$._deferred_rearrange();
       this.$._deferred_state_update_signal();
     }
+
     // Trigger Tiles#groupdrag event
     this.$.dispatchEvent(new CustomEvent("groupdrag", {
       detail: { group: div },
