@@ -239,6 +239,18 @@ tiles.on("click", ({ detail: { tile } }) => {
 - Do not add border, margin, padding or scale to `classNames.groupTiles` to avoid inconsistencies in grid-snapping.
 - Do not add margin or scale to `classNames.tile`. Scale may be used in `classNames.tileContent`.
 
+### Rearranging
+
+If your container starts at zero scale, then it is necessary to manually call `.rearrange()` for the first time after a very small scale (like when it is 0.01).
+
+For example:
+
+```js
+min_scale_timeout.current = window.setTimeout(() => {
+    base_tiles.current!.rearrange();
+}, TILES_OPEN_DELAY + 30);
+```
+
 ## License
 
 Apache 2.0

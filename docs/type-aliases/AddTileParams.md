@@ -8,7 +8,7 @@
 
 > **AddTileParams** = `object`
 
-Defined in: [src/Tiles.ts:681](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L681)
+Defined in: [src/Tiles.ts:691](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L691)
 
 Parameters for adding a tile.
 
@@ -18,7 +18,7 @@ Parameters for adding a tile.
 
 > `optional` **group**: `string`
 
-Defined in: [src/Tiles.ts:691](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L691)
+Defined in: [src/Tiles.ts:701](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L701)
 
 Group to attach tile to. If unspecified,
 tile is attached to either the last group (if unlabeled)
@@ -30,7 +30,7 @@ or a new last anonymous group.
 
 > **id**: `string`
 
-Defined in: [src/Tiles.ts:685](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L685)
+Defined in: [src/Tiles.ts:695](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L695)
 
 Tile ID.
 
@@ -40,7 +40,7 @@ Tile ID.
 
 > `optional` **size**: [`TileSize`](TileSize.md)
 
-Defined in: [src/Tiles.ts:705](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L705)
+Defined in: [src/Tiles.ts:715](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L715)
 
 Tile size.
 
@@ -56,7 +56,7 @@ medium
 
 > `optional` **x**: `number`
 
-Defined in: [src/Tiles.ts:695](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L695)
+Defined in: [src/Tiles.ts:705](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L705)
 
 Horizontal position in small tiles.
 
@@ -66,6 +66,6 @@ Horizontal position in small tiles.
 
 > `optional` **y**: `number`
 
-Defined in: [src/Tiles.ts:699](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L699)
+Defined in: [src/Tiles.ts:709](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L709)
 
 Vertical position in small tiles.

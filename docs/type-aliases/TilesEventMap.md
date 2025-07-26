@@ -8,7 +8,7 @@
 
 > **TilesEventMap** = `object`
 
-Defined in: [src/Tiles.ts:639](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L639)
+Defined in: [src/Tiles.ts:649](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L649)
 
 Tiles event map.
 
@@ -18,7 +18,7 @@ Tiles event map.
 
 > **addedgroup**: `CustomEvent`\<\{ `div`: `HTMLDivElement`; `group`: [`LayoutGroup`](../classes/LayoutGroup.md); `labelDiv`: `HTMLDivElement`; `tilesDiv`: `HTMLDivElement`; \}\>
 
-Defined in: [src/Tiles.ts:640](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L640)
+Defined in: [src/Tiles.ts:650](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L650)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [src/Tiles.ts:640](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **addedtile**: `CustomEvent`\<\{ `button`: `HTMLButtonElement`; `contentDiv`: `HTMLDivElement`; `tile`: [`LayoutTile`](../classes/LayoutTile.md); \}\>
 
-Defined in: [src/Tiles.ts:646](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L646)
+Defined in: [src/Tiles.ts:656](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L656)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [src/Tiles.ts:646](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **click**: `CustomEvent`\<\{ `tile`: `string`; \}\>
 
-Defined in: [src/Tiles.ts:659](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L659)
+Defined in: [src/Tiles.ts:669](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L669)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [src/Tiles.ts:659](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **drag**: `CustomEvent`\<\{ `tile`: `HTMLButtonElement`; \}\>
 
-Defined in: [src/Tiles.ts:653](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L653)
+Defined in: [src/Tiles.ts:663](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L663)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/Tiles.ts:653](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **dragend**: `CustomEvent`\<\{ `tile`: `HTMLButtonElement`; \}\>
 
-Defined in: [src/Tiles.ts:654](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L654)
+Defined in: [src/Tiles.ts:664](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L664)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/Tiles.ts:654](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **dragstart**: `CustomEvent`\<\{ `tile`: `HTMLButtonElement`; \}\>
 
-Defined in: [src/Tiles.ts:652](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L652)
+Defined in: [src/Tiles.ts:662](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L662)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [src/Tiles.ts:652](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **groupdrag**: `CustomEvent`\<\{ `group`: `HTMLDivElement`; \}\>
 
-Defined in: [src/Tiles.ts:656](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L656)
+Defined in: [src/Tiles.ts:666](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L666)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [src/Tiles.ts:656](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **groupdragend**: `CustomEvent`\<\{ `group`: `HTMLDivElement`; \}\>
 
-Defined in: [src/Tiles.ts:657](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L657)
+Defined in: [src/Tiles.ts:667](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L667)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [src/Tiles.ts:657](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **groupdragstart**: `CustomEvent`\<\{ `group`: `HTMLDivElement`; \}\>
 
-Defined in: [src/Tiles.ts:655](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L655)
+Defined in: [src/Tiles.ts:665](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L665)
 
 ***
 
@@ -90,7 +90,7 @@ Defined in: [src/Tiles.ts:655](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **selectionchange**: `CustomEvent`\<\{ `tiles`: `string`[]; \}\>
 
-Defined in: [src/Tiles.ts:658](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L658)
+Defined in: [src/Tiles.ts:668](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L668)
 
 ***
 
@@ -98,4 +98,4 @@ Defined in: [src/Tiles.ts:658](https://github.com/hydroperx/tiles.js/blob/30be6d
 
 > **stateupdate**: `CustomEvent`\<[`State`](../classes/State.md)\>
 
-Defined in: [src/Tiles.ts:651](https://github.com/hydroperx/tiles.js/blob/30be6d2c8ef62743bc7ae5f73140af2fd89e74b6/src/Tiles.ts#L651)
+Defined in: [src/Tiles.ts:661](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L661)

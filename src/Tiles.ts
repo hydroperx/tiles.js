@@ -590,6 +590,16 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     this._inline_groups = val;
     this._deferred_rearrange();
   }
+  
+  /**
+   * Rearranges the layout.
+   * 
+   * This call may be necessary if the container is scaled to zero, usable
+   * after the scale is greater than zero.
+   */
+  rearrange() {
+    this._deferred_rearrange();
+  }
 
   /** @hidden */
   _keep_groups_contiguous(): void {

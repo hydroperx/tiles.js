@@ -38,15 +38,15 @@ export class HorizontalLayout extends Layout {
       }
 
       // Reposition group
-      let width_em = 0;
+      let width = 0;
       if (group.div) {
         group.div.style.transform = `translateX(${x}em) translateY(0)`;
-        width_em = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+        width = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
       } else {
-        width_em = this.$._small_size*4;
+        width = this.$._small_size*4;
       }
-      parent_w += width_em;
-      x += width_em + this.$._group_gap;
+      parent_w += width;
+      x += width + this.$._group_gap;
     }
 
     // parent width has some additional increase
