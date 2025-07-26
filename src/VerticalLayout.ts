@@ -44,7 +44,7 @@ export class VerticalLayout extends Layout {
       const top = column_y.get(column) ?? 0;
       group.div.style.transform = `translateX(${left}em) translateY(${top}em)`;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
-      parent_h += h;
+      parent_h = Math.max(parent_h, top + h);
       column_y.set(column, h + this.$._group_gap);
       max_rows_found.set(column, (max_rows_found.get(column) ?? 0) + 1);
     }
@@ -66,7 +66,8 @@ export class VerticalLayout extends Layout {
 
     // Basics
     let resultX = 0, resultY = 0;
-    const columnY = new Map<number, number>();
+    const column_y = new Map<number, number>();
+    // ...existing code...
 
     // resultX: Find group and tile index
     const groupWidth = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
@@ -106,29 +107,47 @@ export class VerticalLayout extends Layout {
     }
     resultX = tileX;
     // resultY
-    let foundY = false;
+    // Compute vertical positions for each group as in rearrange()
+    const groupTops = new Map<number, number>(); // group index -> top Y
+    // ...existing code...
+    for (let i = 0; i < this.groups.length; i++) {
+      const column = i % this.$._inline_groups;
+      const prevY = column_y.get(column) ?? 0;
+      groupTops.set(i, prevY);
+      const group = this.groups[i];
+      const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      column_y.set(column, prevY + h + this.$._group_gap);
+    }
+    // Now snap to the group in the correct column whose bounds contain offset.y
     for (let i = 0; i < this.groups.length; i++) {
       const group = this.groups[i];
       const column = i % this.$._inline_groups;
       if (column !== groupColumn) continue;
-      const groupStartY = columnY.get(column) ?? 0;
-      let accY = groupStartY + this.$._label_height + this.$._tile_gap;
+      const groupStartY = groupTops.get(i)!;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
       const groupEndY = groupStartY + h;
-      let tileY = 0;
-      for (; accY < groupEndY; tileY++) {
-        if (offset.y < accY + this.$._small_size/2) {
-          resultY = tileY;
-          foundY = true;
-          return {
-            group: group.id,
-            x: resultX,
-            y: resultY,
-          };
+      if (offset.y >= groupStartY-this.$._small_size && offset.y < groupEndY+this.$._small_size) {
+        // Snap to tile within group
+        let accY = groupStartY + this.$._label_height + this.$._tile_gap;
+        let tileY = 0;
+        for (; accY < groupEndY; tileY++) {
+          if (offset.y < accY + this.$._small_size/2) {
+            resultY = tileY;
+            return {
+              group: group.id,
+              x: resultX,
+              y: resultY,
+            };
+          }
+          accY += this.$._small_size + this.$._tile_gap;
         }
-        accY += this.$._small_size + this.$._tile_gap;
+        resultY = tileY;
+        return {
+          group: group.id,
+          x: resultX,
+          y: resultY,
+        };
       }
-      columnY.set(column, groupStartY + h + this.$._group_gap);
     }
     // Request an anonymous group
     return {
