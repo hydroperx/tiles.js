@@ -319,6 +319,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
 
     // Rearrange layout
     this._deferred_rearrange();
+    this._deferred_state_update_signal();
   }
 
   /**
