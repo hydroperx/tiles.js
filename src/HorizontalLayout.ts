@@ -22,24 +22,28 @@ export class HorizontalLayout extends Layout {
    * Rearranges group tiles.
    */
   public override rearrange(): void {
-    let x_em = 0;
-    let parent_w_em = this.groups.length == 0 ? 0 : (this.groups.length - 1) * this.$._group_gap;
-    let parent_h_em = this.$._label_height + this.$._tile_gap + this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
+    // Current X in the cascading EM unit
+    let x = 0;
+    let parent_w = this.groups.length == 0 ? 0 : (this.groups.length - 1) * this.$._group_gap;
+    let parent_h = this.$._label_height + this.$._tile_gap + this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
 
     // Rearrange group tiles and reposition groups
     for (const group of this.groups) {
       group.rearrange();
 
       // Reposition group
-      group.div.style.transform = `translateX(${x_em}em) translateY(0)`;
+      group.div.style.transform = `translateX(${x}em) translateY(0)`;
       const width_em = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
-      parent_w_em += width_em;
-      x_em += width_em + this.$._group_gap;
+      parent_w += width_em;
+      x += width_em + this.$._group_gap;
     }
 
+    // parent width has some additional increase
+    parent_w += this.$._small_size*2;
+
     // Set parent size
-    this.$._container.style.width = parent_w_em + "em";
-    this.$._container.style.height = parent_h_em + "em";
+    this.$._container.style.width = parent_w + "em";
+    this.$._container.style.height = parent_h + "em";
   }
 
   /**
@@ -103,7 +107,7 @@ export class HorizontalLayout extends Layout {
         }
         accX += this.$._small_size + this.$._tile_gap;
       }
-      accX += w + this.$._group_gap;
+      return { group: resultGroup, x: resultX, y: resultY };
     }
     // Request anonymous group
     return {

@@ -49,6 +49,9 @@ export class VerticalLayout extends Layout {
       max_rows_found.set(column, (max_rows_found.get(column) ?? 0) + 1);
     }
 
+    // parent height has some additional increase
+    parent_h += this.$._small_size*2;
+
     // Set parent size
     const max_rows = Math.max(...Array.from(max_rows_found.values()));
     parent_h += max_rows == 0 ? 0 : (max_rows - 1) * this.$._group_gap;

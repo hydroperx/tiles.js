@@ -52,6 +52,7 @@ export class GroupFactory {
     div.style.flexDirection = "column";
     div.style.gap = this.$._tile_gap + "em";
     div.style.position = "absolute";
+    div.style.transition = "transform 0.2s ease";
     this.$._container.appendChild(div);
 
     // Group's label div

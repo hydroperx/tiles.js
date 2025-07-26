@@ -175,11 +175,15 @@ export class TileDraggableBehavior {
         let extentLimit = false;
         const layoutSize = layout_group.getLayoutSize();
         if (this.$._dir == "horizontal") {
-          if (x + w > layoutSize.width+5) {
+          const r = w == 1 ? 2 : w == 2 ? 4 : 6;
+          if (x + w > layoutSize.width + r) {
             extentLimit = true;
           }
-        } else if (y + h > layoutSize.height+5) {
-          extentLimit = true;
+        } else {
+          const r = h == 1 ? 2 : h == 2 ? 4 : 6;
+          if (y + h > layoutSize.height + r) {
+            extentLimit = true;
+          }
         }
 
         if (extentLimit) {
