@@ -110,38 +110,28 @@ export class GroupDraggableBehavior {
         closestIdx = i;
       }
     }
-    // If within threshold, swap indices (only once per drag event)
+    // If within threshold, show ghost group at intended position
     if (closestIdx !== -1 && minDist > 2 * this.$._em) {
-      const draggedIdx = this.$._layout.groups.findIndex(g => g.id === id);
-      if (draggedIdx !== closestIdx) {
-        // Reverts previous ghost group
-        this._revertGhostGroup();
-
-        // Closest group
-        const arr = this.$._layout.groups;
-        const closest_group = arr[closestIdx];
-
-        // Create ghost group
-        this._ghostGroup = "__anonymous$" + RandomUtils.hexLarge();
-        const layoutGhostGroup = new LayoutGroup(this.$._layout, this._ghostGroup!, null, undefined, undefined);
-
-        // Recalculate closest group index after splice
-        let newClosestIdx = arr.indexOf(closest_group);
-        // Insert before or after closest group based on drag direction
-        if (draggedIdx < closestIdx) {
-          // Dragged group was before, insert before closest group
-          arr.splice(newClosestIdx + 1, 0, layoutGhostGroup);
-        } else {
-          // Dragged group was after, insert after closest group
-          arr.splice(newClosestIdx, 0, layoutGhostGroup);
-        }
-        // Update state of closest group
-        this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
-
-        this.$._keep_groups_contiguous();
-        this.$._deferred_rearrange();
-        this.$._deferred_state_update_signal();
-      }
+      const arr = this.$._layout.groups;
+      const draggedIdx = arr.findIndex(g => g.id === id);
+      const closest_group = arr[closestIdx];
+      // Intended ghost index
+      let newClosestIdx = arr.indexOf(closest_group);
+      let intendedIdx = (draggedIdx < closestIdx) ? newClosestIdx + 1 : newClosestIdx;
+      // If ghost group is already at intended position, do nothing
+      if (arr[intendedIdx] && arr[intendedIdx].id === this._ghostGroup) return;
+      // Remove any previous ghost group
+      this._revertGhostGroup();
+      // Create ghost group
+      this._ghostGroup = "__anonymous$" + RandomUtils.hexLarge();
+      const layoutGhostGroup = new LayoutGroup(this.$._layout, this._ghostGroup!, null, undefined, undefined);
+      arr.splice(intendedIdx, 0, layoutGhostGroup);
+      // Update state of closest group
+      this.$._state.groups.get(id)!.index = intendedIdx;
+      this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
+      this.$._keep_groups_contiguous();
+      this.$._deferred_rearrange();
+      this.$._deferred_state_update_signal();
     }
     // Trigger Tiles#groupdrag event
     this.$.dispatchEvent(new CustomEvent("groupdrag", {
@@ -172,16 +162,19 @@ export class GroupDraggableBehavior {
     
     // Take place of ghost group.
     if (this._ghostGroup) {
-      // Ghost group index
-      const ghostGroupIndex = this.$._layout.groups.findIndex(group => group.id == this._ghostGroup!);
-      this.$._layout.groups.splice(ghostGroupIndex, 1);
-      // Change index
-      this.$._state.groups.get(id)!.index = ghostGroupIndex;
-      this.$._layout.groups.splice(ghostGroupIndex, 1);
-      // Keep groups contiguous
-      this.$._keep_groups_contiguous();
-      // State update signal
-      this.$._deferred_state_update_signal();
+      const arr = this.$._layout.groups;
+      const ghostGroupIndex = arr.findIndex(group => group.id == this._ghostGroup!);
+      if (ghostGroupIndex !== -1) {
+        // Remove ghost group and insert dragged group at its place
+        arr.splice(ghostGroupIndex, 1);
+        const draggedIdx = arr.findIndex(g => g.id === id);
+        const [draggedGroup] = arr.splice(draggedIdx, 1);
+        arr.splice(ghostGroupIndex, 0, draggedGroup);
+        this.$._state.groups.get(id)!.index = ghostGroupIndex;
+        this.$._keep_groups_contiguous();
+        this.$._deferred_state_update_signal();
+      }
+      this._ghostGroup = null;
     }
 
     // Rearrange
