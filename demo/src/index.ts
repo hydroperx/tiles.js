@@ -4,7 +4,7 @@ const container = document.querySelector("#container")!;
 
 const tiles = new Tiles({
   element: container,
-  direction: "horizontal",
+  direction: "vertical",
   classNames: {
     group: "group",
     groupLabel: "group-label",
@@ -18,6 +18,7 @@ const tiles = new Tiles({
   groupGap: 3,
   labelHeight: 2,
   height: 6,
+  inlineGroups: 3,
 });
 
 tiles.on("click", ({ detail: { tile } }) => {

@@ -112,13 +112,26 @@ export class GroupDraggableBehavior {
     if (closestIdx !== -1 && minDist < 2 * this.$._em) {
       const draggedIdx = this.$._layout.groups.findIndex(g => g.id === id);
       if (draggedIdx !== closestIdx) {
+        // Closest group
+        const closest_group = this.$._layout.groups[closestIdx];
+
         // Remove dragged group from array
         const arr = this.$._layout.groups;
         const [draggedGroup] = arr.splice(draggedIdx, 1);
         // Insert at new position
+        closestIdx = this.$._layout.groups.indexOf(closest_group);
         arr.splice(closestIdx, 0, draggedGroup);
         this.$._keep_groups_contiguous();
+
+        // Update state
+        const dragged_group_state = this.$._state.groups.get(id)!;
+        dragged_group_state.index = closestIdx;
+        const closest_group_state = this.$._state.groups.get(closest_group.id)!;
+        closest_group_state.index = closestIdx + 1;
+
+        // Rearrange
         this.$._deferred_rearrange();
+        // State update signal
         this.$._deferred_state_update_signal();
       }
     }
