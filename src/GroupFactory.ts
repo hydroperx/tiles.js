@@ -129,30 +129,34 @@ export class GroupFactory {
     new GroupDraggableBehavior(this.$, id).uninstall();
 
     // Remove from DOM
-    if (this.$._group_removal_work) {
-      this.$._group_removal_work(layout_group!.div).then(() => {
+    if (layout_group!.div) {
+      if (this.$._group_removal_work) {
+        this.$._group_removal_work(layout_group!.div).then(() => {
+          layout_group!.div!.remove();
+        });
+      } else {
         layout_group!.div.remove();
-      });
-    } else {
-      layout_group!.div.remove();
+      }
     }
 
     // If any tile is checked, trigger selection change event.
-    const any_checked = [...layout_group.div.getElementsByClassName(this.$._class_names.tile)]
-      .some(button => button.getAttribute(Attributes.ATTR_CHECKED) == "true");
-    if (any_checked) {
-      const all_buttons = [
-        ...this.$._container.getElementsByClassName(this.$._class_names.tile),
-      ].map(btn => [
-        btn.getAttribute(Attributes.ATTR_ID),
-        btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
-      ]);
-      // Emit selectionchange event
-      this.$.dispatchEvent(new CustomEvent("selectionchange", {
-        detail: {
-          tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
-        }
-      }));
+    if (layout_group.div) {
+      const any_checked = [...layout_group.div.getElementsByClassName(this.$._class_names.tile)]
+        .some(button => button.getAttribute(Attributes.ATTR_CHECKED) == "true");
+      if (any_checked) {
+        const all_buttons = [
+          ...this.$._container.getElementsByClassName(this.$._class_names.tile),
+        ].map(btn => [
+          btn.getAttribute(Attributes.ATTR_ID),
+          btn.getAttribute(Attributes.ATTR_CHECKED) === "true",
+        ]);
+        // Emit selectionchange event
+        this.$.dispatchEvent(new CustomEvent("selectionchange", {
+          detail: {
+            tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+          }
+        }));
+      }
     }
 
     // Remove tiles efficiently

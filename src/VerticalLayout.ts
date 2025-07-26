@@ -7,6 +7,7 @@ import * as PaddingUtils from "./utils/PaddingUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
+import * as Attributes from "./Attributes";
 
 /**
  * Vertical layout.
@@ -38,12 +39,22 @@ export class VerticalLayout extends Layout {
       const group = this.groups[i];
       group.rearrange();
 
+      // ignore from layout any group being dragged.
+      if (group.div?.getAttribute(Attributes.ATTR_DRAGGING) == "true") {
+        continue;
+      }
+
       // Reposition group
       const column = i % this.$._inline_groups;
       const left = column*group_w + column*this.$._group_gap;
       const top = column_y.get(column) ?? 0;
-      group.div.style.transform = `translateX(${left}em) translateY(${top}em)`;
-      const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      let h = 0;
+      if (group.div) {
+        group.div!.style.transform = `translateX(${left}em) translateY(${top}em)`;
+        h = ((group.div!.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      } else {
+        h = this.$._small_size*2;
+      }
       parent_h = Math.max(parent_h, top + h);
       column_y.set(column, top + h + this.$._group_gap);
       max_rows_found.set(column, (max_rows_found.get(column) ?? 0) + 1);
@@ -118,7 +129,12 @@ export class VerticalLayout extends Layout {
       const prevY = column_y.get(column) ?? 0;
       groupTops.set(i, prevY);
       const group = this.groups[i];
-      const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      let h = 0;
+      if (group.div) {
+        h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      } else {
+        h = this.$._small_size*2;
+      }
       column_y.set(column, prevY + h + this.$._group_gap);
     }
     // Now snap to the group in the correct column whose bounds contain offset.y
@@ -127,7 +143,12 @@ export class VerticalLayout extends Layout {
       const column = i % this.$._inline_groups;
       if (column !== groupColumn) continue;
       const groupStartY = groupTops.get(i)!;
-      const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      let h = 0;
+      if (group.div) {
+        h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
+      } else {
+        h = this.$._small_size*2;
+      }
       const groupEndY = groupStartY + h;
       if (offset.y >= groupStartY-this.$._small_size && offset.y < groupEndY+this.$._small_size) {
         // Snap to tile within group

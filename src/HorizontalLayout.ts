@@ -6,6 +6,7 @@ import * as OffsetUtils from "./utils/OffsetUtils";
 import * as ScaleUtils from "./utils/ScaleUtils";
 import type { Tiles } from "./Tiles";
 import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
+import * as Attributes from "./Attributes";
 
 /**
  * Horizontal layout.
@@ -31,9 +32,19 @@ export class HorizontalLayout extends Layout {
     for (const group of this.groups) {
       group.rearrange();
 
+      // ignore from layout any group being dragged.
+      if (group.div?.getAttribute(Attributes.ATTR_DRAGGING) == "true") {
+        continue;
+      }
+
       // Reposition group
-      group.div.style.transform = `translateX(${x}em) translateY(0)`;
-      const width_em = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+      let width_em = 0;
+      if (group.div) {
+        group.div.style.transform = `translateX(${x}em) translateY(0)`;
+        width_em = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+      } else {
+        width_em = this.$._small_size*4;
+      }
       parent_w += width_em;
       x += width_em + this.$._group_gap;
     }
@@ -89,7 +100,12 @@ export class HorizontalLayout extends Layout {
       return null;
     }
     for (const group of this.$._layout.groups) {
-      const w = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+      let w = 0;
+      if (group.div) {
+        w = ((group.div.getBoundingClientRect().width / ScaleUtils.getScale(group.div).x) / this.$._em);
+      } else {
+        w = this.$._small_size*4;
+      }
       const endX = accX + w;
       const group_horizontal_start = accX;
       resultGroup = group.id;

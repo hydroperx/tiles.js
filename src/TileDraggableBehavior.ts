@@ -317,9 +317,11 @@ export class TileDraggableBehavior {
 
       // Move the tile to the snap-match group's tilesDiv DOM.
       button.remove();
-      layout_group.div
-        .getElementsByClassName(this.$._class_names.groupTiles)[0]
-        .appendChild(button);
+      if (layout_group.div) {
+        layout_group.div!
+          .getElementsByClassName(this.$._class_names.groupTiles)[0]
+          .appendChild(button);
+      }
       
       // Undo drag position
       button.style.inset = "";
@@ -368,9 +370,11 @@ export class TileDraggableBehavior {
 
       // Move the tile to the new group's tilesDiv DOM.
       button.remove();
-      layout_group.div
-        .getElementsByClassName(this.$._class_names.groupTiles)[0]
-        .appendChild(button);
+      if (layout_group.div) {
+        layout_group.div!
+          .getElementsByClassName(this.$._class_names.groupTiles)[0]
+          .appendChild(button);
+      }
 
       // Undo drag position
       button.style.inset = "";
@@ -390,9 +394,11 @@ export class TileDraggableBehavior {
     } else {
       // Move the tile to the DOM back in the group it was.
       button.remove();
-      old_layout_group.div
-        .getElementsByClassName(this.$._class_names.groupTiles)[0]
-        .appendChild(button);
+      if (old_layout_group.div) {
+        old_layout_group.div!
+          .getElementsByClassName(this.$._class_names.groupTiles)[0]
+          .appendChild(button);
+      }
 
       const w = getWidth(tile_state.size);
       const h = getHeight(tile_state.size);

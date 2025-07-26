@@ -80,7 +80,7 @@ export class LayoutGroup {
   public constructor(
     public $: Layout,
     public id: string,
-    public div: HTMLDivElement,
+    public div: null | HTMLDivElement,
     width: undefined | number,
     height: undefined | number
   ) {
@@ -208,13 +208,15 @@ export class LayoutGroup {
     }
 
     // Resize groupTiles div
-    const group_tiles_div = this.div.getElementsByClassName(this.$.$._class_names.groupTiles)[0] as HTMLElement;
-    let min_w = 0;
-    if (this.$.$._dir == "horizontal") {
-      min_w = 18;
+    if (this.div) {
+      const group_tiles_div = this.div!.getElementsByClassName(this.$.$._class_names.groupTiles)[0] as HTMLElement;
+      let min_w = 0;
+      if (this.$.$._dir == "horizontal") {
+        min_w = 18;
+      }
+      group_tiles_div.style.width = Math.max(min_w, tiles_width_em) + "em";
+      group_tiles_div.style.height = tiles_height_em + "em";
     }
-    group_tiles_div.style.width = Math.max(min_w, tiles_width_em) + "em";
-    group_tiles_div.style.height = tiles_height_em + "em";
 
     // State update signal
     if (changed) {

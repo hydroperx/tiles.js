@@ -398,9 +398,11 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
     // Affect the DOM
     const layout_group = this._layout.groups.find(group => group.id == id);
     assert(!!layout_group, "Group '"+id+"' not found.");
-    const textElement = layout_group.div
-      .getElementsByClassName(this._class_names.groupLabelText)[0] as HTMLElement;
-    textElement.innerText = label;
+    if (layout_group.div) {
+      const textElement = layout_group.div
+        .getElementsByClassName(this._class_names.groupLabelText)[0] as HTMLElement;
+      textElement.innerText = label;
+    }
 
     // State update signal
     this._deferred_state_update_signal();

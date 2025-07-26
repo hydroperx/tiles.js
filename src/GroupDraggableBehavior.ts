@@ -19,6 +19,7 @@ import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
  */
 export class GroupDraggableBehavior {
   private _startIndices: null | { group: string, index: number }[] = null;
+  private _ghostGroup: null | string = null;
 
   // Constructor
   public constructor(private $: Tiles, private id: string) {
@@ -63,7 +64,7 @@ export class GroupDraggableBehavior {
     const { id } = this;
     const group = this.$._layout.groups.find(g => g.id === id);
     if (!group) return;
-    const div = group.div;
+    const div = group.div!;
     // Set dragging attribute
     div.setAttribute(Attributes.ATTR_DRAGGING, "true");
     // Store start indices
@@ -87,7 +88,7 @@ export class GroupDraggableBehavior {
     const { id } = this;
     const group = this.$._layout.groups.find(g => g.id === id);
     if (!group) return;
-    const div = group.div;
+    const div = group.div!;
     // Move group visually
     div.style.zIndex = "999999999";
 
@@ -98,6 +99,7 @@ export class GroupDraggableBehavior {
     for (let i = 0; i < this.$._layout.groups.length; i++) {
       if (this.$._layout.groups[i].id === id) continue;
       const otherDiv = this.$._layout.groups[i].div;
+      if (!otherDiv) continue;
       const otherRect = otherDiv.getBoundingClientRect();
       // Use center distance
       const dx = (rect.left + rect.width/2) - (otherRect.left + otherRect.width/2);
@@ -109,38 +111,40 @@ export class GroupDraggableBehavior {
       }
     }
     // If within threshold, swap indices (only once per drag event)
-    if (closestIdx !== -1 && minDist < 2 * this.$._em) {
+    if (closestIdx !== -1 && minDist > 2 * this.$._em) {
       const draggedIdx = this.$._layout.groups.findIndex(g => g.id === id);
       if (draggedIdx !== closestIdx) {
+        // Reverts previous ghost group
+        this._revertGhostGroup();
+
         // Closest group
-        const closest_group = this.$._layout.groups[closestIdx];
-
-        // Remove dragged group from array
         const arr = this.$._layout.groups;
-        const [draggedGroup] = arr.splice(draggedIdx, 1);
-        // Insert at new position: left or right of closest group
-        let insertIdx = arr.indexOf(closest_group);
+        const closest_group = arr[closestIdx];
+
+        // Create ghost group
+        this._ghostGroup = "__anonymous$" + RandomUtils.hexLarge();
+        const layoutGhostGroup = new LayoutGroup(this.$._layout, this._ghostGroup!, null, undefined, undefined);
+
+        // Recalculate closest group index after splice
+        let newClosestIdx = arr.indexOf(closest_group);
+        // Insert before or after closest group based on drag direction
         if (draggedIdx < closestIdx) {
-          // Dragged group was before, so insert to the left
-          arr.splice(insertIdx, 0, draggedGroup);
+          // Dragged group was before, insert before closest group
+          arr.splice(newClosestIdx + 1, 0, layoutGhostGroup);
 
           // Update state
-          this.$._state.groups.get(draggedGroup.id)!.index = insertIdx;
+          this.$._state.groups.get(layoutGhostGroup.id)!.index = newClosestIdx + 1;
         } else {
-          // Dragged group was after, so insert to the right
-          arr.splice(insertIdx + 1, 0, draggedGroup);
+          // Dragged group was after, insert after closest group
+          arr.splice(newClosestIdx, 0, layoutGhostGroup);
 
           // Update state
-          this.$._state.groups.get(draggedGroup.id)!.index = insertIdx + 1;
+          this.$._state.groups.get(layoutGhostGroup.id)!.index = newClosestIdx;
         }
-
         // Update state of closest group
         this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
 
-        // Keep groups contiguous
         this.$._keep_groups_contiguous();
-
-        // Rearrange and update state
         this.$._deferred_rearrange();
         this.$._deferred_state_update_signal();
       }
@@ -157,7 +161,7 @@ export class GroupDraggableBehavior {
     const { id } = this;
     const group = this.$._layout.groups.find(g => g.id === id);
     if (!group) return;
-    const div = group.div;
+    const div = group.div!;
     // Remove dragging attribute
     div.setAttribute(Attributes.ATTR_DRAGGING, "false");
     // Undo drag position
@@ -165,19 +169,41 @@ export class GroupDraggableBehavior {
     // Reset transform and zIndex
     div.style.transform = "";
     div.style.zIndex = "";
-    // Update state
-    this.$._deferred_state_update_signal();
-    this.$._deferred_rearrange();
 
     // Enable pointer events back
     this.$._container.style.pointerEvents = "";
     div.style.pointerEvents = "";
     (div.getElementsByClassName(this.$._class_names.groupTiles)[0] as HTMLElement)
       .style.pointerEvents = "";
+    
+    // Take place of ghost group.
+    if (this._ghostGroup) {
+      // Ghost group index
+      const ghostGroupIndex = this.$._layout.groups.findIndex(group => group.id == this._ghostGroup!);
+      this.$._layout.groups.splice(ghostGroupIndex, 1);
+      // Change index
+      this.$._state.groups.get(id)!.index = ghostGroupIndex;
+      this.$._layout.groups.splice(ghostGroupIndex, 1);
+      // Keep groups contiguous
+      this.$._keep_groups_contiguous();
+      // State update signal
+      this.$._deferred_state_update_signal();
+    }
 
-      // Trigger Tiles#groupdragend event
+    // Rearrange
+    this.$._deferred_rearrange();
+
+    // Trigger Tiles#groupdragend event
     this.$.dispatchEvent(new CustomEvent("groupdragend", {
       detail: { group: div },
     }));
+  }
+
+  // Reverts ghost group.
+  private _revertGhostGroup(): void {
+    if (!this._ghostGroup) return;
+    const groupIndex = this.$._layout.groups.findIndex(group => group.id == this._ghostGroup!);
+    this.$._layout.groups.splice(groupIndex, 1);
+    this._ghostGroup = null;
   }
 }
