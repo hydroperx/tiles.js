@@ -94,7 +94,7 @@ export class GroupDraggableBehavior {
     // Move group visually
     div.style.zIndex = "999999999";
 
-    // Find best candidate group to swap with using rectangle overlap, fallback to center distance
+    // Find best candidate group to swap with using rectangle overlap.
     let bestIdx = -1;
     let bestArea = 0;
     const rect = div.getBoundingClientRect();
@@ -125,6 +125,7 @@ export class GroupDraggableBehavior {
 
         return;
       }
+      // Track last best group
       this._lastBestGroup = best_group.id;
       // Remove previous ghost group
       if (this._ghostGroup) {
@@ -172,7 +173,10 @@ export class GroupDraggableBehavior {
     div.style.pointerEvents = "";
     (div.getElementsByClassName(this.$._class_names.groupTiles)[0] as HTMLElement)
       .style.pointerEvents = "";
-    
+
+    // Forget last best group
+    this._lastBestGroup = "";
+
     // Take place of ghost group.
     if (this._ghostGroup) {
       const arr = this.$._layout.groups;

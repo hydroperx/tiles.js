@@ -46,6 +46,9 @@ tiles.on("addedtile", ({ detail: { tile, button, contentDiv } }) => {
       break;
     }
   }
+  if (tile.id.startsWith("purple")) {
+    button.style.background = "purple";
+  }
 });
 
 tiles.addGroup({
@@ -79,5 +82,39 @@ tiles.addTile({
 tiles.addTile({
   id: "tile4",
   group: "group2",
+  size: "small",
+});
+
+tiles.addGroup({
+  id: "group5",
+  label: "Group 5",
+});
+
+tiles.addTile({
+  id: "purple1",
+  group: "group5",
+  size: "large",
+});
+
+tiles.addTile({
+  id: "purple2",
+  group: "group5",
+  size: "wide",
+});
+
+tiles.addGroup({
+  id: "group6",
+  label: "Group 6",
+});
+
+tiles.addTile({
+  id: "purple3",
+  group: "group6",
+  size: "large",
+});
+
+tiles.addTile({
+  id: "purple4",
+  group: "group6",
   size: "small",
 });
