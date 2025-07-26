@@ -24,7 +24,7 @@ export class HorizontalLayout extends Layout {
   public override rearrange(): void {
     let x_em = 0;
     let parent_w_em = this.groups.length == 0 ? 0 : (this.groups.length - 1) * this.$._group_gap;
-    let parent_h_em = this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
+    let parent_h_em = this.$._label_height + this.$._tile_gap + this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
 
     // Rearrange group tiles and reposition groups
     for (const group of this.groups) {
