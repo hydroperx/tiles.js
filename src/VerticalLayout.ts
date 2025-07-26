@@ -26,9 +26,9 @@ export class VerticalLayout extends Layout {
     // Column Y in EM
     const column_y = new Map<number, number>();
     // Group width in EM
-    const group_w_em = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
+    const group_w = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
     // Parent width in EM
-    const parent_w = this.$._inline_groups*group_w_em + (this.$._inline_groups-1)*this.$._group_gap;
+    const parent_w = this.$._inline_groups*group_w + (this.$._inline_groups-1)*this.$._group_gap;
     // Parent height in EM
     let parent_h = 0;
     let max_rows_found = new Map<number, number>();
@@ -40,7 +40,7 @@ export class VerticalLayout extends Layout {
 
       // Reposition group
       const column = i % this.$._inline_groups;
-      const left = column*group_w_em + column*this.$._group_gap;
+      const left = column*group_w + column*this.$._group_gap;
       const top = column_y.get(column) ?? 0;
       group.div.style.transform = `translateX(${left}em) translateY(${top}em)`;
       const h = ((group.div.getBoundingClientRect().height / ScaleUtils.getScale(group.div).y) / this.$._em);
