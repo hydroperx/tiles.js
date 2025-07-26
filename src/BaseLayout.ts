@@ -187,8 +187,8 @@ export class BaseLayout {
   }
 
   // Resolve overlapping tiles of a target tile by shifting them
-  // somewhere else, and ensures the target tile is within
-  // bounds.
+  // somewhere else around the original position,
+  // and ensures the target tile is within bounds.
   private resolveConflicts(targetId: string): boolean {
     const toCheck = [targetId];
 

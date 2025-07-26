@@ -91,7 +91,7 @@ export class LayoutGroup {
    * Returns an immutable unordered list of the contained tiles.
    */
   public getTiles(): LayoutTile[] {
-    return Array.from(this._tiles.values());
+    return [...this._tiles.values()];
   }
 
   /**
@@ -141,7 +141,6 @@ export class LayoutGroup {
         (this.$.$._height-1)*this.$.$._tile_gap;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
-    console.log("rearrange()")
     for (const [, tile] of this._tiles) {
       const x_em = tile.x * this.$.$._small_size + tile.x * this.$.$._tile_gap;
       const y_em = tile.y * this.$.$._small_size + tile.y * this.$.$._tile_gap;
