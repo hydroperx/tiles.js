@@ -384,6 +384,26 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /**
+   * Renames a group.
+   */
+  renameGroup(id: string, label: string): void {
+    // Affect state
+    const group_state = this._state.groups.get(id);
+    assert(!!group_state, "Group '"+id+"' not found.");
+    group_state!.label = label;
+
+    // Affect the DOM
+    const layout_group = this._layout.groups.find(group => group.id == id);
+    assert(!!layout_group, "Group '"+id+"' not found.");
+    const textElement = layout_group.div
+      .getElementsByClassName(this._class_names.groupLabelText)[0] as HTMLElement;
+    textElement.innerText = label;
+
+    // State update signal
+    this._deferred_state_update_signal();
+  }
+
+  /**
    * Shorthand to `addEventListener()`.
    */
   on<K extends keyof TilesEventMap>(type: K, listenerFn: (event: TilesEventMap[K]) => void, options?: AddEventListenerOptions): void;
