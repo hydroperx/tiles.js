@@ -191,14 +191,13 @@ export class BaseLayout {
   // bounds.
   private resolveConflicts(targetId: string): boolean {
     const toCheck = [targetId];
-    const moved = new Set<string>();
 
     while (toCheck.length > 0) {
       const id = toCheck.pop()!;
       const tile = this.tiles.get(id)!;
 
       for (const [otherId, otherTile] of this.tiles) {
-        if (id === otherId || moved.has(otherId)) continue;
+        if (id === otherId /* || moved.has(otherId) */) continue;
 
         const isIntersecting = tile.intersects(otherTile);
         const isOutOfBounds =
@@ -226,7 +225,6 @@ export class BaseLayout {
           movedTile.y = foundPos.y;
           this.tiles.set(otherId, movedTile);
 
-          moved.add(otherId);
           toCheck.push(otherId);
         }
       }
