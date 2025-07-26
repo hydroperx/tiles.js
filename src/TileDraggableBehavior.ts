@@ -165,13 +165,32 @@ export class TileDraggableBehavior {
         // Insert a ghost tile without button at the layout
         const layout_group = this.$._layout.groups.find(g => g.id == this._gridSnap!.group)!;
         const size = button.getAttribute(Attributes.ATTR_SIZE) as TileSize;
+        const { x, y } = this._gridSnap!;
         const w = getWidth(size);
         const h = getHeight(size);
-        this._ghostTile = new LayoutTile("__anonymous$" + RandomUtils.hexLarge(), null);
-        // If can't add ghost tile, cancel it.
-        if (!this._ghostTile!.addTo(layout_group, this._gridSnap!.x, this._gridSnap!.y, w, h)) {
-          this._ghostTile = null;
+
+        // Limit ghost tile to a certain extent,
+        // so that dragging the tile doesn't keep infinitely
+        // growing the same group.
+        let extentLimit = false;
+        const layoutSize = layout_group.getLayoutSize();
+        if (this.$._dir == "horizontal") {
+          if (x + w > layoutSize.width+5) {
+            extentLimit = true;
+          }
+        } else if (y + h > layoutSize.height+5) {
+          extentLimit = true;
+        }
+
+        if (extentLimit) {
           this._gridSnap = null;
+        } else {
+          this._ghostTile = new LayoutTile("__anonymous$" + RandomUtils.hexLarge(), null);
+          // If can't add ghost tile, cancel it.
+          if (!this._ghostTile!.addTo(layout_group, x, y, w, h)) {
+            this._ghostTile = null;
+            this._gridSnap = null;
+          }
         }
         this.$._deferred_rearrange();
       } else {
