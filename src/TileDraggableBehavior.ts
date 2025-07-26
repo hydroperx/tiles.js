@@ -20,7 +20,6 @@ import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
 export class TileDraggableBehavior {
   private _startX: number = 0;
   private _startY: number = 0;
-  private _startLayoutIndex: number = 0;
   private _startState: null | State = null;
   private _gridSnap: null | GridSnapResult = null;
   private _ghostTile: null | LayoutTile = null;

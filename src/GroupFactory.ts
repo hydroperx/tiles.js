@@ -14,6 +14,7 @@ import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 import type { Tiles, AddGroupParams } from "./Tiles";
 import * as Attributes from "./Attributes";
 import { TileDraggableBehavior } from "./TileDraggableBehavior";
+import { GroupDraggableBehavior } from "./GroupDraggableBehavior";
 
 /**
  * Group factory.
@@ -84,6 +85,11 @@ export class GroupFactory {
     this.$._layout.groups.push(layout_group);
     this.$._deferred_rearrange();
 
+    // Install draggable behavior
+    if (this.$._drag_enabled) {
+      new GroupDraggableBehavior(this.$, id).install();
+    }
+
     // addedgroup signal
     this.$.dispatchEvent(
       new CustomEvent("addedgroup", {
@@ -120,8 +126,7 @@ export class GroupFactory {
     this.$._layout.groups.splice(this.$._layout.groups.indexOf(layout_group!), 1);
 
     // Discard draggable
-    this.$._group_draggables.get(layout_group!.div)?.destroy();
-    this.$._group_draggables.delete(layout_group!.div);
+    new GroupDraggableBehavior(this.$, id).uninstall();
 
     // Remove from DOM
     if (this.$._group_removal_work) {

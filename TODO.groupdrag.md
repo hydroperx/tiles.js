@@ -1,7 +1,6 @@
-- `Tiles#addGroup()`
-  - [ ] Setup group draggable (contribute to `_group_draggables`) if drag is enabled.
-- [ ] Groups support drag-n-drop if `dragEnabled`.
-- [ ] Use filterTarget so that dragging can only happen from the label.
-- [ ] Use a threshold of `"0.5em"` for the group Draggable.
+- [x] Use filterTarget so that dragging can only happen from the label.
+- [x] Groups support drag-n-drop if `dragEnabled`.
+- [x] Use a threshold of `"0.5em"` for the group Draggable.
 - [ ] Set `ATTR_DRAGGING` in the group's div too.
 - [ ] While dragging a group, for the Tiles container set `.style.pointerEvents = "none";`, set `group.style.pointerEvents = "auto"` and set `groupTiles.style.pointerEvents = "none"`.
+- [ ] While dragging a group in a vertical container, minimize the tiles temporarily.
