@@ -112,6 +112,9 @@ export class TileDraggableBehavior {
     this.$.dispatchEvent(new CustomEvent("dragstart", {
       detail: { tile: button },
     }));
+
+    // Rearrange
+    this.$._deferred_rearrange();
   }
 
   // Drag

@@ -141,12 +141,14 @@ export class LayoutGroup {
         (this.$.$._height-1)*this.$.$._tile_gap;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
+    console.log("rearrange()")
     for (const [, tile] of this._tiles) {
       const x_em = tile.x * this.$.$._small_size + tile.x * this.$.$._tile_gap;
       const y_em = tile.y * this.$.$._small_size + tile.y * this.$.$._tile_gap;
 
       const w_em = tile.width * this.$.$._small_size + (tile.width - 1) * this.$.$._tile_gap;
       const h_em = tile.height * this.$.$._small_size + (tile.height - 1) * this.$.$._tile_gap;
+
       // change tiles size em
       tiles_width_em = Math.max(x_em + w_em, tiles_width_em);
       tiles_height_em = Math.max(y_em + h_em, tiles_height_em);
@@ -270,6 +272,7 @@ export class LayoutTile {
    * from the overall state.
    */
   public remove(): void {
+    this.positioned = false;
     this.$!._layout.removeTile(this.id);
     this.$!._tiles.delete(this.id);
   }
