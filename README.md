@@ -248,7 +248,7 @@ For example:
 ```js
 min_scale_timeout.current = window.setTimeout(() => {
     base_tiles.current!.rearrange();
-}, TILES_OPEN_DELAY + TILES_OPEN_DELAY / 2.4);
+}, TILES_OPEN_DELAY + TILES_OPEN_DELAY / 2.2);
 ```
 
 ## License
