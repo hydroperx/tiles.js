@@ -478,6 +478,56 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
   }
 
   /**
+   * Returns which tiles are checked.
+   */
+  checkedTiles(): string[] {
+    const all_buttons = [
+      ...this._container.getElementsByClassName(this._class_names.tile),
+    ].map(btn => [
+      btn.getAttribute(Attributes.ATTR_ID),
+      btn.getAttribute(Attributes.ATTR_CHECKED) == "true",
+    ]);
+    return all_buttons.filter(([, y]) => y).map(([id]) => id as string);
+  }
+
+  /**
+   * Returns whether a tile is checked or not.
+   */
+  getChecked(tile: string): boolean {
+    const button = this._buttons.get(tile);
+    assert(!!button, "Tile '"+tile+"' not found.");
+    return button.getAttribute(Attributes.ATTR_CHECKED) == "true";
+  }
+
+  /**
+   * Sets whether a tile is checked or not.
+   */
+  setChecked(tile: string, value: boolean): void {
+    const button = this._buttons.get(tile);
+    assert(!!button, "Tile '"+tile+"' not found.");
+    button.setAttribute(Attributes.ATTR_CHECKED, value.toString());
+    const all_buttons = [
+      ...this._container.getElementsByClassName(this._class_names.tile),
+    ].map(btn => [
+      btn.getAttribute(Attributes.ATTR_ID),
+      btn.getAttribute(Attributes.ATTR_CHECKED) == "true",
+    ]);
+    // Emit selectionchange event
+    this.dispatchEvent(new CustomEvent("selectionchange", {
+      detail: {
+        tiles: all_buttons.filter(([, y]) => y).map(([id]) => id as string),
+      }
+    }));
+  }
+
+  /**
+   * Toggles whether a tile is checked or not.
+   */
+  toggleChecked(tile: string): void {
+    this.setChecked(tile, !this.getChecked(tile));
+  }
+
+  /**
    * Shorthand to `addEventListener()`.
    */
   on<K extends keyof TilesEventMap>(type: K, listenerFn: (event: TilesEventMap[K]) => void, options?: AddEventListenerOptions): void;

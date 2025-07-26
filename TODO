@@ -1,12 +1,3 @@
-# Transition
-
-While rearranging tiles:
-
-(To stop current transition, get the interpolated cascading value of `top`/`left` and set it as the current, then run a very short timeout (5ms) to proceed.)
-
-- [x] From -Y top to +Y (e.g. ignore X transition when changing both XY)
-- [x] From +Y bottom to -Y (e.g. ignore X transition when changing both XY)
-
 # Clipping
 
 - [x] Set style `overflow: hidden` for group's tiles. (Won't affect the dragging-flying tile anyways.)
@@ -17,7 +8,6 @@ While rearranging tiles:
 - [x] `Tiles#inlineGroups` (for the vertical layout)
 - [x] `Tiles#clear()` - Clears attached groups and tiles.
 - [x] `Tiles#addGroup()`
-  - [ ] Setup group draggable (contribute to `_group_draggables`) if drag is enabled.
 - [x] `Tiles#addTile()`
 - [x] `Tiles#removeGroup()`
   - [x] Do nothing if there's a tile or group being actively dragged.
@@ -57,20 +47,15 @@ While rearranging tiles:
 
 # Tile selection
 
-- [ ] Allow (un)checking tiles
-  - [ ] through touch long hold
-  - [ ] through click long hold
-  - [ ] if currently in selection mode, through a touch tap
-  - [ ] if currently in selection mode, through a click
-  - [ ] through the API
-- [ ] Disable tile (un)checking depending on the `selectionEnabled` option.
-- [ ] Provide API method for retrieving the IDs of checked tiles.
-- [ ] Provide selection change events.
-
-# Zoom
-
-- [ ] Near view and far view modes. Vertical container is always in near view.
-- [ ] When in far view, user is not allowed to interact with tiles, but rather with groups, allowing to drag-n-drop groups.
+- [x] Allow (un)checking tiles
+  - [x] through touch long hold
+  - [x] through click long hold
+  - [x] if currently in selection mode, through a touch tap
+  - [x] if currently in selection mode, through a click
+  - [x] through the API
+- [x] Disable tile (un)checking depending on the `selectionEnabled` option.
+- [x] Provide API method for retrieving the IDs of checked tiles.
+- [x] Provide selection change events.
 
 # Representation
 
@@ -79,10 +64,7 @@ While rearranging tiles:
 - [x] Groups contain groupLabel and groupTiles
 - [x] Tiles are `button` elements (of `position: absolute`) containing a tile content element. During dragging, the user may slightly scale down tile contents rather than the tile's button itself.
 
-# Group dragging
+# Zoom
 
-- [ ] Groups support drag-n-drop if `dragEnabled`.
-- [ ] Use filterTarget so that dragging can only happen from the label.
-- [ ] Use a threshold of `"0.5em"` for the group Draggable.
-- [ ] Set `ATTR_DRAGGING` in the group's div too.
-- [ ] While dragging a group, for the Tiles container set `.style.pointerEvents = "none";`, set `group.style.pointerEvents = "auto"` and set `groupTiles.style.pointerEvents = "none"`.
+- [ ] Near view and far view modes. Vertical container is always in near view.
+- [ ] When in far view, user is not allowed to interact with tiles, but rather with groups, allowing to drag-n-drop groups.
