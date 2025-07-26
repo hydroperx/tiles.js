@@ -118,20 +118,30 @@ export class GroupDraggableBehavior {
         // Remove dragged group from array
         const arr = this.$._layout.groups;
         const [draggedGroup] = arr.splice(draggedIdx, 1);
-        // Insert at new position
-        closestIdx = this.$._layout.groups.indexOf(closest_group);
-        arr.splice(closestIdx, 0, draggedGroup);
+        // Insert at new position: left or right of closest group
+        let insertIdx = arr.indexOf(closest_group);
+        if (draggedIdx < closestIdx) {
+          // Dragged group was before, so insert to the left
+          arr.splice(insertIdx, 0, draggedGroup);
+
+          // Update state
+          this.$._state.groups.get(draggedGroup.id)!.index = insertIdx;
+        } else {
+          // Dragged group was after, so insert to the right
+          arr.splice(insertIdx + 1, 0, draggedGroup);
+
+          // Update state
+          this.$._state.groups.get(draggedGroup.id)!.index = insertIdx + 1;
+        }
+
+        // Update state of closest group
+        this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
+
+        // Keep groups contiguous
         this.$._keep_groups_contiguous();
 
-        // Update state
-        const dragged_group_state = this.$._state.groups.get(id)!;
-        dragged_group_state.index = closestIdx;
-        const closest_group_state = this.$._state.groups.get(closest_group.id)!;
-        closest_group_state.index = closestIdx + 1;
-
-        // Rearrange
+        // Rearrange and update state
         this.$._deferred_rearrange();
-        // State update signal
         this.$._deferred_state_update_signal();
       }
     }
