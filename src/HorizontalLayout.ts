@@ -73,7 +73,7 @@ export class HorizontalLayout extends Layout {
       }
       accY += this.$._small_size + this.$._tile_gap;
     }
-    if (offset.y > accY) {
+    if (offset.y > accY + this.$._small_size) {
       return null;
     }
 
