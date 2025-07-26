@@ -18,9 +18,14 @@ import { Layout, LayoutGroup, LayoutTile, GridSnapResult } from "./Layout";
  * Drag-n-drop behavior for groups.
  */
 export class GroupDraggableBehavior {
+  // Debounce timer for rearrange/state update
+  private _debounceTimer: any = null;
+  private _DEBOUNCE_MS = 24; // ~1.5 frames at 60Hz
+  private _MIN_OVERLAP_AREA = 32; // px^2, tweak as needed
   private _startIndices: null | { group: string, index: number }[] = null;
   private _lastBestGroup: string = "";
   private _ghostGroup: null | string = null;
+  private _lastIntendedIdx: number = -1;
 
   // Constructor
   public constructor(private $: Tiles, private id: string) {
@@ -92,7 +97,7 @@ export class GroupDraggableBehavior {
     if (!group) return;
     const div = group.div!;
     // Move group visually
-    div.style.zIndex = "999999999";
+    if (div.style.zIndex !== "999999999") div.style.zIndex = "999999999";
 
     // Find best candidate group to swap with using rectangle overlap.
     let bestIdx = -1;
@@ -110,27 +115,32 @@ export class GroupDraggableBehavior {
       }
     }
 
-    if (bestIdx !== -1) {
+    let shouldUpdate = false;
+    let intendedIdx = -1;
+    let best_group = null;
+    if (bestIdx !== -1 && bestArea >= this._MIN_OVERLAP_AREA) {
       const draggedIdx = arr.findIndex(g => g.id === id);
-      const best_group = arr[bestIdx];
+      best_group = arr[bestIdx];
       // Intended ghost index based on mouse position relative to best group center
       let newBestIdx = arr.indexOf(best_group);
-      let intendedIdx = newBestIdx + (draggedIdx > newBestIdx ? 0 : 1);
-      // If dragged group is already at intended index, do nothing
-      if (draggedIdx === intendedIdx || this._lastBestGroup == best_group.id) {
-        // Trigger Tiles#groupdrag event
-        this.$.dispatchEvent(new CustomEvent("groupdrag", {
-          detail: { group: div },
-        }));
+      intendedIdx = newBestIdx + (draggedIdx > newBestIdx ? 0 : 1);
 
-        return;
+      // Only update if intendedIdx or best_group changes
+      if (draggedIdx !== intendedIdx && (this._lastIntendedIdx !== intendedIdx || this._lastBestGroup !== best_group.id)) {
+        shouldUpdate = true;
       }
-      // Track last best group
+      this._lastIntendedIdx = intendedIdx;
       this._lastBestGroup = best_group.id;
-      // Remove previous ghost group
-      if (this._ghostGroup) {
-        const ghostIdx = arr.findIndex(g => g.id === this._ghostGroup);
-        if (ghostIdx !== -1) arr.splice(ghostIdx, 1);
+    } else {
+      this._lastIntendedIdx = -1;
+      this._lastBestGroup = "";
+    }
+
+    if (shouldUpdate && best_group) {
+      // Remove previous ghost group if needed
+      let ghostIdx = this._ghostGroup ? arr.findIndex(g => g.id === this._ghostGroup) : -1;
+      if (this._ghostGroup && ghostIdx !== -1) {
+        arr.splice(ghostIdx, 1);
       }
       // Create ghost group id if needed
       if (!this._ghostGroup) {
@@ -143,8 +153,12 @@ export class GroupDraggableBehavior {
       this.$._state.groups.get(id)!.index = intendedIdx;
       this.$._state.groups.get(best_group.id)!.index = arr.indexOf(best_group);
       this.$._keep_groups_contiguous();
-      this.$._deferred_rearrange();
-      this.$._deferred_state_update_signal();
+      // Debounce rearrange/state update
+      if (this._debounceTimer) clearTimeout(this._debounceTimer);
+      this._debounceTimer = setTimeout(() => {
+        this.$._deferred_rearrange();
+        this.$._deferred_state_update_signal();
+      }, this._DEBOUNCE_MS);
     }
 
     // Trigger Tiles#groupdrag event
@@ -174,8 +188,9 @@ export class GroupDraggableBehavior {
     (div.getElementsByClassName(this.$._class_names.groupTiles)[0] as HTMLElement)
       .style.pointerEvents = "";
 
-    // Forget last best group
+    // Forget last best group and intended index
     this._lastBestGroup = "";
+    this._lastIntendedIdx = -1;
 
     // Take place of ghost group.
     if (this._ghostGroup) {
