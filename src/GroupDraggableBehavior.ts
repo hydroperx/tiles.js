@@ -90,7 +90,6 @@ export class GroupDraggableBehavior {
     const div = group.div;
     // Move group visually
     div.style.zIndex = "999999999";
-    div.style.transform = `translateX(${x/this.$._em}em) translateY(${y/this.$._em}em)`;
 
     // Find closest group to swap with
     let closestIdx = -1;
@@ -109,15 +108,15 @@ export class GroupDraggableBehavior {
         closestIdx = i;
       }
     }
-    // If within threshold, swap indices
+    // If within threshold, swap indices (only once per drag event)
     if (closestIdx !== -1 && minDist < 2 * this.$._em) {
       const draggedIdx = this.$._layout.groups.findIndex(g => g.id === id);
       if (draggedIdx !== closestIdx) {
-        // Swap in array
+        // Remove dragged group from array
         const arr = this.$._layout.groups;
-        const temp = arr[draggedIdx];
-        arr[draggedIdx] = arr[closestIdx];
-        arr[closestIdx] = temp;
+        const [draggedGroup] = arr.splice(draggedIdx, 1);
+        // Insert at new position
+        arr.splice(closestIdx, 0, draggedGroup);
         this.$._keep_groups_contiguous();
         this.$._deferred_rearrange();
         this.$._deferred_state_update_signal();
