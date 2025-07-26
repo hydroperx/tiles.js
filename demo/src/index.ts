@@ -34,6 +34,10 @@ tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) =
       button.style.background = "blue";
       break;
     }
+    case "tile4": {
+      button.style.background = "yellow";
+      break;
+    }
   }
 });
 
@@ -61,6 +65,12 @@ tiles.addGroup({
 
 tiles.addTile({
   id: "tile3",
+  group: "group2",
+  size: "small",
+});
+
+tiles.addTile({
+  id: "tile4",
   group: "group2",
   size: "small",
 });
