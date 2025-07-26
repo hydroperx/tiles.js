@@ -131,15 +131,9 @@ export class GroupDraggableBehavior {
         if (draggedIdx < closestIdx) {
           // Dragged group was before, insert before closest group
           arr.splice(newClosestIdx + 1, 0, layoutGhostGroup);
-
-          // Update state
-          this.$._state.groups.get(layoutGhostGroup.id)!.index = newClosestIdx + 1;
         } else {
           // Dragged group was after, insert after closest group
           arr.splice(newClosestIdx, 0, layoutGhostGroup);
-
-          // Update state
-          this.$._state.groups.get(layoutGhostGroup.id)!.index = newClosestIdx;
         }
         // Update state of closest group
         this.$._state.groups.get(closest_group.id)!.index = arr.indexOf(closest_group);
