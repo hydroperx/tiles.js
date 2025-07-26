@@ -4,7 +4,7 @@ const container = document.querySelector("#container")!;
 
 const tiles = new Tiles({
   element: container,
-  direction: "vertical",
+  direction: "horizontal",
   classNames: {
     group: "group",
     groupLabel: "group-label",
@@ -18,7 +18,6 @@ const tiles = new Tiles({
   groupGap: 3,
   labelHeight: 2,
   height: 6,
-  inlineGroups: 3,
 });
 
 tiles.addEventListener("addedtile", ({ detail: { tile, button, contentDiv } }) => {
