@@ -71,7 +71,6 @@ export class GroupFactory {
     // Group's tiles div
     const tilesDiv = document.createElement("div");
     tilesDiv.classList.add(this.$._class_names.groupTiles);
-    tilesDiv.style.position = "relative";
     tilesDiv.style.overflow = "hidden";
     tilesDiv.style.padding = this.$._tile_gap*2 + "em";
     div.appendChild(tilesDiv);
