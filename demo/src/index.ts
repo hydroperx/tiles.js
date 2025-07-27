@@ -48,6 +48,7 @@ tiles.on("addedtile", ({ detail: { tile, button, contentDiv } }) => {
   if (tile.id.startsWith("purple")) {
     button.style.background = "purple";
   }
+  button.style.outline = "0.5em solid yellow";
 });
 
 tiles.addGroup({
