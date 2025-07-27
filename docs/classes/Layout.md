@@ -6,7 +6,7 @@
 
 # Class: `abstract` Layout
 
-Defined in: [src/Layout.ts:12](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L12)
+Defined in: [src/Layout.ts:12](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L12)
 
 Layout.
 
@@ -16,7 +16,7 @@ Layout.
 
 > **new Layout**(`$`): `Layout`
 
-Defined in: [src/Layout.ts:26](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L26)
+Defined in: [src/Layout.ts:26](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L26)
 
 Constructor.
 
@@ -36,7 +36,7 @@ Constructor.
 
 > `readonly` **$**: [`Tiles`](Tiles.md)
 
-Defined in: [src/Layout.ts:16](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L16)
+Defined in: [src/Layout.ts:16](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L16)
 
 Tiles back-reference.
 
@@ -46,7 +46,7 @@ Tiles back-reference.
 
 > `readonly` **groups**: [`LayoutGroup`](LayoutGroup.md)[] = `[]`
 
-Defined in: [src/Layout.ts:21](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L21)
+Defined in: [src/Layout.ts:21](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L21)
 
 Ordered groups.
 
@@ -56,7 +56,7 @@ Ordered groups.
 
 > `abstract` **rearrange**(): `void`
 
-Defined in: [src/Layout.ts:33](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L33)
+Defined in: [src/Layout.ts:33](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L33)
 
 Rearranges group tiles.
 
@@ -70,7 +70,7 @@ Rearranges group tiles.
 
 > `abstract` **snapToGrid**(`tile`): `null` \| [`GridSnapResult`](../type-aliases/GridSnapResult.md)
 
-Defined in: [src/Layout.ts:38](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L38)
+Defined in: [src/Layout.ts:38](https://github.com/hydroperx/tiles.js/blob/c540bb46b4dec8fde37584a136a0fe29b84e5d4a/src/Layout.ts#L38)
 
 Snaps location to grid.
 

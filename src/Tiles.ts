@@ -573,7 +573,7 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
       if (acc != 0) {
         acc += this._group_gap;
       }
-      acc += this._group_width*this._small_size + (this._group_width-1)*this._group_gap;
+      acc += this._group_width*this._small_size + (this._group_width-1)*this._group_gap + this._tile_gap*4;
     }
     return r;
   }

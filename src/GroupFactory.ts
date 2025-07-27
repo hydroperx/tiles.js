@@ -51,7 +51,6 @@ export class GroupFactory {
     div.classList.add(this.$._class_names.group);
     div.style.display = "flex";
     div.style.flexDirection = "column";
-    div.style.gap = this.$._tile_gap + "em";
     div.style.position = "absolute";
     div.style.transition = "transform 0.2s ease";
     this.$._container.appendChild(div);
@@ -74,6 +73,7 @@ export class GroupFactory {
     tilesDiv.classList.add(this.$._class_names.groupTiles);
     tilesDiv.style.position = "relative";
     tilesDiv.style.overflow = "hidden";
+    tilesDiv.style.padding = this.$._tile_gap*2 + "em";
     div.appendChild(tilesDiv);
 
     // Layout group
