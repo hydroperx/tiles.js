@@ -196,37 +196,17 @@ export class BaseLayout {
       const id = toCheck.pop()!;
       const tile = this.tiles.get(id)!;
 
-      for (const [otherId, otherTile] of this.tiles) {
-        if (id === otherId /* || moved.has(otherId) */) continue;
+      const intersectingIds = this.getIntersectingTiles(tile, id);
+      if (intersectingIds.length > 0) {
+        const snapshotBeforeCluster = this.snapshot();
 
-        const isIntersecting = tile.intersects(otherTile);
-        const isOutOfBounds =
-          otherTile.x < 0 ||
-          otherTile.y < 0 ||
-          (this.maxWidth !== undefined && otherTile.x + otherTile.width > this.maxWidth) ||
-          (this.maxHeight !== undefined && otherTile.y + otherTile.height > this.maxHeight);
-
-        if (isIntersecting || isOutOfBounds) {
-          let foundPos = this.findAvailableNearbyPosition(
-            otherTile,
-            otherId,
-            otherTile.x,
-            otherTile.y
-          );
-
-          if (!foundPos) {
-            foundPos = this.findAvailablePositionFor(otherTile, otherId);
-          }
-
-          if (!foundPos) return false;
-
-          const movedTile = otherTile.clone();
-          movedTile.x = foundPos.x;
-          movedTile.y = foundPos.y;
-          this.tiles.set(otherId, movedTile);
-
-          toCheck.push(otherId);
+        const success = this.tryShiftTileCluster(intersectingIds);
+        if (!success) {
+          this.restoreSnapshot(snapshotBeforeCluster);
+          return false;
         }
+
+        toCheck.push(...intersectingIds);
       }
 
       const isOutOfBounds =
@@ -317,6 +297,89 @@ export class BaseLayout {
     }
 
     return null;
+  }
+
+  // Intersecting tiles
+  private getIntersectingTiles(tile: BaseTile, excludeId: string): string[] {
+    const result: string[] = [];
+    for (const [id, other] of this.tiles.entries()) {
+      if (id !== excludeId && tile.intersects(other)) {
+        result.push(id);
+      }
+    }
+    return result;
+  }
+
+  private tryShiftTileCluster(tileIds: string[]): boolean {
+    if (tileIds.length === 0) return true;
+
+    // Compute bounding box
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    const tiles = tileIds.map(id => this.tiles.get(id)!);
+    for (const tile of tiles) {
+      minX = Math.min(minX, tile.x);
+      minY = Math.min(minY, tile.y);
+      maxX = Math.max(maxX, tile.x + tile.width);
+      maxY = Math.max(maxY, tile.y + tile.height);
+    }
+
+    const width = maxX - minX;
+    const height = maxY - minY;
+
+    const layoutWidth = this.maxWidth ?? Infinity;
+    const layoutHeight = this.maxHeight ?? Infinity;
+
+    const originalSnapshot = this.snapshot();
+
+    const maxRadius = 10;
+    for (let radius = 0; radius <= maxRadius; radius++) {
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          if (Math.abs(dx) + Math.abs(dy) !== radius) continue;
+
+          const xOffset = minX + dx;
+          const yOffset = minY + dy;
+
+          if (
+            xOffset < 0 || yOffset < 0 ||
+            xOffset + width > layoutWidth || yOffset + height > layoutHeight
+          ) continue;
+
+          const movedPositions: { [id: string]: BaseTile } = {};
+
+          let fits = true;
+          for (let i = 0; i < tiles.length; i++) {
+            const tile = tiles[i];
+            const id = tileIds[i];
+
+            const newX = tile.x + dx;
+            const newY = tile.y + dy;
+            const testTile = new BaseTile(newX, newY, tile.width, tile.height);
+
+            const overlapping = [...this.tiles.entries()].some(([otherId, other]) =>
+              !tileIds.includes(otherId) && testTile.intersects(other)
+            );
+
+            if (overlapping) {
+              fits = false;
+              break;
+            }
+
+            movedPositions[id] = testTile;
+          }
+
+          if (fits) {
+            for (const id of tileIds) {
+              this.tiles.set(id, movedPositions[id]);
+            }
+            return true;
+          }
+        }
+      }
+    }
+
+    this.restoreSnapshot(originalSnapshot);
+    return false;
   }
 
   // Returns a copy of the tile data.
