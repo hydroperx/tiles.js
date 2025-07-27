@@ -8,7 +8,7 @@
 
 > **AddGroupParams** = `object`
 
-Defined in: [src/Tiles.ts:675](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L675)
+Defined in: [src/Tiles.ts:702](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Tiles.ts#L702)
 
 Parameters for adding a group.
 
@@ -18,7 +18,7 @@ Parameters for adding a group.
 
 > **id**: `string`
 
-Defined in: [src/Tiles.ts:679](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L679)
+Defined in: [src/Tiles.ts:706](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Tiles.ts#L706)
 
 Unique group ID.
 
@@ -28,7 +28,7 @@ Unique group ID.
 
 > `optional` **label**: `string`
 
-Defined in: [src/Tiles.ts:685](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Tiles.ts#L685)
+Defined in: [src/Tiles.ts:712](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Tiles.ts#L712)
 
 Initial label to display for the group.
 

@@ -6,7 +6,7 @@
 
 # Class: LayoutTile
 
-Defined in: [src/Layout.ts:231](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L231)
+Defined in: [src/Layout.ts:231](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L231)
 
 Tile.
 
@@ -16,7 +16,7 @@ Tile.
 
 > **new LayoutTile**(`id`, `button`): `LayoutTile`
 
-Defined in: [src/Layout.ts:251](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L251)
+Defined in: [src/Layout.ts:251](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L251)
 
 Cosntructor.
 
@@ -42,7 +42,7 @@ If `null` indicates this is a placeholder tile.
 
 > **$**: `null` \| [`LayoutGroup`](LayoutGroup.md) = `null`
 
-Defined in: [src/Layout.ts:245](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L245)
+Defined in: [src/Layout.ts:245](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L245)
 
 Parent layout group.
 
@@ -52,7 +52,7 @@ Parent layout group.
 
 > **button**: `null` \| `HTMLButtonElement`
 
-Defined in: [src/Layout.ts:253](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L253)
+Defined in: [src/Layout.ts:253](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L253)
 
 If `null` indicates this is a placeholder tile.
 
@@ -62,7 +62,7 @@ If `null` indicates this is a placeholder tile.
 
 > `readonly` **id**: `string`
 
-Defined in: [src/Layout.ts:252](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L252)
+Defined in: [src/Layout.ts:252](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L252)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [src/Layout.ts:252](https://github.com/hydroperx/tiles.js/blob/af11a
 
 > **positioned**: `boolean` = `false`
 
-Defined in: [src/Layout.ts:240](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L240)
+Defined in: [src/Layout.ts:240](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L240)
 
 Cached indicator for initial position.
 
@@ -80,7 +80,7 @@ Cached indicator for initial position.
 
 > **tween**: `null` \| `Tween` = `null`
 
-Defined in: [src/Layout.ts:235](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L235)
+Defined in: [src/Layout.ts:235](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L235)
 
 Cached tween.
 
@@ -92,7 +92,7 @@ Cached tween.
 
 > **get** **height**(): `number`
 
-Defined in: [src/Layout.ts:307](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L307)
+Defined in: [src/Layout.ts:307](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L307)
 
 Height in small tiles.
 
@@ -108,7 +108,7 @@ Height in small tiles.
 
 > **get** **width**(): `number`
 
-Defined in: [src/Layout.ts:300](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L300)
+Defined in: [src/Layout.ts:300](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L300)
 
 Width in small tiles.
 
@@ -124,7 +124,7 @@ Width in small tiles.
 
 > **get** **x**(): `number`
 
-Defined in: [src/Layout.ts:286](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L286)
+Defined in: [src/Layout.ts:286](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L286)
 
 X coordinate in small tiles.
 
@@ -140,7 +140,7 @@ X coordinate in small tiles.
 
 > **get** **y**(): `number`
 
-Defined in: [src/Layout.ts:293](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L293)
+Defined in: [src/Layout.ts:293](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L293)
 
 Y coordinate in small tiles.
 
@@ -154,7 +154,7 @@ Y coordinate in small tiles.
 
 > **addTo**(`$`, `x`, `y`, `width`, `height`): `boolean`
 
-Defined in: [src/Layout.ts:263](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L263)
+Defined in: [src/Layout.ts:263](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L263)
 
 Attempts to contributes the tile to the layout.
 If `x` and `y` are both given as `null`, then the
@@ -193,7 +193,7 @@ the tile to the best last position.
 
 > **move**(`x`, `y`): `boolean`
 
-Defined in: [src/Layout.ts:314](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L314)
+Defined in: [src/Layout.ts:314](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L314)
 
 Moves position.
 
@@ -217,7 +217,7 @@ Moves position.
 
 > **remove**(): `void`
 
-Defined in: [src/Layout.ts:277](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L277)
+Defined in: [src/Layout.ts:277](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L277)
 
 Removes the tile from the parent `LayoutGroup`.
 This method does not, however, remove the tile
@@ -233,7 +233,7 @@ from the overall state.
 
 > **resize**(`width`, `height`): `boolean`
 
-Defined in: [src/Layout.ts:321](https://github.com/hydroperx/tiles.js/blob/af11a201a74d02cee143046c2bd205f8f79b4904/src/Layout.ts#L321)
+Defined in: [src/Layout.ts:321](https://github.com/hydroperx/tiles.js/blob/e7df361dc5db8534367a3ce46e0ae3185d9045cd/src/Layout.ts#L321)
 
 Resizes tile.
 
