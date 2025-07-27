@@ -241,14 +241,15 @@ tiles.on("click", ({ detail: { tile } }) => {
 
 ### Rearranging
 
-If your container starts at zero scale, then it is necessary to manually call `.rearrange()` for the first time after a very small scale (like when it is 0.01).
+If your container starts at zero scale, then it is necessary to manually call `.rearrangeOverMinimumScale()` for the first time the container opens.
 
 For example:
 
 ```js
-min_scale_timeout.current = window.setTimeout(() => {
-    base_tiles.current!.rearrange();
-}, TILES_OPEN_DELAY + TILES_OPEN_DELAY / 1.7);
+const aborter = base_tiles.current!.rearrangeOverMinimumScale();
+
+// Abort when necessary
+aborter.abort();
 ```
 
 ## License

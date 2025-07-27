@@ -11,6 +11,7 @@ import {
   getHeight,
   TileSize,
 } from "./enum/TileSize";
+import * as ScaleUtils from "./utils/ScaleUtils";
 import { State } from "./State";
 import { Layout, LayoutGroup, LayoutTile } from "./Layout";
 import { HorizontalLayout } from "./HorizontalLayout";
@@ -599,6 +600,32 @@ export class Tiles extends (EventTarget as TypedEventTarget<TilesEventMap>) {
    */
   rearrange() {
     this._deferred_rearrange();
+  }
+
+  /**
+   * Rearranges the layout when the minimum scale to make it work
+   * is reached.
+   *
+   * This call may be necessary if the container is initially scaled to zero.
+   */
+  rearrangeOverMinimumScale(): AbortController {
+    const initialScale = ScaleUtils.getScale(this._container);
+    const abortController = new AbortController();
+    const check = () => {
+      if (abortController.signal.aborted) {
+        return;
+      }
+      const scale = ScaleUtils.getScale(this._container);
+      if (scale.x >= 0.1 && scale.y >= 0.1) {
+        this.rearrange();
+        return;
+      } else if (scale.x < initialScale.x || scale.y < initialScale.y) {
+        return;
+      }
+      requestAnimationFrame(check);
+    };
+    requestAnimationFrame(check);
+    return abortController;
   }
 
   /** @hidden */
