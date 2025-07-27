@@ -134,11 +134,13 @@ export class LayoutGroup {
     if (this.$.$._dir == "vertical") {
       tiles_width_em =
         this.$.$._group_width*this.$.$._small_size +
-        (this.$.$._group_width-1)*this.$.$._tile_gap;
+        (this.$.$._group_width-1)*this.$.$._tile_gap +
+        this.$.$._tile_gap*2;
     } else {
       tiles_height_em =
         this.$.$._height*this.$.$._small_size +
-        (this.$.$._height-1)*this.$.$._tile_gap;
+        (this.$.$._height-1)*this.$.$._tile_gap +
+        this.$.$._tile_gap*2;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
     for (const [, tile] of this._tiles) {
@@ -149,8 +151,8 @@ export class LayoutGroup {
       const h_em = tile.height*this.$.$._small_size + (tile.height-1)*this.$.$._tile_gap;
 
       // change tiles size em
-      tiles_width_em = Math.max(x_em + w_em, tiles_width_em);
-      tiles_height_em = Math.max(y_em + h_em, tiles_height_em);
+      tiles_width_em = Math.max(x_em + w_em + this.$.$._tile_gap*2, tiles_width_em);
+      tiles_height_em = Math.max(y_em + h_em + this.$.$._tile_gap*2, tiles_height_em);
 
       // new X/Y state
       const state = this.$.$._state.tiles.get(tile.id);
