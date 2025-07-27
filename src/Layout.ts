@@ -134,11 +134,13 @@ export class LayoutGroup {
     if (this.$.$._dir == "vertical") {
       tiles_width_em =
         this.$.$._group_width*this.$.$._small_size +
-        (this.$.$._group_width-1)*this.$.$._tile_gap;
+        (this.$.$._group_width-1)*this.$.$._tile_gap +
+        this.$.$._tile_gap*4;
     } else {
       tiles_height_em =
         this.$.$._height*this.$.$._small_size +
-        (this.$.$._height-1)*this.$.$._tile_gap;
+        (this.$.$._height-1)*this.$.$._tile_gap +
+        this.$.$._tile_gap*4;
     }
     const to_tween_y_late: { tile: LayoutTile, button: HTMLButtonElement, hEM: number, yEM: number }[] = [];
     for (const [, tile] of this._tiles) {
