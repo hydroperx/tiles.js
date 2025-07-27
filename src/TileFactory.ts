@@ -61,7 +61,7 @@ export class TileFactory {
     button.setAttribute(Attributes.ATTR_ID, params.id);
     button.setAttribute(Attributes.ATTR_DRAGGING, "false");
     button.setAttribute(Attributes.ATTR_SIZE, size);
-    button.style.position = "relative";
+    button.style.position = "absolute";
     button.style.fontSize = "inherit";
     button.style.boxSizing = "border-box";
     button.style.width = this.$._tile_em[size].w + "em";

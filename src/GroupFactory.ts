@@ -73,6 +73,7 @@ export class GroupFactory {
     tilesDiv.classList.add(this.$._class_names.groupTiles);
     tilesDiv.style.overflow = "hidden";
     tilesDiv.style.padding = this.$._tile_gap*2 + "em";
+    tilesDiv.style.position = "relative";
     div.appendChild(tilesDiv);
 
     // Layout group
