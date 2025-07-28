@@ -27,7 +27,7 @@ export class VerticalLayout extends Layout {
     // Column Y in EM
     const column_y = new Map<number, number>();
     // Group width in EM
-    const group_w = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap + this.$._tile_gap*4;
+    const group_w = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
     // Parent width in EM
     const parent_w = this.$._inline_groups*group_w + (this.$._inline_groups-1)*this.$._group_gap;
     // Parent height in EM
@@ -83,7 +83,7 @@ export class VerticalLayout extends Layout {
     const column_y = new Map<number, number>();
 
     // resultX: Find group and tile index
-    const groupWidth = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap + this.$._tile_gap*4;
+    const groupWidth = this.$._group_width*this.$._small_size + (this.$._group_width-1)*this.$._tile_gap;
     if (offset.x < (-this.$._small_size*2) - this.$._tile_gap*4) {
       return null;
     }
@@ -91,9 +91,9 @@ export class VerticalLayout extends Layout {
     let groupColumn = -1;
     let groupStartX = 0;
     for (let col = 0; col < this.$._inline_groups; col++) {
-      const startX = col * groupWidth + col * this.$._group_gap + this.$._tile_gap*2;
+      const startX = col * groupWidth + col*this.$._group_gap;
       const endX = startX + groupWidth;
-      if (offset.x >= startX - this.$._small_size/2 - this.$._tile_gap*4 && offset.x < endX + this.$._small_size/2) {
+      if (offset.x >= startX - this.$._small_size/2 - this.$._tile_gap && offset.x < endX + this.$._small_size/2) {
         groupColumn = col;
         groupStartX = startX;
         break;
@@ -150,7 +150,7 @@ export class VerticalLayout extends Layout {
       const groupEndY = groupStartY + h;
       if (offset.y >= groupStartY-this.$._small_size && offset.y < groupEndY+this.$._small_size) {
         // Snap to tile within group
-        let accY = groupStartY + this.$._label_height + this.$._tile_gap*2;
+        let accY = groupStartY + this.$._label_height + this.$._tile_gap;
         let tileY = 0;
         for (; accY < groupEndY; tileY++) {
           if (offset.y < accY + this.$._small_size/2) {

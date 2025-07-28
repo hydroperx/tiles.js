@@ -238,6 +238,7 @@ tiles.on("click", ({ detail: { tile } }) => {
 - Do not add border, margin, padding or scale to `classNames.group` to avoid inconsistencies in grid-snapping.
 - Do not add border, margin, padding or scale to `classNames.groupTiles` to avoid inconsistencies in grid-snapping.
 - Do not add margin or scale to `classNames.tile`. Scale may be used in `classNames.tileContent`.
+- Outline mayn't work well in `className.tile`, as it may be clipped off; prefer a border.
 
 ### Rearranging
 

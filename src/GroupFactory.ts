@@ -53,6 +53,7 @@ export class GroupFactory {
     div.style.flexDirection = "column";
     div.style.position = "absolute";
     div.style.transition = "transform 0.2s ease";
+    div.style.gap = this.$._tile_gap + "em";
     this.$._container.appendChild(div);
 
     // Group's label div
@@ -72,7 +73,6 @@ export class GroupFactory {
     const tilesDiv = document.createElement("div");
     tilesDiv.classList.add(this.$._class_names.groupTiles);
     tilesDiv.style.overflow = "hidden";
-    tilesDiv.style.padding = this.$._tile_gap*2 + "em";
     tilesDiv.style.position = "relative";
     div.appendChild(tilesDiv);
 

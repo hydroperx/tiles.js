@@ -26,7 +26,7 @@ export class HorizontalLayout extends Layout {
     // Current X in the cascading EM unit
     let x = 0;
     let parent_w = this.groups.length == 0 ? 0 : (this.groups.length - 1) * this.$._group_gap;
-    let parent_h = this.$._label_height + this.$._tile_gap*4 + this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
+    let parent_h = this.$._label_height + this.$._tile_gap + this.$._height*this.$._small_size + (this.$._height-1)*this.$._tile_gap;
 
     // Rearrange group tiles and reposition groups
     for (const group of this.groups) {
@@ -74,8 +74,8 @@ export class HorizontalLayout extends Layout {
     const fullHeight = tilesHeight + this.$._label_height + this.$._tile_gap;
     // skip label
     accY += this.$._label_height;
-    // skip tile divs first padding.
-    accY += this.$._tile_gap*2;
+    // skip gap between label and tilesDiv
+    accY += this.$._tile_gap;
     // offset-Y check 1
     const offset_middle_y = offset.y + offset.h/2;
     if (offset_middle_y < accY) {
@@ -88,8 +88,6 @@ export class HorizontalLayout extends Layout {
       }
       accY += this.$._small_size + this.$._tile_gap;
     }
-    // skip tiles div last padding
-    accY += this.$._tile_gap*2;
     if (offset.y > accY + this.$._small_size) {
       return null;
     }
@@ -116,11 +114,9 @@ export class HorizontalLayout extends Layout {
       }
       if (offset.x > group_horizontal_start + w + this.$._small_size / 2) {
         // move on to the next group
-        accX += w + this.$._group_gap + this.$._tile_gap*4;
+        accX += w + this.$._group_gap;
         continue;
       }
-      // skip group tilesDiv first padding
-      accX += this.$._tile_gap*2;
       for (resultX = 0; accX < endX; resultX++) {
         if (offset.x < accX + this.$._small_size/2) {
           return { group: resultGroup, x: resultX, y: resultY };
