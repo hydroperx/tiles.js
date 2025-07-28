@@ -16,7 +16,7 @@ export class BaseTile {
   ) {}
 
   /**
-   * Checks whetehr two tiles intersect.
+   * Checks whether two tiles intersect.
    */
   public intersects(other: BaseTile): boolean {
     return !(
@@ -231,17 +231,31 @@ export class BaseLayout {
 
   // Finds a best last position.
   private findBestPosition(width: number, height: number): { x: number; y: number } {
-    let y = 0;
-    while (true) {
-      for (let x = 0; !this.maxWidth || x + width <= this.maxWidth; x++) {
-        const testTile = new BaseTile(x, y, width, height);
-        if (![...this.tiles.values()].some(t => t.intersects(testTile))) {
-          return { x, y };
+    const layoutWidth = this.maxWidth ?? Infinity;
+    const layoutHeight = this.maxHeight ?? Infinity;
+
+    const horizontalLayout = this.maxHeight !== undefined;
+
+    // If horizontal layout: scan by columns (x outer, y inner)
+    if (horizontalLayout) {
+      for (let x = 0; x + width <= layoutWidth; x++) {
+        for (let y = 0; y + height <= layoutHeight; y++) {
+          const testTile = new BaseTile(x, y, width, height);
+          const overlaps = [...this.tiles.values()].some(t => t.intersects(testTile));
+          if (!overlaps) return { x, y };
         }
       }
-      y++;
-      if (this.maxHeight && y + height > this.maxHeight) break;
+    } else {
+      // Vertical layout: scan by rows (y outer, x inner)
+      for (let y = 0; y + height <= layoutHeight; y++) {
+        for (let x = 0; x + width <= layoutWidth; x++) {
+          const testTile = new BaseTile(x, y, width, height);
+          const overlaps = [...this.tiles.values()].some(t => t.intersects(testTile));
+          if (!overlaps) return { x, y };
+        }
+      }
     }
+
     return { x: 0, y: 0 }; // fallback
   }
 
@@ -256,15 +270,27 @@ export class BaseLayout {
     const layoutWidth = this.maxWidth ?? Infinity;
     const layoutHeight = this.maxHeight ?? Infinity;
 
+    const horizontalLayout = this.maxHeight !== undefined;
+
+    // Prefer vertical moves in horizontal layout, horizontal moves in vertical layout
+    const directions = horizontalLayout
+      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical first
+      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal first
+
     for (let radius = 0; radius <= maxRadius; radius++) {
-      for (let dy = -radius; dy <= radius; dy++) {
-        for (let dx = -radius; dx <= radius; dx++) {
-          if (Math.abs(dx) + Math.abs(dy) !== radius) continue;
+      for (const [dxBase, dyBase] of directions) {
+        for (let step = -radius; step <= radius; step++) {
+          const dx = dxBase * Math.abs(step);
+          const dy = dyBase * Math.abs(step);
 
           const x = originX + dx;
           const y = originY + dy;
 
-          if (x < 0 || y < 0 || x + tile.width > layoutWidth || y + tile.height > layoutHeight) continue;
+          if (
+            x < 0 || y < 0 ||
+            x + tile.width > layoutWidth ||
+            y + tile.height > layoutHeight
+          ) continue;
 
           const testTile = new BaseTile(x, y, tile.width, tile.height);
           const overlaps = [...this.tiles.entries()].some(
@@ -310,6 +336,7 @@ export class BaseLayout {
     return result;
   }
 
+  // Try shifting a tile cluster
   private tryShiftTileCluster(tileIds: string[]): boolean {
     if (tileIds.length === 0) return true;
 
@@ -323,31 +350,40 @@ export class BaseLayout {
       maxY = Math.max(maxY, tile.y + tile.height);
     }
 
-    const width = maxX - minX;
-    const height = maxY - minY;
+    const groupWidth = maxX - minX;
+    const groupHeight = maxY - minY;
 
     const layoutWidth = this.maxWidth ?? Infinity;
     const layoutHeight = this.maxHeight ?? Infinity;
+    const horizontalLayout = this.maxHeight !== undefined;
 
     const originalSnapshot = this.snapshot();
 
     const maxRadius = 10;
-    for (let radius = 0; radius <= maxRadius; radius++) {
-      for (let dy = -radius; dy <= radius; dy++) {
-        for (let dx = -radius; dx <= radius; dx++) {
-          if (Math.abs(dx) + Math.abs(dy) !== radius) continue;
 
-          const xOffset = minX + dx;
-          const yOffset = minY + dy;
+    const directions = horizontalLayout
+      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical bias
+      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal bias
+
+    for (let radius = 0; radius <= maxRadius; radius++) {
+      for (const [dxBase, dyBase] of directions) {
+        for (let step = -radius; step <= radius; step++) {
+          const dx = dxBase * Math.abs(step);
+          const dy = dyBase * Math.abs(step);
+
+          const offsetX = minX + dx;
+          const offsetY = minY + dy;
 
           if (
-            xOffset < 0 || yOffset < 0 ||
-            xOffset + width > layoutWidth || yOffset + height > layoutHeight
+            offsetX < 0 || offsetY < 0 ||
+            offsetX + groupWidth > layoutWidth ||
+            offsetY + groupHeight > layoutHeight
           ) continue;
 
+          // Try shifting all tiles
           const movedPositions: { [id: string]: BaseTile } = {};
-
           let fits = true;
+
           for (let i = 0; i < tiles.length; i++) {
             const tile = tiles[i];
             const id = tileIds[i];
