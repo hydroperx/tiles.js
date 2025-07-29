@@ -50,6 +50,7 @@ export class GroupDraggableBehavior {
         return cursor.x >= rect.x && cursor.y >= rect.y && cursor.x < rect.x + rect.width && cursor.y < rect.y + rect.height;
       },
       setPosition: false,
+      cascadingUnit: "em",
       threshold: "0.5em",
       onDragStart: this._dragStart.bind(this),
       onDrag: this._drag.bind(this),
