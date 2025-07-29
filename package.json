@@ -1,6 +1,6 @@
 {
   "name": "@hydroperx/tiles",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "type": "module",
   "files": [
     "/dist"
