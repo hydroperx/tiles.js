@@ -291,6 +291,9 @@ export class TileDraggableBehavior {
       // State update signal
       this.$._deferred_state_update_signal();
 
+      // Clear start state
+      this._startState = null;
+
       // Finish
       return;
     }
@@ -335,7 +338,9 @@ export class TileDraggableBehavior {
         if (layout_tile != tile_2) {
           // Move X/Y reflecting the current state.
           const tile_state = this.$._state.tiles.get(tile_2.id)!;
-          tile_2.move(tile_state.x, tile_state.y);
+          if (tile_state) {
+            tile_2.move(tile_state!.x, tile_state!.y);
+          }
         }
       }
 
@@ -403,7 +408,7 @@ export class TileDraggableBehavior {
       const w = getWidth(tile_state.size);
       const h = getHeight(tile_state.size);
       const layout_tile = new LayoutTile(id, button);
-      const old_tile_state = this._startState!.tiles.get(id)!;
+      const old_tile_state = this._startState?.tiles.get(id)!;
 
       // Put the tile back at the initial respective layout group.
       // If it fails, insert it at the last position then.
@@ -419,7 +424,7 @@ export class TileDraggableBehavior {
 
       // Update every tile to reflect the old state.
       for (const tile of old_layout_group.getTiles()) {
-        const oldTileState = this._startState!.tiles.get(tile.id);
+        const oldTileState = this._startState?.tiles.get(tile.id);
         if (oldTileState) {
           tile.move(oldTileState.x, oldTileState.y);
         } else {
@@ -435,6 +440,9 @@ export class TileDraggableBehavior {
       this.$._deferred_state_update_signal();
     }
 
+    // Clear start state
+    this._startState = null;
+
     // Trigger Tiles#dragend event
     this.$.dispatchEvent(new CustomEvent("dragend", {
       detail: { tile: button },
@@ -448,7 +456,7 @@ export class TileDraggableBehavior {
     this._ghostTile!.remove();
     // Update every tile to reflect the old state.
     for (const tile of layout_group.getTiles()) {
-      const oldTileState = this._startState!.tiles.get(tile.id);
+      const oldTileState = this._startState?.tiles.get(tile.id);
       if (oldTileState) {
         tile.move(oldTileState.x, oldTileState.y);
       } else {

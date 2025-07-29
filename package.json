@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "@hydroperx/draggable": "^1",
+    "@hydroperx/draggable": "file:../draggable.js",
     "@hydroperx/event": "^1.0.0",
     "@hydroperx/inputaction": "^1.1.1",
     "assert": "^2.1.0",
