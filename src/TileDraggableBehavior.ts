@@ -42,6 +42,7 @@ export class TileDraggableBehavior {
     this.$._tile_draggables.set(button, new Draggable(button, {
       threshold: "0.7em",
       cascadingUnit: "em",
+      setPosition: false,
       onDragStart: this._dragStart.bind(this),
       onDrag: this._drag.bind(this),
       onDragEnd: drag_end,
