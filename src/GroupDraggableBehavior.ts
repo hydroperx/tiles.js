@@ -45,7 +45,7 @@ export class GroupDraggableBehavior {
 
     // Setup Draggable
     this.$._group_draggables.set(div!, new Draggable(div!, {
-      filterTarget: (_, cursor) => {
+      filterTarget(_, cursor) {
         const rect = label.getBoundingClientRect();
         return cursor.x >= rect.x && cursor.y >= rect.y && cursor.x < rect.x + rect.width && cursor.y < rect.y + rect.height;
       },
