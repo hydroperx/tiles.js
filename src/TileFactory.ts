@@ -207,6 +207,15 @@ export class TileFactory {
           }
         }));
       };
+    } else {
+      button.addEventListener("click", e => {
+        // click
+        this.$.dispatchEvent(new CustomEvent("click", {
+          detail: {
+            tile: params.id,
+          }
+        }));
+      });
     }
 
     // Contribute to layout
