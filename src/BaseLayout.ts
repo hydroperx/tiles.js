@@ -116,7 +116,7 @@ export class BaseLayout {
     const originalState = this.snapshot();
     this.tiles.set(id, newTile);
 
-    if (this.resolveConflicts(id)) return true;
+    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
 
     this.restoreSnapshot(originalState);
     return false;
@@ -137,7 +137,7 @@ export class BaseLayout {
     tile.x = x;
     tile.y = y;
 
-    if (this.resolveConflicts(id)) return true;
+    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
 
     this.restoreSnapshot(originalState);
     return false;
@@ -156,7 +156,7 @@ export class BaseLayout {
     tile.width = width;
     tile.height = height;
 
-    if (this.resolveConflicts(id)) return true;
+    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
 
     this.restoreSnapshot(originalState);
     return false;
@@ -323,6 +323,51 @@ export class BaseLayout {
     }
 
     return null;
+  }
+
+  // Determines whether layout is contiguous.
+  private isLayoutContiguous(): boolean {
+    if (this.tiles.size === 0) return true;
+
+    const occupied = new Set<string>();
+    let minX = Infinity, minY = Infinity;
+
+    for (const tile of this.tiles.values()) {
+      for (let dx = 0; dx < tile.width; dx++) {
+        for (let dy = 0; dy < tile.height; dy++) {
+          const key = `${tile.x + dx},${tile.y + dy}`;
+          occupied.add(key);
+          minX = Math.min(minX, tile.x);
+          minY = Math.min(minY, tile.y);
+        }
+      }
+    }
+
+    // BFS to see if all occupied tiles are reachable from the top-left corner
+    const visited = new Set<string>();
+    const queue: [number, number][] = [];
+
+    if (!occupied.has("0,0")) return false;
+
+    queue.push([0, 0]);
+    visited.add("0,0");
+
+    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+
+    while (queue.length > 0) {
+      const [x, y] = queue.shift()!;
+      for (const [dx, dy] of directions) {
+        const nx = x + dx;
+        const ny = y + dy;
+        const key = `${nx},${ny}`;
+        if (occupied.has(key) && !visited.has(key)) {
+          visited.add(key);
+          queue.push([nx, ny]);
+        }
+      }
+    }
+
+    return visited.size === occupied.size;
   }
 
   // Intersecting tiles
