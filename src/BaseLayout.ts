@@ -116,7 +116,13 @@ export class BaseLayout {
     const originalState = this.snapshot();
     this.tiles.set(id, newTile);
 
-    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
+    if (this.resolveConflicts(id)) {
+      const tile = this.tiles.get(id)!;
+      const hasRemainingOverlaps = this.getIntersectingTiles(tile, id).length > 0;
+      if (!hasRemainingOverlaps && this.isLayoutContiguous()) {
+        return true;
+      }
+    }
 
     this.restoreSnapshot(originalState);
     return false;
@@ -137,7 +143,13 @@ export class BaseLayout {
     tile.x = x;
     tile.y = y;
 
-    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
+    if (this.resolveConflicts(id)) {
+      const tile = this.tiles.get(id)!;
+      const hasRemainingOverlaps = this.getIntersectingTiles(tile, id).length > 0;
+      if (!hasRemainingOverlaps && this.isLayoutContiguous()) {
+        return true;
+      }
+    }
 
     this.restoreSnapshot(originalState);
     return false;
@@ -156,7 +168,13 @@ export class BaseLayout {
     tile.width = width;
     tile.height = height;
 
-    if (this.resolveConflicts(id) && this.isLayoutContiguous()) return true;
+    if (this.resolveConflicts(id)) {
+      const tile = this.tiles.get(id)!;
+      const hasRemainingOverlaps = this.getIntersectingTiles(tile, id).length > 0;
+      if (!hasRemainingOverlaps && this.isLayoutContiguous()) {
+        return true;
+      }
+    }
 
     this.restoreSnapshot(originalState);
     return false;
@@ -265,17 +283,15 @@ export class BaseLayout {
     excludeId: string,
     originX: number,
     originY: number,
-    maxRadius: number = 10
+    maxRadius: number = 50
   ): { x: number; y: number } | null {
     const layoutWidth = this.maxWidth ?? Infinity;
     const layoutHeight = this.maxHeight ?? Infinity;
-
     const horizontalLayout = this.maxHeight !== undefined;
 
-    // Prefer vertical moves in horizontal layout, horizontal moves in vertical layout
     const directions = horizontalLayout
-      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical first
-      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal first
+      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ]
+      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ];
 
     for (let radius = 0; radius <= maxRadius; radius++) {
       for (const [dxBase, dyBase] of directions) {
@@ -328,37 +344,26 @@ export class BaseLayout {
   // Determines whether layout is contiguous.
   private isLayoutContiguous(): boolean {
     if (this.tiles.size === 0) return true;
+    if (!this.hasTileAtZeroZero()) return false;
 
     const occupied = new Set<string>();
-    let minX = Infinity, minY = Infinity;
-
     for (const tile of this.tiles.values()) {
       for (let dx = 0; dx < tile.width; dx++) {
         for (let dy = 0; dy < tile.height; dy++) {
-          const key = `${tile.x + dx},${tile.y + dy}`;
-          occupied.add(key);
-          minX = Math.min(minX, tile.x);
-          minY = Math.min(minY, tile.y);
+          occupied.add(`${tile.x + dx},${tile.y + dy}`);
         }
       }
     }
 
-    // BFS to see if all occupied tiles are reachable from the top-left corner
     const visited = new Set<string>();
-    const queue: [number, number][] = [];
-
-    if (!occupied.has("0,0")) return false;
-
-    queue.push([0, 0]);
+    const queue: [number, number][] = [[0, 0]];
     visited.add("0,0");
 
     const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-
     while (queue.length > 0) {
       const [x, y] = queue.shift()!;
       for (const [dx, dy] of directions) {
-        const nx = x + dx;
-        const ny = y + dy;
+        const nx = x + dx, ny = y + dy;
         const key = `${nx},${ny}`;
         if (occupied.has(key) && !visited.has(key)) {
           visited.add(key);
@@ -368,6 +373,13 @@ export class BaseLayout {
     }
 
     return visited.size === occupied.size;
+  }
+
+  // Determines if there is a tile at position (0, 0)
+  private hasTileAtZeroZero(): boolean {
+    return [...this.tiles.values()].some(tile => {
+      return tile.x <= 0 && tile.y <= 0 && tile.x + tile.width > 0 && tile.y + tile.height > 0;
+    });
   }
 
   // Intersecting tiles
@@ -385,9 +397,9 @@ export class BaseLayout {
   private tryShiftTileCluster(tileIds: string[]): boolean {
     if (tileIds.length === 0) return true;
 
-    // Compute bounding box
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     const tiles = tileIds.map(id => this.tiles.get(id)!);
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (const tile of tiles) {
       minX = Math.min(minX, tile.x);
       minY = Math.min(minY, tile.y);
@@ -397,18 +409,16 @@ export class BaseLayout {
 
     const groupWidth = maxX - minX;
     const groupHeight = maxY - minY;
-
     const layoutWidth = this.maxWidth ?? Infinity;
     const layoutHeight = this.maxHeight ?? Infinity;
     const horizontalLayout = this.maxHeight !== undefined;
 
     const originalSnapshot = this.snapshot();
-
-    const maxRadius = 10;
+    const maxRadius = Math.max(layoutWidth, layoutHeight);
 
     const directions = horizontalLayout
-      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical bias
-      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal bias
+      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ]
+      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ];
 
     for (let radius = 0; radius <= maxRadius; radius++) {
       for (const [dxBase, dyBase] of directions) {
@@ -425,8 +435,7 @@ export class BaseLayout {
             offsetY + groupHeight > layoutHeight
           ) continue;
 
-          // Try shifting all tiles
-          const movedPositions: { [id: string]: BaseTile } = {};
+          const movedPositions: Record<string, BaseTile> = {};
           let fits = true;
 
           for (let i = 0; i < tiles.length; i++) {
