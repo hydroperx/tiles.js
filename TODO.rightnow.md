@@ -1,0 +1,9 @@
+- [ ] Somehow group labels bug such that they are not clickable for edit anymore. That happens particularly after dragging the group.
+- [ ] Make it so groupLabel has same width as tilesDiv and ensure overflow is hidden
+- [ ] Group labels not editable in mobile
+- [ ] groupLabelEditable? option
+- [ ] Ensure tiles are contiguous, shifting tiles carefully
+- [ ] Ensure that if there are tiles, then there is a tile at (0, 0), shifting tiles carefully
+- [ ] Re-request BaseLayout impl for ChatGPT. Consider shifting clusters and around the original position; also, for determining best last position, look vertically in horizontal layouts (but horizontally first at until width 4), and horizontally in vertical layouts (but vertically first at until height 4).
+- [ ] Fix tiles tweening X/Y simultaneously
+- [ ] Remove groupTilesDiv overflow hidden and apply a clipping mask only while tweening tiles
