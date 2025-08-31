@@ -1,3 +1,5 @@
+import assert from "assert";
+
 /**
  * A tile in the `BaseLayout` class.
  */
@@ -143,14 +145,43 @@ export class BaseLayout {
   private maxHeight?: number;
 
   /**
-   * Constructor.
+   * A `BaseLayout` is horizontal if there is a set width.
+   */
+  public get isHorizontal() {
+    return this.maxWidth !== undefined;
+  }
+
+  /**
+   * A `BaseLayout` is vertical if there is a set height.
+   */
+  public get isVertical() {
+    return this.maxHeight !== undefined;
+  }
+
+  /**
+   * Constructor. Must specify one of `width` and `height`.
    * 
-   * - A `width` may be specified to limit how far tiles can go horizontally.
-   * - A `height` may be specified to limit how far tiles can go vertically.
+   * - A `width` limits how far tiles can go horizontally.
+   * - A `height` limits how far tiles can go vertically.
    */
   public constructor({ width, height }: { width?: number; height?: number }) {
+    assert(!(width === undefined && height === undefined), "One of width and height must be specified.");
+    assert(!(width !== undefined && height !== undefined), "Width and height are mutually-exclusive.");
     this.maxWidth = width;
     this.maxHeight = height;
+  }
+
+  /**
+   * Clones the `BaseLayout`.
+   */
+  public clone() {
+    const r = new BaseLayout({
+      width: this.maxWidth,
+      height: this.maxHeight,
+    });
+    r.tiles = new Map(Array.from(this.tiles.entries())
+      .map(([id, tile]) => [id, tile.clone()]));
+    return r;
   }
 
   /**
@@ -161,11 +192,12 @@ export class BaseLayout {
   }
 
   /**
-   * Returns the size of the layout in small tile units (1x1).
+   * Returns the size of the layout in small tile units (1x1),
+   * counting maximum width and maximum height.
    */
   public getLayoutSize(): { width: number; height: number } {
-    let maxX = 0;
-    let maxY = 0;
+    let maxX = this.maxWidth ?? 0;
+    let maxY = this.maxHeight ?? 0;
     for (const tile of this.tiles.values()) {
       maxX = Math.max(maxX, tile.x + tile.width);
       maxY = Math.max(maxY, tile.y + tile.height);
@@ -185,23 +217,7 @@ export class BaseLayout {
    * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
    */
   public addTile(id: string, x: number | null, y: number | null, width: number, height: number): boolean {
-    const newTile = new BaseTile(x ?? 0, y ?? 0, width, height);
-    if (x === null || y === null) {
-      if ((x === null && y !== null) || (x !== null && y === null)) {
-        throw new TypeError("If either x or y are null, then both must be null.");
-      }
-      const best = this.findBestPosition(width, height);
-      newTile.x = best.x;
-      newTile.y = best.y;
-    }
-
-    const originalState = this.snapshot();
-    this.tiles.set(id, newTile);
-
-    if (this.resolveConflicts(id)) return true;
-
-    this.restoreSnapshot(originalState);
-    return false;
+    //
   }
 
   /**
@@ -212,17 +228,7 @@ export class BaseLayout {
    * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
    */
   public moveTile(id: string, x: number, y: number): boolean {
-    const tile = this.tiles.get(id);
-    if (!tile) return false;
-
-    const originalState = this.snapshot();
-    tile.x = x;
-    tile.y = y;
-
-    if (this.resolveConflicts(id)) return true;
-
-    this.restoreSnapshot(originalState);
-    return false;
+    //
   }
 
   /**
@@ -231,17 +237,7 @@ export class BaseLayout {
    * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
    */
   public resizeTile(id: string, width: number, height: number): boolean {
-    const tile = this.tiles.get(id);
-    if (!tile) return false;
-
-    const originalState = this.snapshot();
-    tile.width = width;
-    tile.height = height;
-
-    if (this.resolveConflicts(id)) return true;
-
-    this.restoreSnapshot(originalState);
-    return false;
+    //
   }
 
   /**
@@ -249,16 +245,7 @@ export class BaseLayout {
    * towards the removed tile.
    */
   public removeTile(id: string): void {
-    const removed = this.tiles.get(id);
-    if (!removed) return;
-    this.tiles.delete(id);
-
-    // Push horizontally-fitting bottom neighbours.
-    for (const [tid, tile] of this.tiles) {
-      if (tile.y > removed.y && tile.x >= removed.x && tile.x + tile.width <= removed.x + removed.width) {
-        tile.y = Math.max(0, tile.y - removed.height);
-      }
-    }
+    fixme();
   }
 
   /**
@@ -266,145 +253,6 @@ export class BaseLayout {
    */
   public clear(): void {
     this.tiles.clear();
-  }
-
-  // Resolve overlapping tiles of a target tile by shifting them
-  // somewhere else around the original position,
-  // and ensures the target tile is within bounds.
-  private resolveConflicts(targetId: string): boolean {
-    const toCheck = [targetId];
-
-    while (toCheck.length > 0) {
-      const id = toCheck.pop()!;
-      const tile = this.tiles.get(id)!;
-
-      const intersectingIds = this.getIntersectingTiles(tile, id);
-      if (intersectingIds.length > 0) {
-        const snapshotBeforeCluster = this.snapshot();
-
-        const success = this.tryShiftTileCluster(intersectingIds);
-        if (!success) {
-          this.restoreSnapshot(snapshotBeforeCluster);
-          return false;
-        }
-
-        toCheck.push(...intersectingIds);
-      }
-
-      const isOutOfBounds =
-        tile.x < 0 ||
-        tile.y < 0 ||
-        (this.maxWidth !== undefined && tile.x + tile.width > this.maxWidth) ||
-        (this.maxHeight !== undefined && tile.y + tile.height > this.maxHeight);
-
-      if (isOutOfBounds) {
-        let foundPos = this.findAvailableNearbyPosition(tile, id, tile.x, tile.y);
-        if (!foundPos) {
-          foundPos = this.findAvailablePositionFor(tile, id);
-        }
-        if (!foundPos) return false;
-        tile.x = foundPos.x;
-        tile.y = foundPos.y;
-      }
-    }
-
-    return true;
-  }
-
-  // Finds a best last position.
-  private findBestPosition(width: number, height: number): { x: number; y: number } {
-    const layoutWidth = this.maxWidth ?? Infinity;
-    const layoutHeight = this.maxHeight ?? Infinity;
-
-    const horizontalLayout = this.maxHeight !== undefined;
-
-    // If horizontal layout: scan by columns (x outer, y inner)
-    if (horizontalLayout) {
-      for (let x = 0; x + width <= layoutWidth; x++) {
-        for (let y = 0; y + height <= layoutHeight; y++) {
-          const testTile = new BaseTile(x, y, width, height);
-          const overlaps = [...this.tiles.values()].some(t => t.intersects(testTile));
-          if (!overlaps) return { x, y };
-        }
-      }
-    } else {
-      // Vertical layout: scan by rows (y outer, x inner)
-      for (let y = 0; y + height <= layoutHeight; y++) {
-        for (let x = 0; x + width <= layoutWidth; x++) {
-          const testTile = new BaseTile(x, y, width, height);
-          const overlaps = [...this.tiles.values()].some(t => t.intersects(testTile));
-          if (!overlaps) return { x, y };
-        }
-      }
-    }
-
-    return { x: 0, y: 0 }; // fallback
-  }
-
-  // Method used in conflict resolution.
-  private findAvailableNearbyPosition(
-    tile: BaseTile,
-    excludeId: string,
-    originX: number,
-    originY: number,
-    maxRadius: number = 10
-  ): { x: number; y: number } | null {
-    const layoutWidth = this.maxWidth ?? Infinity;
-    const layoutHeight = this.maxHeight ?? Infinity;
-
-    const horizontalLayout = this.maxHeight !== undefined;
-
-    // Prefer vertical moves in horizontal layout, horizontal moves in vertical layout
-    const directions = horizontalLayout
-      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical first
-      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal first
-
-    for (let radius = 0; radius <= maxRadius; radius++) {
-      for (const [dxBase, dyBase] of directions) {
-        for (let step = -radius; step <= radius; step++) {
-          const dx = dxBase * Math.abs(step);
-          const dy = dyBase * Math.abs(step);
-
-          const x = originX + dx;
-          const y = originY + dy;
-
-          if (
-            x < 0 || y < 0 ||
-            x + tile.width > layoutWidth ||
-            y + tile.height > layoutHeight
-          ) continue;
-
-          const testTile = new BaseTile(x, y, tile.width, tile.height);
-          const overlaps = [...this.tiles.entries()].some(
-            ([id, other]) => id !== excludeId && testTile.intersects(other)
-          );
-
-          if (!overlaps) return { x, y };
-        }
-      }
-    }
-
-    return null;
-  }
-
-  // Method used in conflict resolution.
-  private findAvailablePositionFor(tile: BaseTile, excludeId: string): { x: number; y: number } | null {
-    const layoutWidth = this.maxWidth ?? Infinity;
-    const layoutHeight = this.maxHeight ?? Infinity;
-
-    for (let y = 0; y + tile.height <= layoutHeight; y++) {
-      for (let x = 0; x + tile.width <= layoutWidth; x++) {
-        const testTile = new BaseTile(x, y, tile.width, tile.height);
-        const overlaps = [...this.tiles.entries()].some(
-          ([id, other]) => id !== excludeId && testTile.intersects(other)
-        );
-        if (!overlaps) {
-          return { x, y };
-        }
-      }
-    }
-
-    return null;
   }
 
   // Intersecting tiles
@@ -416,88 +264,6 @@ export class BaseLayout {
       }
     }
     return result;
-  }
-
-  // Try shifting a tile cluster
-  private tryShiftTileCluster(tileIds: string[]): boolean {
-    if (tileIds.length === 0) return true;
-
-    // Compute bounding box
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    const tiles = tileIds.map(id => this.tiles.get(id)!);
-    for (const tile of tiles) {
-      minX = Math.min(minX, tile.x);
-      minY = Math.min(minY, tile.y);
-      maxX = Math.max(maxX, tile.x + tile.width);
-      maxY = Math.max(maxY, tile.y + tile.height);
-    }
-
-    const groupWidth = maxX - minX;
-    const groupHeight = maxY - minY;
-
-    const layoutWidth = this.maxWidth ?? Infinity;
-    const layoutHeight = this.maxHeight ?? Infinity;
-    const horizontalLayout = this.maxHeight !== undefined;
-
-    const originalSnapshot = this.snapshot();
-
-    const maxRadius = 10;
-
-    const directions = horizontalLayout
-      ? [ [0, 1], [0, -1], [1, 0], [-1, 0] ] // vertical bias
-      : [ [1, 0], [-1, 0], [0, 1], [0, -1] ]; // horizontal bias
-
-    for (let radius = 0; radius <= maxRadius; radius++) {
-      for (const [dxBase, dyBase] of directions) {
-        for (let step = -radius; step <= radius; step++) {
-          const dx = dxBase * Math.abs(step);
-          const dy = dyBase * Math.abs(step);
-
-          const offsetX = minX + dx;
-          const offsetY = minY + dy;
-
-          if (
-            offsetX < 0 || offsetY < 0 ||
-            offsetX + groupWidth > layoutWidth ||
-            offsetY + groupHeight > layoutHeight
-          ) continue;
-
-          // Try shifting all tiles
-          const movedPositions: { [id: string]: BaseTile } = {};
-          let fits = true;
-
-          for (let i = 0; i < tiles.length; i++) {
-            const tile = tiles[i];
-            const id = tileIds[i];
-
-            const newX = tile.x + dx;
-            const newY = tile.y + dy;
-            const testTile = new BaseTile(newX, newY, tile.width, tile.height);
-
-            const overlapping = [...this.tiles.entries()].some(([otherId, other]) =>
-              !tileIds.includes(otherId) && testTile.intersects(other)
-            );
-
-            if (overlapping) {
-              fits = false;
-              break;
-            }
-
-            movedPositions[id] = testTile;
-          }
-
-          if (fits) {
-            for (const id of tileIds) {
-              this.tiles.set(id, movedPositions[id]);
-            }
-            return true;
-          }
-        }
-      }
-    }
-
-    this.restoreSnapshot(originalSnapshot);
-    return false;
   }
 
   // Returns a copy of the tile data.
