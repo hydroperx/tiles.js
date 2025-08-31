@@ -323,7 +323,8 @@ export class BaseLayout {
     }
   }
 
-  // Find holes between a given position and tile clusters.
+  // Find holes (horizontal, vertical) between
+  // a given position and tile clusters.
   private findHoles(x: number, y: number): [number, number] {
     //
   }
