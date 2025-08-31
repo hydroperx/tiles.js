@@ -15,6 +15,22 @@ export class BaseTile {
     public height: number
   ) {}
 
+  get left() {
+    return this.x;
+  }
+
+  get top() {
+    return this.y;
+  }
+
+  get right() {
+    return this.x + this.width;
+  }
+
+  get bottom() {
+    return this.y + this.height;
+  }
+
   /**
    * Checks whether two tiles intersect.
    */
@@ -27,6 +43,63 @@ export class BaseTile {
     );
   }
 
+    intersection(other: BaseTile): null | BaseTile {
+      const { x: ax1, y: ay1 } = this;
+      const ax2 = this.x + this.width;
+      const ay2 = this.y + this.height;
+      const { x: bx1, y: by1 } = other;
+      const bx2 = other.x + other.width;
+      const by2 = other.y + other.height;
+
+      const ix1 = Math.max(ax1, bx1);
+      const iy1 = Math.max(ay1, by1);
+      const ix2 = Math.min(ax2, bx2);
+      const iy2 = Math.min(ay2, by2);
+
+      if (ix1 < ix2 && iy1 < iy2) {
+        return new BaseTile(ix1, iy1, ix2 - ix1, iy2 - iy1);
+      }
+      return null;
+  }
+  
+  /**
+   * Determines what side of `other` this tile intersects with.
+   */
+  public intersectsSideOf(other: BaseTile): null | IntersectionSide {
+    // Based on ChatGPT
+
+    const intersection = this.intersection(other);
+    if (!intersection) {
+      return null;
+    }
+
+    // Compute overlap depths
+    const overlap_x = intersection!.width;
+    const overlap_y = intersection!.height;
+
+    if (overlap_x < overlap_y) {
+      // Horizontal penetration is smaller → collision is Left/Right
+      let from_left  = Math.abs(this.right - other.left);
+      let from_right = Math.abs(other.right - this.left);
+
+      if (from_left < from_right) {
+        return "left";
+      } else {
+        return "right";
+      }
+    } else {
+      // Vertical penetration is smaller → collision is Top/Bottom
+      let from_top    = Math.abs(this.bottom - other.top);
+      let from_bottom = Math.abs(other.bottom - this.top);
+
+      if (from_top < from_bottom) {
+        return "top";
+      } else {
+        return "bottom";
+      }
+    }
+  }
+
   /**
    * Clones tile data.
    */
@@ -34,6 +107,15 @@ export class BaseTile {
     return new BaseTile(this.x, this.y, this.width, this.height);
   }
 }
+
+/**
+ * The side where a tile intersects with another.
+ */
+export type IntersectionSide =
+  | "top"
+  | "bottom"
+  | "left"
+  | "right";
 
 /**
  * A layout mimmicking the Windows 8 or 10's live tile layout.
