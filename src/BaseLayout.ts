@@ -145,30 +145,34 @@ export class BaseLayout {
   private maxHeight?: number;
 
   /**
-   * A `BaseLayout` is horizontal if there is a set width.
+   * A `BaseLayout` is horizontal if there is a set height.
    */
   public get isHorizontal() {
-    return this.maxWidth !== undefined;
+    return this.maxHeight !== undefined;
   }
 
   /**
-   * A `BaseLayout` is vertical if there is a set height.
+   * A `BaseLayout` is vertical if there is a set width.
    */
   public get isVertical() {
-    return this.maxHeight !== undefined;
+    return this.maxWidth !== undefined;
   }
 
   /**
    * Constructor. Must specify one of `width` and `height`.
    * 
    * - A `width` limits how far tiles can go horizontally.
+   *   If specified, must be at least 4.
    * - A `height` limits how far tiles can go vertically.
+   *   If specified, must be at least 4.
    */
   public constructor({ width, height }: { width?: number; height?: number }) {
     assert(!(width === undefined && height === undefined), "One of width and height must be specified.");
     assert(!(width !== undefined && height !== undefined), "Width and height are mutually-exclusive.");
     this.maxWidth = width;
     this.maxHeight = height;
+    assert(this.maxWidth === undefined || this.maxWidth >= 4, "Width must be >= 4 if specified.");
+    assert(this.maxHeight === undefined || this.maxHeight >= 4, "Height must be >= 4 if specified.");
   }
 
   /**
@@ -213,11 +217,36 @@ export class BaseLayout {
    * 
    * @param x X coordinate in small tiles unit (1x1), or `null`.
    * @param y Y coordinate in small tiles unit (1x1), or `null`.
-   * @throws A TypeError if either x or y are null, but not both are null.
+   * @throws An `Error` if either x or y are null, but not both are null.
    * @returns `true` if there was no unsolvable conflict, and `false` otherwise.
    */
   public addTile(id: string, x: number | null, y: number | null, width: number, height: number): boolean {
-    //
+    assert(!this.tiles.has(id), `Tile ${id} already exists.`);
+    assert(!((x === null || y === null) && (x !== null || y !== null)), "If any of (x,y) are null, then both must be null.");
+    // If both (x, y) are specified, add tile and shift
+    // as needed.
+    if (x !== null && y !== null) {
+      const snapshot = this.snapshot();
+      this.tiles.set(id, new BaseTile(x!, y!, width, height));
+      this.fitBaseTile(id, tile);
+      if (this.resolveConflicts(id)) {
+        this.fillMinimumPosition();
+        this.compact();
+        return true;
+      }
+      this.restoreSnapshot(snapshot);
+      return false;
+    // If `x` and `y` are `null`, the tile is positioned at the best *last* position.
+    } else {
+      let [x, y] = this.findBestLastPosition(width, height);
+      // If the resulting (x,y) leave holes between other tile clusters,
+      // then snap the resulting (x,y) so there is no hole between other tiles
+      // (e.g. ensure they are contiguous).
+      const [horizontal_hole, vertical_hole] = this.findHoles(x, y);
+      x -= horizontal_hole;
+      y -= vertical_hole;
+    }
+    return true;
   }
 
   /**
@@ -264,6 +293,39 @@ export class BaseLayout {
       }
     }
     return result;
+  }
+
+  // Finds best last position for a tile.
+  private findBestLastPosition(width: number, height: number): [number, number] {
+    let testTile = new BaseTile(0, 0, width, height);
+    if (this.isHorizontal) {
+      const layout_height = this.maxHeight!;
+      for (let x = 0;; x++) {
+        testTile.x = x;
+        for (let y = 0; y < layout_height; y++) {
+          testTile.y = y;
+          if (this.getIntersectingTiles(testTile, "").length === 0) {
+            return [x, y];
+          }
+        }
+      }
+    } else {
+      const layout_width = this.maxWidth!;
+      for (let y = 0;; y++) {
+        testTile.y = y;
+        for (let x = 0; x < layout_width; x++) {
+          testTile.x = x;
+          if (this.getIntersectingTiles(testTile, "").length === 0) {
+            return [x, y];
+          }
+        }
+      }
+    }
+  }
+
+  // Find holes between a given position and tile clusters.
+  private findHoles(x: number, y: number): [number, number] {
+    //
   }
 
   // Returns a copy of the tile data.
